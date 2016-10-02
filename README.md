@@ -1,5 +1,7 @@
 # Consus
 
+[![Build Status](https://travis-ci.org/TheFourFifths/consus.svg?branch=master)](https://travis-ci.org/TheFourFifths/consus)
+
 ## Installing
 
 ```bash
