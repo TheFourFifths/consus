@@ -1,6 +1,6 @@
 # Consus
 
-[![Build Status](https://travis-ci.org/TheFourFifths/consus.svg?branch=master)](https://travis-ci.org/TheFourFifths/consus)
+[![Build Status](https://travis-ci.org/TheFourFifths/consus.svg?branch=dev)](https://travis-ci.org/TheFourFifths/consus)
 
 ## Installing
 
