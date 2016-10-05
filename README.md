@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/TheFourFifths/consus.svg?branch=dev)](https://travis-ci.org/TheFourFifths/consus)
 [![codecov](https://codecov.io/gh/TheFourFifths/consus/branch/master/graph/badge.svg)](https://codecov.io/gh/TheFourFifths/consus)
+[![Dependency Status](https://david-dm.org/TheFourFifths/consus.svg)](https://david-dm.org/TheFourFifths/consus)
+[![devDependency Status](https://david-dm.org/TheFourFifths/consus/dev-status.svg)](https://david-dm.org/TheFourFifths/consus?type=dev)
 
 ## Installing
 
