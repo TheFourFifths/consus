@@ -40,14 +40,11 @@ module.exports = function(grunt) {
                 ]
             }
         },
-        jshint: {
+        eslint: {
             options: {
-                jshintrc: '.jshintrc'
+                configFile: '.eslintrc.json'
             },
-            uses_defaults: [
-                'src/**/*.js',
-                'test/**/*.js'
-            ]
+            src: ['src/**/*.js', 'test/**/*.js']
         },
         mochacli: {
             options: {
@@ -67,12 +64,12 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('build', ['clean:dist', 'babel:dist', 'copy']);
-    grunt.registerTask('lint', ['jshint']);
+    grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('test', ['lint', 'build', 'clean:test', 'babel:test', 'mochacli']);
     grunt.registerTask('prepublish', ['test', 'clean:dist', 'babel:dist']);
 
