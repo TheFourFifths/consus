@@ -6,27 +6,23 @@ let app = express();
 
 app.get('/', (req, res) => {
     let model = ModelStore.getModelById(req.query.id);
-    if (typeof model === 'undefined') {
-        return res.failureJson('Model not found.');
-    }
     res.successJson({
         model: {
-            id: model.id,
+            address: model.address,
             name: model.name
         }
     });
 });
 
 app.post('/', (req, res) => {
-    addAction({
-        type: 'NEW_MODEL',
-        data: {
-            id: req.body.id,
-            name: req.body.name
-        }
+    addAction('NEW_MODEL', {
+        name: req.body.name
     })
-    .then(() => {
-        res.successJson();
+    .then(actionId => {
+        let model = ModelStore.getModelByActionId(actionId);
+        res.successJson({
+            address: model.address
+        });
     })
     .catch(e => {
         res.failureJson(e.message);
