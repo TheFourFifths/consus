@@ -5,7 +5,7 @@ import ItemStore from '../store/item-store';
 let app = express();
 
 app.get('/', (req, res) => {
-    let item = ItemStore.getItemById(req.query.id);
+    let item = ItemStore.getItemByAddress(req.query.address);
     res.successJson({
         item: {
             address: item.address,
