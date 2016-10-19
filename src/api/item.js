@@ -5,27 +5,25 @@ import ItemStore from '../store/item-store';
 let app = express();
 
 app.get('/', (req, res) => {
-    let item = ItemStore.getItemById(req.query.id);
-    if (typeof item === 'undefined') {
-        return res.failureJson('Item not found.');
-    }
+    let item = ItemStore.getItemByAddress(req.query.address);
     res.successJson({
         item: {
-            id: item.id,
+            address: item.address,
+            modelAddress: item.modelAddress,
             status: item.status
         }
     });
 });
 
 app.post('/', (req, res) => {
-    addAction({
-        type: 'NEW_ITEM',
-        data: {
-            id: req.body.id
-        }
+    addAction('NEW_ITEM', {
+        modelAddress: req.body.modelAddress
     })
-    .then(() => {
-        res.successJson();
+    .then(actionId => {
+        let item = ItemStore.getItemByActionId(actionId);
+        res.successJson({
+            address: item.address
+        });
     })
     .catch(e => {
         res.failureJson(e.message);

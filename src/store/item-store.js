@@ -1,13 +1,37 @@
-import Item from '../model/item';
-import { Store } from 'consus-flux';
-import { assert } from 'chai';
+import { Store } from 'consus-core/flux';
+import { createAddress, readAddress } from 'consus-core/identifiers';
 
-let items = {};
+let items = [
+    {
+        address: 'iGwEZUvfA',
+        modelAddress: 'm8y7nEtAe',
+        status: 'AVAILABLE'
+    },
+    {
+        address: 'iGwEZVHHE',
+        modelAddress: 'm8y7nFLsT',
+        status: 'AVAILABLE'
+    },
+    {
+        address: 'iGwEZVeaT',
+        modelAddress: 'm8y7nFLsT',
+        status: 'AVAILABLE'
+    }
+];
+let itemsByActionId = new Object(null);
 
 class ItemStore extends Store {
 
-    getItemById(id) {
-        return items[id];
+    getItemByAddress(address) {
+        let result = readAddress(address);
+        if (result.type !== 'item') {
+            throw new Error('Address is not an item.');
+        }
+        return items[result.index];
+    }
+
+    getItemByActionId(actionId) {
+        return itemsByActionId[actionId];
     }
 
 }
@@ -15,9 +39,19 @@ class ItemStore extends Store {
 const store = new ItemStore();
 
 store.registerHandler('NEW_ITEM', data => {
-    assert.isString(data.id, 'An item id must be a string.');
-    assert.isUndefined(items[data.id], 'An item with that id already exists.');
-    items[data.id] = new Item(data.id);
+    let item = {
+        address: createAddress(items.length, 'item'),
+        modelAddress: data.modelAddress,
+        status: 'AVAILABLE'
+    };
+    itemsByActionId[data.actionId] = item;
+    items.push(item);
+});
+
+store.registerHandler('NEW_CHECKOUT', data => {
+    data.itemAddresses.forEach(address => {
+        store.getItemByAddress(address).status = 'CHECKED_OUT';
+    });
 });
 
 export default store;

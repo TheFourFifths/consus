@@ -49,12 +49,13 @@
     "grunt-contrib-copy": "1.0.0",
     "grunt-eslint": "^19.0.0",
     "grunt-mocha-cli": "2.1.0",
-    "nyc": "^8.3.0"
+    "nyc": "^8.3.0",
+    "request": "^2.75.0"
   },
   "dependencies": {
     "body-parser": "1.15.2",
     "chai": "3.5.0",
-    "consus-flux": "0.2.0",
+    "consus-core": "^0.5.3",
     "daemonize2": "0.4.2",
     "express": "4.14.0"
   }

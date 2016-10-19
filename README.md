@@ -43,12 +43,11 @@ npm start
 
 ## Project File Structure
 
-* `doc`: Project documentation goes here
+* `docs`: Project documentation goes here
 * `bin`: A directory containing the `consusd` file for running as a global module
 * `src`: The project's source code
     * `api`: API apps that register and handle REST endpoints
     * `lib`: Miscellaneous library modules
-    * `model`: Model classes for organizing data
     * `public`: Public files served to the web browser
     * `store`: Flux stores which contain state and consume actions
 * `test`: The project's tests

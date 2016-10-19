@@ -54,6 +54,11 @@ module.exports = function(grunt) {
                 files: {
                     src: ['.test/unit/**/*.js']
                 }
+            },
+            functional: {
+                files: {
+                    src: ['.test/functional/**/*.js']
+                }
             }
         },
         clean: {
