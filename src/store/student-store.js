@@ -1,6 +1,11 @@
 import { Store } from 'consus-core/flux';
 
-let students = new Object(null);
+let students = {};
+students[123456] = {
+    id: 123456,
+    name: 'John von Neumann',
+    itemAddresses: []
+};
 let studentsByActionId = new Object(null);
 
 class StudentStore extends Store {

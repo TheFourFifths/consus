@@ -1,7 +1,16 @@
 import { Store } from 'consus-core/flux';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
-let models = [];
+let models = [
+    {
+        address: 'm8y7nEtAe',
+        name: 'Resistor'
+    },
+    {
+        address: 'm8y7nFLsT',
+        name: 'Transistor'
+    }
+];
 let modelsByActionId = new Object(null);
 
 class ModelStore extends Store {

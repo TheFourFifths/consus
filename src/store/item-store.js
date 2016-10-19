@@ -1,7 +1,23 @@
 import { Store } from 'consus-core/flux';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
-let items = [];
+let items = [
+    {
+        address: 'iGwEZUvfA',
+        modelAddress: 'm8y7nEtAe',
+        status: 'AVAILABLE'
+    },
+    {
+        address: 'iGwEZVHHE',
+        modelAddress: 'm8y7nFLsT',
+        status: 'AVAILABLE'
+    },
+    {
+        address: 'iGwEZVeaT',
+        modelAddress: 'm8y7nFLsT',
+        status: 'AVAILABLE'
+    }
+];
 let itemsByActionId = new Object(null);
 
 class ItemStore extends Store {
