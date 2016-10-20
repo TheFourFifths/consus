@@ -3,5 +3,11 @@
         "es2015"
     ],
     "compact": true,
-    "comments": false
+    "comments": false,
+    "env": {
+        "test": {
+            "plugins": ["istanbul"]
+        }
+    },
+    "sourceMap": true
 }

@@ -1,14 +1,7 @@
-import express from 'express';
-import path from 'path';
-import bodyParser from 'body-parser';
-import api from './lib/api';
+import server from './lib/server';
 
-const PORT = 80;
-
-let app = express();
-app.use(express.static(path.join(__dirname, './public')));
-app.use(bodyParser.json());
-app.use('/api', api);
-app.listen(PORT, () => {
+server.start()
+.then(PORT => {
+    /* eslint-disable no-console */
     console.log('The consus server is now listening on port ' + PORT + '.');
 });
