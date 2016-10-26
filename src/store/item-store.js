@@ -1,6 +1,5 @@
 import { Store } from 'consus-core/flux';
 import CheckinStore from './checkin-store';
-import StudentStore from './student-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
 let items = [
@@ -24,6 +23,10 @@ let itemsByActionId = new Object(null);
 
 class ItemStore extends Store {
 
+    getItems() {
+        return items;
+    }
+
     getItemByAddress(address) {
         let result = readAddress(address);
         if (result.type !== 'item') {
@@ -39,6 +42,11 @@ class ItemStore extends Store {
 }
 
 const store = new ItemStore();
+
+store.registerHandler('CLEAR_ALL_DATA', () => {
+    items = [];
+    itemsByActionId = new Object(null);
+});
 
 store.registerHandler('NEW_ITEM', data => {
     let item = {

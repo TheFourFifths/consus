@@ -2,42 +2,52 @@ import { Store } from 'consus-core/flux';
 import StudentStore from './student-store';
 import ItemStore from './item-store';
 
-let checkins = [];
-let checkinsByActionId = new Object(null);
-let checkinErrorsByActionId = new Object(null);
+let checkins = new Object(null);
+let checkinErrors = new Object(null);
 
 class CheckinStore extends Store {
 
+    getCheckins() {
+        return Object.keys(checkins).map(key => checkins[key]);
+    }
+
+    getCheckinErrors() {
+        return Object.keys(checkinErrors).map(key => checkinErrors[key]);
+    }
+
     getCheckinByActionId(actionId) {
-        return checkinsByActionId[actionId];
+        return checkins[actionId];
     }
 
     getCheckinErrorByActionId(actionId) {
-        return checkinErrorsByActionId[actionId];
+        return checkinErrors[actionId];
     }
 
 }
 
 const store = new CheckinStore();
 
+store.registerHandler('CLEAR_ALL_DATA', () => {
+    checkins = new Object(null);
+    checkinErrors = new Object(null);
+});
+
 store.registerHandler('CHECKIN', data => {
     let student = StudentStore.getStudentById(data.studentId);
     if (typeof student !== 'object') {
-        return checkinErrorsByActionId.push('Student could not be found.');
+        return checkinErrors[data.actionId] = 'Student could not be found.';
     }
     let item = ItemStore.getItemByAddress(data.itemAddress);
     if (typeof item !== 'object') {
-        return checkinErrorsByActionId.push('Item could not be found.');
+        return checkinErrors[data.actionId] = 'Item could not be found.';
     }
     if (student.items.indexOf(item) === -1) {
-        return checkinErrorsByActionId.push('This item is not checked out by the student.');
+        return checkinErrors[data.actionId] = 'This item is not checked out by the student.';
     }
-    let checkin = {
+    checkins[data.actionId] = {
         student,
         item
     };
-    checkinsByActionId[data.actionId] = checkin;
-    checkins.push(checkin);
 });
 
 export default store;
