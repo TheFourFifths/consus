@@ -4,7 +4,7 @@ let students = {};
 students[123456] = {
     id: 123456,
     name: 'John von Neumann',
-    itemAddresses: []
+    items: []
 };
 let studentsByActionId = new Object(null);
 
@@ -26,7 +26,7 @@ store.registerHandler('NEW_STUDENT', data => {
     let student = {
         id: students.length,
         name: data.name,
-        itemAddresses: []
+        items: []
     };
     studentsByActionId[data.actionId] = student;
     students.push(student);
@@ -34,7 +34,8 @@ store.registerHandler('NEW_STUDENT', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     let student = store.getStudentById(data.studentId);
-    student.itemAddresses = student.itemAddresses.concat(data.itemAddresses);
+    let items = data.itemAddresses.map(address => ItemStore.getItemByAddress(address));
+    student.items = student.items.concat(items);
 });
 
 export default store;
