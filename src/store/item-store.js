@@ -69,8 +69,7 @@ store.registerHandler('CHECKIN', data => {
     if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
         return;
     }
-    let item = store.getItemByAddress(data.itemAddress);
-    item.status = 'AVAILABLE';
+    store.getItemByAddress(data.itemAddress).status = 'AVAILABLE';
 });
 
 export default store;

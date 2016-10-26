@@ -35,12 +35,12 @@ store.registerHandler('CLEAR_ALL_DATA', () => {
 
 store.registerHandler('NEW_STUDENT', data => {
     let student = {
-        id: students.length,
+        id: data.id,
         name: data.name,
         items: []
     };
     studentsByActionId[data.actionId] = student;
-    students.push(student);
+    students[data.id] = student;
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
