@@ -1,4 +1,6 @@
 import { Store } from 'consus-core/flux';
+import CheckinStore from './checkin-store';
+import StudentStore from './student-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
 let items = [
@@ -52,6 +54,15 @@ store.registerHandler('NEW_CHECKOUT', data => {
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
     });
+});
+
+store.registerHandler('CHECKIN', data => {
+    store.waitFor(CheckinStore);
+    if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
+        return;
+    }
+    let item = store.getItemByAddress(data.itemAddress);
+    item.status = 'AVAILABLE';
 });
 
 export default store;

@@ -1,4 +1,6 @@
 import { Store } from 'consus-core/flux';
+import CheckinStore from './checkin-store';
+import ItemStore from './item-store';
 
 let students = {};
 students[123456] = {
@@ -36,6 +38,16 @@ store.registerHandler('NEW_CHECKOUT', data => {
     let student = store.getStudentById(data.studentId);
     let items = data.itemAddresses.map(address => ItemStore.getItemByAddress(address));
     student.items = student.items.concat(items);
+});
+
+store.registerHandler('CHECKIN', data => {
+    store.waitFor(CheckinStore);
+    if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
+        return;
+    }
+    let student = store.getStudentById(data.studentId);
+    let item = ItemStore.getItemByAddress(data.itemAddress);
+    student.items.splice(student.items.indexOf(item), 1);
 });
 
 export default store;
