@@ -7,7 +7,7 @@ describe('ModelStore', () => {
     let model;
 
     before(() => {
-        addAction('CLEAR_ALL_DATA');
+        return addAction('CLEAR_ALL_DATA');
     });
 
     it('should instantiate without any models', () => {
@@ -15,12 +15,12 @@ describe('ModelStore', () => {
     });
 
     it('should create a model an retrieve it by the action id', () => {
-        addAction('NEW_MODEL', {
+        return addAction('NEW_MODEL', {
             name: 'Transistor'
         }).then(actionId => {
             model = ModelStore.getModelByActionId(actionId);
+            assert.lengthOf(ModelStore.getModels(), 1);
         });
-        assert.lengthOf(ModelStore.getModels(), 1);
     });
 
     it('should retrieve a model by address', () => {
@@ -28,14 +28,16 @@ describe('ModelStore', () => {
     });
 
     it('should create more models', () => {
-        addAction('NEW_MODEL', {
+        return addAction('NEW_MODEL', {
             name: 'Resistor'
+        }).then(() => {
+            assert.lengthOf(ModelStore.getModels(), 2);
+            return addAction('NEW_MODEL', {
+                name: 'Wire'
+            });
+        }).then(() => {
+            assert.lengthOf(ModelStore.getModels(), 3);
         });
-        assert.lengthOf(ModelStore.getModels(), 2);
-        addAction('NEW_MODEL', {
-            name: 'Wire'
-        });
-        assert.lengthOf(ModelStore.getModels(), 3);
     });
 
 });

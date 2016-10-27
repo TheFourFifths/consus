@@ -7,26 +7,40 @@ import { addAction } from '../../util/database';
 
 describe('CheckoutStore', () => {
 
+    let model;
     let items = [];
     let student;
 
     before(() => {
-        addAction('CLEAR_ALL_DATA');
-        addAction('NEW_MODEL', {
-            name: 'Resistor'
+        return addAction('CLEAR_ALL_DATA').then(() => {
+            return addAction('NEW_MODEL', {
+                name: 'Resistor'
+            });
         }).then(actionId => {
-            let model = ModelStore.getModelByActionId(actionId);
-            for (let i = 0; i < 3; i++) {
-                addAction('NEW_ITEM', {
-                    modelAddress: model.address
-                }).then(actionId => {
-                    items.push(ItemStore.getItemByActionId(actionId));
-                });
-            }
-        });
-        addAction('NEW_STUDENT', {
-            id: '123456',
-            name: 'John von Neumann'
+            model = ModelStore.getModelByActionId(actionId);
+            return addAction('NEW_ITEM', {
+                modelAddress: model.address
+            });
+        }).then(actionId => {
+            items.push(ItemStore.getItemByActionId(actionId));
+            return addAction('NEW_ITEM', {
+                modelAddress: model.address
+            });
+        }).then(actionId => {
+            items.push(ItemStore.getItemByActionId(actionId));
+            return addAction('NEW_ITEM', {
+                modelAddress: model.address
+            });
+        }).then(actionId => {
+            items.push(ItemStore.getItemByActionId(actionId));
+            return addAction('NEW_ITEM', {
+                modelAddress: model.address
+            });
+        }).then(() => {
+            return addAction('NEW_STUDENT', {
+                id: '123456',
+                name: 'John von Neumann'
+            });
         }).then(actionId => {
             student = StudentStore.getStudentByActionId(actionId);
         });
@@ -41,9 +55,9 @@ describe('CheckoutStore', () => {
     });
 
     it('should create a checkout', () => {
-        addAction('NEW_CHECKOUT', {
+        return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            items: [items[0].address, items[1].address]
+            itemAddresses: [items[0].address, items[1].address]
         }).then(() => {
             assert.lengthOf(CheckoutStore.getCheckouts(), 1);
         });
