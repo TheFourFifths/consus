@@ -95,6 +95,31 @@ Retrieve a model.
 }
 ```
 
+## GET `/api/model/all-models`
+
+Retrieve all models.
+
+
+### Sample Response
+An array containing each model and its data.
+```json
+{
+    "status": "success",
+    "data": {
+        "models": [{
+            'address': 'm8y7nEtAe',
+            'name': 'Resistor',
+            'description': 'V = IR',
+            'location': 'Shelf 14',
+            'isFaulty': false,
+            'faultDescription': '',
+            'price': '$10.50',
+            'count': 20
+        }]
+    }
+}
+```
+
 ## GET `/api/student`
 
 Retrieve a student.
