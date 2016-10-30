@@ -110,7 +110,7 @@ An array containing each model and its data.
             "address": "m8y7nEtAe",
             "name": "Resistor",
             "description": "V = IR",
-            "location': "Shelf 14",
+            "location": "Shelf 14",
             "isFaulty": false,
             "faultDescription": "",
             "price": "$10.50",
