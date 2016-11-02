@@ -1,5 +1,5 @@
 import express from 'express';
-import {addAction} from '../lib/database';
+import { addAction } from '../lib/database';
 import ModelStore from '../store/model-store';
 
 let app = express();
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
         }
     });
 });
-app.get('/all-models', (req, res) => {
+app.get('/all', (req, res) => {
     res.successJson({
         models: ModelStore.getAllModels()
     });
