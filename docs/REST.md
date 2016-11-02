@@ -10,7 +10,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/item`](#get-apiitem)
     * [POST `/api/model`](#post-apimodel)
     * [GET `/api/model`](#get-apimodel)
-    * [GET `/api/model/all]` (#get-apimodel-all)
+    * [GET `/api/model/all`](#get-apimodel-all)
     * [GET `/api/student`](#get-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
 
@@ -112,7 +112,7 @@ An array containing each model and its data.
             "name": "Resistor",
             "description": "V = IR",
             "manufacturer": "Pancakes R Us",
-            "vendor": "Mouzer"
+            "vendor": "Mouzer",
             "location": "Shelf 14",
             "isFaulty": false,
             "faultDescription": "",
