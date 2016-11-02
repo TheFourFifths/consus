@@ -32,6 +32,10 @@ let modelsByActionId = new Object(null);
 
 class ModelStore extends Store {
 
+    getModels() {
+        return models;
+    }
+
     getModelByAddress(address) {
         let result = readAddress(address);
         if (result.type !== 'model') {
@@ -49,6 +53,11 @@ class ModelStore extends Store {
 }
 
 const store = new ModelStore();
+
+store.registerHandler('CLEAR_ALL_DATA', () => {
+    models = [];
+    modelsByActionId = new Object(null);
+});
 
 store.registerHandler('NEW_MODEL', data => {
     let model = {

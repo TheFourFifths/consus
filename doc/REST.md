@@ -126,3 +126,22 @@ Submit a checkout request.
     "status": "success"
 }
 ```
+
+
+
+## POST `/api/checkin`
+
+Submit a check-in request.
+
+### Parameters
+
+* `studentId`: The student's identifier
+* `itemAddress`: The address of the item being checked in
+
+### Sample Response
+
+```json
+{
+    "status": "success"
+}
+```
