@@ -10,7 +10,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/item`](#get-apiitem)
     * [POST `/api/model`](#post-apimodel)
     * [GET `/api/model`](#get-apimodel)
-    * [GET `/api/model/all`](#get-apimodel-all)
+    * [GET `/api/model/all`](#get-apimodelall)
     * [GET `/api/student`](#get-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
 
