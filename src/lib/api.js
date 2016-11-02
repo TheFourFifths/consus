@@ -3,6 +3,7 @@ import model from '../api/model';
 import item from '../api/item';
 import student from '../api/student';
 import checkout from '../api/checkout';
+import checkin from '../api/checkin';
 
 let app = express();
 
@@ -35,5 +36,6 @@ app.use('/model', model);
 app.use('/item', item);
 app.use('/student', student);
 app.use('/checkout', checkout);
+app.use('/checkin', checkin);
 
 export default app;
