@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 app.get('/all', (req, res) => {
     res.successJson({
-        models: ModelStore.getAllModels()
+        models: ModelStore.getModels()
     });
 });
 app.post('/', (req, res) => {

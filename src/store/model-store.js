@@ -47,9 +47,6 @@ class ModelStore extends Store {
     getModelByActionId(actionId) {
         return modelsByActionId[actionId];
     }
-    getAllModels(){
-        return models;
-    }
 }
 
 const store = new ModelStore();
