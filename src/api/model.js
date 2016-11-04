@@ -13,20 +13,24 @@ app.get('/', (req, res) => {
         }
     });
 });
-
+app.get('/all', (req, res) => {
+    res.successJson({
+        models: ModelStore.getModels()
+    });
+});
 app.post('/', (req, res) => {
     addAction('NEW_MODEL', {
         name: req.body.name
     })
-    .then(actionId => {
-        let model = ModelStore.getModelByActionId(actionId);
-        res.successJson({
-            address: model.address
+        .then(actionId => {
+            let model = ModelStore.getModelByActionId(actionId);
+            res.successJson({
+                address: model.address
+            });
+        })
+        .catch(e => {
+            res.failureJson(e.message);
         });
-    })
-    .catch(e => {
-        res.failureJson(e.message);
-    });
 });
 
 export default app;

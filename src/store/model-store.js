@@ -4,11 +4,28 @@ import { createAddress, readAddress } from 'consus-core/identifiers';
 let models = [
     {
         address: 'm8y7nEtAe',
-        name: 'Resistor'
+        name: 'Resistor',
+        description: 'V = IR',
+        manufacturer: 'Pancakes R\' Us',
+        vendor: 'Mouzer',
+        location: 'Shelf 14',
+        isFaulty: false,
+        faultDescription: '',
+        price: 10.50,
+        count: 20
     },
     {
         address: 'm8y7nFLsT',
-        name: 'Transistor'
+        name: 'Transistor',
+        description: 'Something used in computers',
+        manufacturer: 'Vroom Industries',
+        vendor: 'Fankserrogatoman Inc',
+        location: 'Shelf 2',
+        isFaulty: false,
+        faultDescription: '',
+        price: 4.00,
+        count: 10
+
     }
 ];
 let modelsByActionId = new Object(null);
@@ -30,7 +47,6 @@ class ModelStore extends Store {
     getModelByActionId(actionId) {
         return modelsByActionId[actionId];
     }
-
 }
 
 const store = new ModelStore();
