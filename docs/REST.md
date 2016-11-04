@@ -116,7 +116,7 @@ An array containing each model and its data.
             "location": "Shelf 14",
             "isFaulty": false,
             "faultDescription": "",
-            "price": "$10.50",
+            "price": 10.50,
             "count": 20
         }]
     }
