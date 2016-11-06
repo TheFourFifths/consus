@@ -9,8 +9,10 @@ app.post('/', (req, res) => {
         studentId: req.body.studentId,
         itemAddress: req.body.itemAddress
     }).then(actionId => {
-        CheckinStore.getCheckinByActionId(actionId);
-        res.successJson();
+        let checkin = CheckinStore.getCheckinByActionId(actionId);
+        res.successJson({
+            itemAddress: checkin.item.address
+        });
     }).catch(e => {
         res.failureJson(e.message);
     });
