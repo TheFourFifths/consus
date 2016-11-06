@@ -111,7 +111,7 @@ Retrieve a model.
             "address": "m8y7nEtAe",
             "name": "Resistor",
             "description": "V = IR",
-            "manufacturer": "Pancakes R\' Us",
+            "manufacturer": "Pancakes R Us",
             "vendor": "Mouzer",
             "location": "Shelf 14",
             "isFaulty": "false",
