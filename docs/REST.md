@@ -62,6 +62,14 @@ Create a model.
 ### Parameters
 
 * `name`: The name of the model
+* `description`: The description of the model
+* `manufacturer`: The manufacturer of the model
+* `vendor`: The vendor who sold the model
+* `location`: Location where the model is stored
+* `isFaulty`: Whether the model is faulty of not
+* `faultDescription`: Description of the fault
+* `price`: Price of one model
+* `count`: Amount of this model in stock
 
 ### Sample Response
 
@@ -69,7 +77,16 @@ Create a model.
 {
     "status": "success",
     "data": {
-        "id": "abc"
+        "address": "m8y7nEtAe",
+        "name": "Resistor",
+        "description": "V = IR",
+        "manufacturer": "Pancakes R\' Us",
+        "vendor": "Mouzer",
+        "location": "Shelf 14",
+        "isFaulty": "false",
+        "faultDescription": "",
+        "price": "10.50",
+        "count": "20"
     }
 }
 ```
@@ -89,8 +106,16 @@ Retrieve a model.
     "status": "success",
     "data": {
         "model": {
-            "id": "abc",
-            "name": "Transistor"
+            "address": "m8y7nEtAe",
+            "name": "Resistor",
+            "description": "V = IR",
+            "manufacturer": "Pancakes R\' Us",
+            "vendor": "Mouzer",
+            "location": "Shelf 14",
+            "isFaulty": "false",
+            "faultDescription": "",
+            "price": "10.50",
+            "count": "20"
         }
     }
 }
