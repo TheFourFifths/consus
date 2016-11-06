@@ -59,7 +59,16 @@ store.registerHandler('CLEAR_ALL_DATA', () => {
 store.registerHandler('NEW_MODEL', data => {
     let model = {
         address: createAddress(models.length, 'model'),
-        name: data.name
+        name: data.name,
+        description: data.description,
+        manufacturer: data.manufacturer,
+        vendor: data.vendor,
+        location: data.location,
+        isFaulty: data.isFaulty,
+        faultDescription: data.faultDescription,
+        price: data.price,
+        count: data.count
+
     };
     modelsByActionId[data.actionId] = model;
     models.push(model);
