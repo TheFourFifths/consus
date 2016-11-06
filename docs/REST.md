@@ -29,7 +29,7 @@ Create an item.
 {
     "status": "success",
     "data": {
-        "id": "123"
+        "address": "iGwEZUvfA"
     }
 }
 ```
@@ -49,7 +49,8 @@ Retrieve an item.
     "status": "success",
     "data": {
         "item": {
-            "id": "123",
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
             "status": "AVAILABLE"
         }
     }
@@ -70,7 +71,7 @@ Create a model.
 {
     "status": "success",
     "data": {
-        "id": "abc"
+        "address": "m8y7nEtAe"
     }
 }
 ```
@@ -90,7 +91,7 @@ Retrieve a model.
     "status": "success",
     "data": {
         "model": {
-            "id": "abc",
+            "address": "m8y7nEtAe",
             "name": "Transistor"
         }
     }
