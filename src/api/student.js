@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
         student: {
             id: student.id,
             name: student.name,
-            itemAddresses: student.itemAddresses
+            items: student.items
         }
     });
 });

@@ -51,6 +51,11 @@ store.registerHandler('NEW_ITEM', data => {
 store.registerHandler('NEW_CHECKOUT', data => {
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
+
+        let timestamp = new Date(data.timestamp);
+        timestamp.setUTCHours(16);//Set the time to 5pm
+
+        store.getItemByAddress(address).timestamp = timestamp;
     });
 });
 
