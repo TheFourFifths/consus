@@ -13,6 +13,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/model/all`](#get-apimodelall)
     * [GET `/api/student`](#get-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
+    * [POST `api/checkin`](#post-apicheckin)
 
 ## POST `/api/item`
 
@@ -170,5 +171,25 @@ Submit a checkout request.
 ```json
 {
     "status": "success"
+}
+```
+
+## POST `/api/checkin`
+
+Submit a check-in request.
+
+### Parameters
+
+* `studentId`: The student's identifier
+* `itemAddress`: The address of the item being checked in
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": {
+        "itemAddress": "iGwEZUvfA"
+    }
 }
 ```
