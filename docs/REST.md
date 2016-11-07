@@ -82,13 +82,13 @@ Create a model.
         "address": "m8y7nEtAe",
         "name": "Resistor",
         "description": "V = IR",
-        "manufacturer": "Pancakes R\' Us",
+        "manufacturer": "Live,
         "vendor": "Mouzer",
         "location": "Shelf 14",
-        "isFaulty": "false",
+        "isFaulty": false,
         "faultDescription": "",
-        "price": "10.50",
-        "count": "20"
+        "price": 10.50,
+        "count": 20
     }
 }
 ```
@@ -114,10 +114,10 @@ Retrieve a model.
             "manufacturer": "Pancakes R Us",
             "vendor": "Mouzer",
             "location": "Shelf 14",
-            "isFaulty": "false",
+            "isFaulty": false,
             "faultDescription": "",
-            "price": "10.50",
-            "count": "20"
+            "price": 10.50,
+            "count": 20
         }
     }
 }
