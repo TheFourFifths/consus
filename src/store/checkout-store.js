@@ -1,5 +1,6 @@
 import { Store } from 'consus-core/flux';
 import StudentStore from './student-store';
+import ItemStore from './item-store';
 
 let checkouts = [];
 let checkoutsByActionId = new Object(null);
@@ -19,10 +20,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
         studentId: data.studentId,
         itemAddresses: data.itemAddresses
     };
-
-    if (StudentStore.hasOverdueItem(data.studentId)){
+    data.itemAddresses.forEach(itemAddress => {
+        if (ItemStore.getItemByAddress(itemAddress).status !== 'AVAILABLE') {
+            throw new Error('An item in the cart is not available for checkout.');
+        }
+    });
+    if (StudentStore.hasOverdueItem(data.studentId)) {
         throw new Error('Student has overdue item');
-    }else {
+    } else {
         checkoutsByActionId[data.actionId] = checkout;
         checkouts.push(checkout);
     }
