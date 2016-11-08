@@ -1,17 +1,17 @@
-import CheckoutStore from '../../../.dist/store/checkout-store';
+import CheckinStore from '../../../.dist/store/checkin-store';
 import ModelStore from '../../../.dist/store/model-store';
 import ItemStore from '../../../.dist/store/item-store';
 import StudentStore from '../../../.dist/store/student-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
 
-describe('CheckoutStore', () => {
+describe('CheckinStore', () => {
 
     let model;
     let items = [];
     let student;
 
-    beforeEach(() => {
+    before(() => {
         return addAction('CLEAR_ALL_DATA').then(() => {
             return addAction('NEW_MODEL', {
                 name: 'Resistor'
@@ -43,39 +43,38 @@ describe('CheckoutStore', () => {
             });
         }).then(actionId => {
             student = StudentStore.getStudentByActionId(actionId);
-        });
-    });
-
-    it('should fail to checkout with an overdue item.', () => {
-        return addAction('NEW_CHECKOUT', {
-            studentId: student.id,
-            itemAddresses: [items[0].address]
-        }).then(() => {
-            student.items[0].timestamp = 0;
-            assert.isTrue(StudentStore.hasOverdueItem(student.id));
-            addAction('NEW_CHECKOUT', {
-                studentId:student.id,
-                itemAddresses:[items[1].address]
-            }).catch(e => {
-                assert.strictEqual(e.message, 'Student has overdue item');
+            return addAction('NEW_CHECKOUT', {
+                studentId: student.id,
+                itemAddresses: [items[0].address, items[2].address]
             });
         });
     });
 
-    it('should instantiate without any checkouts', () => {
-        assert.lengthOf(CheckoutStore.getCheckouts(), 0);
+    it('should instantiate without any checkins', () => {
+        assert.lengthOf(CheckinStore.getCheckins(), 0);
     });
 
-    it('should instantiate without any checkout errors', () => {
-        assert.lengthOf(CheckoutStore.getCheckoutErrors(), 0);
+    it('should instantiate with any checkin errors', () => {
+        assert.lengthOf(CheckinStore.getCheckinErrors(), 0);
     });
 
-    it('should create a checkout', () => {
-        return addAction('NEW_CHECKOUT', {
+    it('should create a checkin', () => {
+        return addAction('CHECKIN', {
             studentId: student.id,
-            itemAddresses: [items[0].address, items[1].address]
-        }).then(() => {
-            assert.lengthOf(CheckoutStore.getCheckouts(), 1);
+            itemAddress: items[0].address
+        }).then(actionId => {
+            assert.isObject(CheckinStore.getCheckinByActionId(actionId));
+            assert.lengthOf(CheckinStore.getCheckins(), 1);
+        });
+    });
+
+    it('should create another checkin', () => {
+        return addAction('CHECKIN', {
+            studentId: student.id,
+            itemAddress: items[2].address
+        }).then(actionId => {
+            assert.isObject(CheckinStore.getCheckinByActionId(actionId));
+            assert.lengthOf(CheckinStore.getCheckins(), 2);
         });
     });
 

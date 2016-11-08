@@ -12,7 +12,13 @@ app.get('/', (req, res) => {
         student: {
             id: student.id,
             name: student.name,
-            items: student.items
+            items: student.items.map(item => {
+                return {
+                    address: item.address,
+                    modelAddress: item.modelAddress,
+                    status: item.status
+                };
+            })
         }
     });
 });
