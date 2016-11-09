@@ -58,6 +58,41 @@ describe('CheckoutStore', () => {
                 itemAddresses:[items[1].address]
             }).catch(e => {
                 assert.strictEqual(e.message, 'Student has overdue item');
+                assert.strictEqual(student.items.length, 1);
+            });
+        });
+    });
+
+    it('should fail to override checkout with an overdue item if admin code is invalid.', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address]
+        }).then(() => {
+            student.items[0].timestamp = 0;
+            assert.isTrue(StudentStore.hasOverdueItem(student.id));
+            addAction('NEW_CHECKOUT', {
+                studentId:student.id,
+                itemAddresses:[items[1].address],
+                adminCode: '2000'
+            }).catch(e => {
+                assert.strictEqual(e.message, 'Invalid Admin');
+                assert.strictEqual(student.items.length, 1);
+            });
+        });
+    });
+    it('should allow for admin to override failure to checkout due to overdue item', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address]
+        }).then(() => {
+            student.items[0].timestamp = 0;
+            assert.isTrue(StudentStore.hasOverdueItem(student.id));
+            addAction('NEW_CHECKOUT', {
+                studentId: student.id,
+                itemAddresses: [items[1].address],
+                adminCode: '112994'
+            }).then(() => {
+                assert.strictEqual(student.items.length, 2);
             });
         });
     });
