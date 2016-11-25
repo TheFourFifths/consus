@@ -4,9 +4,12 @@ import StudentStore from '../store/student-store';
 let app = express();
 
 app.get('/', (req, res) => {
+    let regex = new RegExp("^[a-zA-Z0-9]*$");
     let student = StudentStore.getStudentById(req.query.id);
     if (typeof student === 'undefined') {
         return res.failureJson('The student could not be found.');
+    }else if(!regex.test(req.query.id)){
+        return res.failureJson('Invalid characters in student ID');
     }
     res.successJson({
         student: {
