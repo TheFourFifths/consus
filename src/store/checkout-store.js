@@ -1,6 +1,5 @@
 import { Store } from 'consus-core/flux';
 import StudentStore from './student-store';
-import AuthStore from './auth-store';
 
 let checkouts = new Object(null);
 let checkoutErrors = new Object(null);
@@ -33,22 +32,13 @@ store.registerHandler('CLEAR_ALL_DATA', () => {
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
-    let checkout = {
+    if (StudentStore.hasOverdueItem(data.studentId)) {
+        throw new Error('Student has overdue item');
+    }
+    checkouts[data.actionId] = {
         studentId: data.studentId,
         itemAddresses: data.itemAddresses
     };
-
-    if (data.adminCode){
-        if(AuthStore.verifyAdmin(data.adminCode)){
-            checkouts[data.actionId] = checkout;
-        }else{
-            throw new Error('Invalid Admin');
-        }
-    }else if (StudentStore.hasOverdueItem(data.studentId)){
-        throw new Error('Student has overdue item');
-    }else {
-        checkouts[data.actionId] = checkout;
-    }
 });
 
 export default store;

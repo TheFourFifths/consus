@@ -1,6 +1,5 @@
 import { Store } from 'consus-core/flux';
 import ItemStore from './item-store';
-import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 
 let students = new Object(null);
@@ -9,16 +8,6 @@ students[123456] = {
     name: 'John von Neumann',
     items: []
 };
-
-students[111111] = {
-    id: 111111,
-    name: 'Boaty McBoatface',
-    items: [{
-        address:'4324234',
-        timestamp: 0
-    }]
-};
-
 let studentsByActionId = new Object(null);
 
 class StudentStore extends Store {
@@ -62,10 +51,7 @@ store.registerHandler('NEW_STUDENT', data => {
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
-    store.waitFor(CheckoutStore);
-
     let student = store.getStudentById(data.studentId);
-
     data.itemAddresses.forEach(itemAddress => {
         student.items.push(ItemStore.getItemByAddress(itemAddress));
     });

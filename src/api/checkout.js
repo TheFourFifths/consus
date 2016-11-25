@@ -6,8 +6,7 @@ let app = express();
 app.post('/', (req, res) => {
     addAction('NEW_CHECKOUT', {
         studentId: req.body.studentId,
-        itemAddresses: req.body.itemAddresses,
-        adminCode: req.body.adminCode
+        itemAddresses: req.body.itemAddresses
     })
     .then(() => {
         res.successJson();
