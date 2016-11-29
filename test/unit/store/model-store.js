@@ -14,7 +14,7 @@ describe('ModelStore', () => {
         assert.lengthOf(ModelStore.getModels(), 0);
     });
 
-    it('should create a model an retrieve it by the action id', () => {
+    it('should create a model and retrieve it by the action id', () => {
         return addAction('NEW_MODEL', {
             name: 'Transistor'
         }).then(actionId => {
