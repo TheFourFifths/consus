@@ -41,9 +41,6 @@ store.registerHandler('NEW_CHECKOUT', data => {
             throw new Error('An item in the cart is not available for checkout.');
         }
     });
-    if (StudentStore.hasOverdueItem(data.studentId)) {
-        throw new Error('Student has overdue item');
-    }
     checkouts[data.actionId] = {
         studentId: data.studentId,
         itemAddresses: data.itemAddresses
