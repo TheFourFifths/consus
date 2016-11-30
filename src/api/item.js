@@ -5,6 +5,10 @@ import ItemStore from '../store/item-store';
 let app = express();
 
 app.get('/', (req, res) => {
+    let regex = new RegExp("^[a-zA-Z0-9]+$");
+    if(!regex.test(req.query.id)){
+        return res.failureJson('Invalid Characters in item address');
+    }
     let item = ItemStore.getItemByAddress(req.query.address);
     res.successJson({
         item: {
