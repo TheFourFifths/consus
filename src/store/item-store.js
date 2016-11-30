@@ -1,4 +1,5 @@
 import { Store } from 'consus-core/flux';
+import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 import moment from 'moment-timezone';
@@ -60,6 +61,7 @@ store.registerHandler('NEW_ITEM', data => {
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
         let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
