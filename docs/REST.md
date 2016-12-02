@@ -82,7 +82,7 @@ Create a model.
         "address": "m8y7nEtAe",
         "name": "Resistor",
         "description": "V = IR",
-        "manufacturer": "Live,
+        "manufacturer": "Live",
         "vendor": "Mouzer",
         "location": "Shelf 14",
         "isFaulty": false,
