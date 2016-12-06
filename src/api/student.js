@@ -12,19 +12,7 @@ app.get('/', (req, res) => {
     }else if (typeof student === 'undefined') {
         return res.failureJson('The student could not be found.');
     }
-    res.successJson({
-        student: {
-            id: student.id,
-            name: student.name,
-            items: student.items.map(item => {
-                return {
-                    address: item.address,
-                    modelAddress: item.modelAddress,
-                    status: item.status
-                };
-            })
-        }
-    });
+    res.successJson(student);
 });
 
 export default app;

@@ -12,7 +12,8 @@ let models = [
         isFaulty: false,
         faultDescription: '',
         price: 10.50,
-        count: 20
+        count: 20,
+        items: ['iGwEZUvfA', 'iGwEZVHHE', 'iGwEZVeaT']
     },
     {
         address: 'm8y7nFLsT',
@@ -24,7 +25,8 @@ let models = [
         isFaulty: false,
         faultDescription: '',
         price: 4.00,
-        count: 10
+        count: 10,
+        items: []
 
     }
 ];
@@ -68,7 +70,6 @@ store.registerHandler('NEW_MODEL', data => {
         faultDescription: data.faultDescription,
         price: data.price,
         count: data.count
-
     };
     modelsByActionId[data.actionId] = model;
     models.push(model);

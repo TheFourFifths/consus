@@ -10,13 +10,7 @@ app.get('/', (req, res) => {
         return res.failureJson('Invalid Characters in item address');
     }
     let item = ItemStore.getItemByAddress(req.query.address);
-    res.successJson({
-        item: {
-            address: item.address,
-            modelAddress: item.modelAddress,
-            status: item.status
-        }
-    });
+    res.successJson(item);
 });
 
 app.post('/', (req, res) => {
@@ -25,12 +19,16 @@ app.post('/', (req, res) => {
     })
     .then(actionId => {
         let item = ItemStore.getItemByActionId(actionId);
-        res.successJson({
-            address: item.address
-        });
+        res.successJson(item);
     })
     .catch(e => {
         res.failureJson(e.message);
+    });
+});
+
+app.get('/all', (req, res) => {
+    res.successJson({
+        items: ItemStore.getItems()
     });
 });
 

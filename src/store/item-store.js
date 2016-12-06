@@ -8,17 +8,24 @@ let items = [
     {
         address: 'iGwEZUvfA',
         modelAddress: 'm8y7nEtAe',
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: '',
+
     },
     {
         address: 'iGwEZVHHE',
         modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: '',
     },
     {
         address: 'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: '',
     }
 ];
 let itemsByActionId = new Object(null);

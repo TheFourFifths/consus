@@ -5,21 +5,8 @@ import ModelStore from '../store/model-store';
 let app = express();
 
 app.get('/', (req, res) => {
-    let model = ModelStore.getModelById(req.query.id);
-    res.successJson({
-        model: {
-            address: model.address,
-            name: model.name,
-            description: model.description,
-            manufacturer: model.manufacturer,
-            vendor: model.vendor,
-            location: model.location,
-            isFaulty: model.isFaulty,
-            faultDescription: model.faultDescription,
-            price: model.price,
-            count: model.count
-        }
-    });
+    let model = ModelStore.getModelByAddress(req.query.address);
+    res.successJson(model);
 });
 app.get('/all', (req, res) => {
     res.successJson({
@@ -40,19 +27,7 @@ app.post('/', (req, res) => {
     })
         .then(actionId => {
             let model = ModelStore.getModelByActionId(actionId);
-            res.successJson({
-                address: model.address,
-                name: model.name,
-                description: model.description,
-                manufacturer: model.manufacturer,
-                vendor: model.vendor,
-                location: model.location,
-                isFaulty: model.isFaulty,
-                faultDescription: model.faultDescription,
-                price: model.price,
-                count: model.count
-
-            });
+            res.successJson(model);
         })
         .catch(e => {
             res.failureJson(e.message);
