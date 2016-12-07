@@ -216,7 +216,7 @@ Submit a check-in request.
     "status": "success",
     "data": {
         "itemAddress": "iGwEZUvfA",
-        "modelAddress": "m8y7nEtAe"
+        "modelName": "Resistor"
     }
 }
 ```
