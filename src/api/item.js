@@ -31,13 +31,5 @@ app.get('/all', (req, res) => {
         items: ItemStore.getItems()
     });
 });
-app.del('/', (req, res) => {
-    addAction('DELETE_ITEM', {
-       itemAddress: req.body.itemAddress
-    }).then(deletedItem => {
-        res.successJson(deletedItem);
-    }).catch(e => {
-       res.failureJson(e.message);
-    });
-});
+
 export default app;

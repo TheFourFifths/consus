@@ -48,16 +48,6 @@ class ItemStore extends Store {
         return itemsByActionId[actionId];
     }
 
-    deleteItemByAddress(address){
-        let result = readAddress(address);
-        if(result.type !== 'item' ){
-            throw new Error('Address is not an item.');
-        }
-        let item = items[result.index];
-        items.splice(result.index, 1);
-        return item;
-    }
-
 }
 
 const store = new ItemStore();
@@ -103,7 +93,4 @@ store.registerHandler('CHECKIN', data => {
     store.getItemByAddress(data.itemAddress).status = 'AVAILABLE';
 });
 
-store.registerHandler('DELETE_ITEM', address => {
-    store.deleteItemByAddress(itemAddress)
-});
 export default store;
