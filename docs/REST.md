@@ -29,7 +29,8 @@ Create an item.
 {
     "status": "success",
     "data": {
-        "address": "iGwEZUvfA"
+        "address": "iGwEZUvfA",
+        "modelName": "Resistor"
     }
 }
 ```

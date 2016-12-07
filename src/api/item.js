@@ -1,6 +1,7 @@
 import express from 'express';
 import { addAction } from '../lib/database';
 import ItemStore from '../store/item-store';
+import ModelStore from '../store/model-store';
 
 let app = express();
 
@@ -19,7 +20,10 @@ app.post('/', (req, res) => {
     })
     .then(actionId => {
         let item = ItemStore.getItemByActionId(actionId);
-        res.successJson(item);
+        res.successJson({
+            address: item.address,
+            modelName: ModelStore.getModelByAddress(ItemStore.getItemByAddress(item.address).modelAddress).name
+        });
     })
     .catch(e => {
         res.failureJson(e.message);
