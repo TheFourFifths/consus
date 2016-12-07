@@ -215,7 +215,8 @@ Submit a check-in request.
 {
     "status": "success",
     "data": {
-        "itemAddress": "iGwEZUvfA"
+        "itemAddress": "iGwEZUvfA",
+        "modelName": "Resistor"
     }
 }
 ```
