@@ -85,4 +85,15 @@ describe('ItemStore', () => {
         });
     });
 
+    it('should fail to delete an item', () =>{
+        assert.strictEqual(items.length, 2);
+        return addAction('DELETE_ITEM', {
+            itemAddress: 'This is not an address'
+        }).then(() => {
+            throw new Error('Expected to catch error since there was not a valid address given to delete item');
+        }).catch(() => {
+            assert.isTrue(true);
+        });
+    });
+
 });
