@@ -43,4 +43,5 @@ app.delete('/', (req, res) => {
         res.failureJson(e);
     });
 });
+
 export default app;
