@@ -31,13 +31,16 @@ app.get('/all', (req, res) => {
         items: ItemStore.getItems()
     });
 });
-app.del('/', (req, res) => {
+
+app.delete('/', (req, res) => {
     addAction('DELETE_ITEM', {
-       itemAddress: req.body.itemAddress
-    }).then(deletedItem => {
-        res.successJson(deletedItem);
+        itemAddress: req.query.itemAddress
+    }).then(() => {
+        res.successJson({
+            items: ItemStore.getItems()
+        });
     }).catch(e => {
-       res.failureJson(e.message);
+        res.failureJson(e);
     });
 });
 export default app;

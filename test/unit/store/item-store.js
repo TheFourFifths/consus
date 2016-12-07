@@ -75,4 +75,14 @@ describe('ItemStore', () => {
         });
     });
 
+    it('should delete an item', () => {
+        assert.strictEqual(items.length, 3);
+        return addAction('DELETE_ITEM', {
+            itemAddress: items[0].address
+        }).then(() => {
+            items = ItemStore.getItems();
+            assert.strictEqual(items.length, 2);
+        });
+    });
+
 });
