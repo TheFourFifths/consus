@@ -14,7 +14,7 @@ app.post('/', (req, res) => {
         let checkin = CheckinStore.getCheckinByActionId(actionId);
         res.successJson({
             itemAddress: checkin.item.address,
-            modelName: ModelStore.getModelByAddress(ItemStore.getItemByAddress(checkin.item.address)).name
+            modelName: ModelStore.getModelByAddress(ItemStore.getItemByAddress(checkin.item.address).modelAddress).name
         });
     }).catch(e => {
         res.failureJson(e.message);
