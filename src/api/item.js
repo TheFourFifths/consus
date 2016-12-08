@@ -22,7 +22,7 @@ app.post('/', (req, res) => {
         let item = ItemStore.getItemByActionId(actionId);
         res.successJson({
             address: item.address,
-            modelName: ModelStore.getModelByAddress(ItemStore.getItemByAddress(item.address).modelAddress).name
+            modelName: ModelStore.getModelByAddress(item.modelAddress).name
         });
     })
     .catch(e => {
