@@ -8,6 +8,7 @@ This document describes the API endpoints of the Consus server.
     * [Table of contents](#table-of-contents)
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
+    * [DELETE `api/item`](#delete-apiitem)
     * [POST `/api/model`](#post-apimodel)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
@@ -57,6 +58,27 @@ Retrieve an item.
 }
 ```
 
+## DELETE `/api/item`
+Delete an item
+
+### Parameters
+
+* `itemAddress`: Address of the item to delete
+
+### Sample Response
+The entire list of items the server contains
+```json
+{
+    "status": "success",
+    "data": {
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "status": "AVAILABLE"
+        }]
+    }
+}
+```
 ## POST `/api/model`
 
 Create a model.
