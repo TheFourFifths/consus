@@ -58,6 +58,16 @@ store.registerHandler('CLEAR_ALL_DATA', () => {
     modelsByActionId = new Object(null);
 });
 
+store.registerHandler('NEW_ITEM', data => {
+    let model = store.getModelByAddress(data.modelAddress);
+    model.count += 1;
+});
+
+store.registerHandler('DELETE_ITEM', data => {
+    let model = store.getModelByAddress(data.modelAddress);
+    model.count -= 1;
+});
+
 store.registerHandler('NEW_MODEL', data => {
     let model = {
         address: createAddress(models.length, 'model'),
