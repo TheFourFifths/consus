@@ -40,7 +40,7 @@ app.delete('/', (req, res) => {
             items: ItemStore.getItems()
         });
     }).catch(e => {
-        res.failureJson(e);
+        res.failureJson(e.message);
     });
 });
 
