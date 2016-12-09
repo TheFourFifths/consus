@@ -10,7 +10,7 @@ describe('ItemStore', () => {
     let model;
     let items = [];
 
-    before(() => {
+    beforeEach(() => {
         return addAction('CLEAR_ALL_DATA').then(() => {
             return addAction('NEW_MODEL', {
                 name: 'Resistor'
@@ -23,11 +23,22 @@ describe('ItemStore', () => {
             });
         }).then(actionId => {
             student = StudentStore.getStudentByActionId(actionId);
+            return addAction('NEW_ITEM', {
+                modelAddress: model.address
+            });
+        }).then(() => {
+            return addAction('NEW_ITEM', {
+                modelAddress: model.address
+            });
+        }).then(() => {
+            items = ItemStore.getItems();
         });
     });
 
-    it('should instantiate without any items', () => {
-        assert.lengthOf(ItemStore.getItems(), 0);
+    it('should clear all data', () => {
+        return addAction('CLEAR_ALL_DATA').then(() => {
+            assert.lengthOf(ItemStore.getItems(), 0);
+        });
     });
 
     it('should create an item', () => {
@@ -35,7 +46,7 @@ describe('ItemStore', () => {
             modelAddress: model.address
         }).then(actionId => {
             items.push(ItemStore.getItemByActionId(actionId));
-            assert.lengthOf(ItemStore.getItems(), 1);
+            assert.lengthOf(ItemStore.getItems(), 3);
         });
     });
 
@@ -49,7 +60,7 @@ describe('ItemStore', () => {
             });
         }).then(actionId => {
             items.push(ItemStore.getItemByActionId(actionId));
-            assert.lengthOf(ItemStore.getItems(), 3);
+            assert.lengthOf(ItemStore.getItems(), 4);
         });
     });
 
@@ -76,12 +87,12 @@ describe('ItemStore', () => {
     });
 
     it('should delete an item', () => {
-        assert.strictEqual(items.length, 3);
+        assert.strictEqual(items.length, 2);
         return addAction('DELETE_ITEM', {
             itemAddress: items[0].address
         }).then(() => {
             items = ItemStore.getItems();
-            assert.strictEqual(items.length, 2);
+            assert.strictEqual(items.length, 1);
         });
     });
 
@@ -89,10 +100,22 @@ describe('ItemStore', () => {
         assert.strictEqual(items.length, 2);
         return addAction('DELETE_ITEM', {
             itemAddress: 'This is not an address'
-        }).then(() => {
-            throw new Error('Expected to catch error since there was not a valid address given to delete item');
-        }).catch(() => {
-            assert.isTrue(true);
+        }).then(assert.fail)
+          .catch(e => {
+              assert.strictEqual(e.message, 'Unknown type.');
+              assert.strictEqual(items.length, 2);
+          });
+    });
+    it('should confirm the item deleted', () =>{
+        assert.strictEqual(items.length, 2);
+        let deletedItemAddress = items[0].address;
+        return addAction('DELETE_ITEM', {
+            itemAddress: deletedItemAddress
+        }).then(items => {
+            items = ItemStore.getItems();
+            let array = items.filter(t => t.address === deletedItemAddress);
+            assert.lengthOf(array, 0);
+            assert.strictEqual(items.length, 1);
         });
     });
 
