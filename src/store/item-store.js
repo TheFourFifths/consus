@@ -33,7 +33,7 @@ let itemsByActionId = new Object(null);
 class ItemStore extends Store {
 
     getItems() {
-        return items;
+        return items.filter(item => item !== undefined);
     }
 
     getItemByAddress(address) {
@@ -46,6 +46,14 @@ class ItemStore extends Store {
 
     getItemByActionId(actionId) {
         return itemsByActionId[actionId];
+    }
+
+    deleteItemByAddress(address){
+        let result = readAddress(address);
+        if(result.type !== 'item' ){
+            throw new Error('Address is not an item.');
+        }
+        delete items[result.index];
     }
 
 }
@@ -93,4 +101,7 @@ store.registerHandler('CHECKIN', data => {
     store.getItemByAddress(data.itemAddress).status = 'AVAILABLE';
 });
 
+store.registerHandler('DELETE_ITEM', data => {
+    store.deleteItemByAddress(data.itemAddress);
+});
 export default store;
