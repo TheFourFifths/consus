@@ -31,7 +31,6 @@ describe('ItemStore', () => {
                 modelAddress: model.address
             });
         }).then(() => {
-            console.log(ItemStore.getItems());
             items = ItemStore.getItems();
         });
     });
