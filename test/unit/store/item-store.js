@@ -84,16 +84,6 @@ describe('ItemStore', () => {
         });
     });
 
-    it('should delete an item', () => {
-        assert.strictEqual(items.length, 2);
-        return addAction('DELETE_ITEM', {
-            itemAddress: items[0].address
-        }).then(() => {
-            items = ItemStore.getItems();
-            assert.strictEqual(items.length, 1);
-        });
-    });
-
     it('should fail to delete an item', () =>{
         assert.strictEqual(items.length, 2);
         return addAction('DELETE_ITEM', {
@@ -104,7 +94,7 @@ describe('ItemStore', () => {
               assert.strictEqual(items.length, 2);
           });
     });
-    it('should confirm the item deleted', () =>{
+    it('should delete an item', () =>{
         assert.strictEqual(items.length, 2);
         let deletedItemAddress = items[0].address;
         return addAction('DELETE_ITEM', {
