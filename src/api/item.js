@@ -37,11 +37,14 @@ app.get('/all', (req, res) => {
 });
 
 app.delete('/', (req, res) => {
+    let itemToDelete = ItemStore.getItemByAddress(req.query.itemAddress);
+    let model = ModelStore.getModelByAddress(itemToDelete.modelAddress);
     addAction('DELETE_ITEM', {
-        itemAddress: req.query.itemAddress
+        itemAddress: itemToDelete.address
     }).then(() => {
         res.successJson({
-            items: ItemStore.getItems()
+            items: ItemStore.getItems(),
+            modelName: model.name
         });
     }).catch(e => {
         res.failureJson(e.message);

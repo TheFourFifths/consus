@@ -77,6 +77,7 @@ The entire list of items the server contains
             "modelAddress": "m8y7nEtAe",
             "status": "AVAILABLE"
         }]
+        "modelName": "<NAME OF MODEL THE ITEM BELONGS TO>"
     }
 }
 ```
