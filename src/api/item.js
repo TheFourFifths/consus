@@ -40,7 +40,8 @@ app.delete('/', (req, res) => {
     let itemToDelete = ItemStore.getItemByAddress(req.query.itemAddress);
     let model = ModelStore.getModelByAddress(itemToDelete.modelAddress);
     addAction('DELETE_ITEM', {
-        itemAddress: itemToDelete.address
+        itemAddress: req.query.itemAddress,
+        modelAddress: req.query.modelAddress
     }).then(() => {
         res.successJson({
             items: ItemStore.getItems(),

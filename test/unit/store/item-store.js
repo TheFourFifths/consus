@@ -93,11 +93,14 @@ describe('ItemStore', () => {
               assert.strictEqual(items.length, 2);
           });
     });
+
     it('should delete an item', () =>{
         assert.strictEqual(items.length, 2);
         let deletedItemAddress = items[0].address;
+        let modelAddress = items[0].modelAddress;
         return addAction('DELETE_ITEM', {
-            itemAddress: deletedItemAddress
+            itemAddress: deletedItemAddress,
+            modelAddress: modelAddress
         }).then(items => {
             items = ItemStore.getItems();
             let array = items.filter(t => t.address === deletedItemAddress);
