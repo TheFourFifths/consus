@@ -34,7 +34,8 @@ app.get('/all', (req, res) => {
 
 app.delete('/', (req, res) => {
     addAction('DELETE_ITEM', {
-        itemAddress: req.query.itemAddress
+        itemAddress: req.query.itemAddress,
+        modelAddress: req.query.modelAddress
     }).then(() => {
         res.successJson({
             items: ItemStore.getItems()
