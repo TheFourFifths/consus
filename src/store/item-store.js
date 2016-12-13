@@ -79,6 +79,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
+
         let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
         let hour = parseInt(timestamp.format('H'));
         let minute = parseInt(timestamp.format('m'));
