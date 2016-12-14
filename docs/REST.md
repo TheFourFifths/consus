@@ -30,7 +30,8 @@ Create an item.
 {
     "status": "success",
     "data": {
-        "address": "iGwEZUvfA"
+        "address": "iGwEZUvfA",
+        "modelName": "Resistor"
     }
 }
 ```
@@ -75,7 +76,8 @@ The entire list of items the server contains
             "address": "iGwEZUvfA",
             "modelAddress": "m8y7nEtAe",
             "status": "AVAILABLE"
-        }]
+        }],
+        "modelName": "<NAME OF MODEL THE ITEM BELONGS TO>"
     }
 }
 ```
@@ -237,7 +239,8 @@ Submit a check-in request.
 {
     "status": "success",
     "data": {
-        "itemAddress": "iGwEZUvfA"
+        "itemAddress": "iGwEZUvfA",
+        "modelName": "Resistor"
     }
 }
 ```
