@@ -8,6 +8,7 @@ This document describes the API endpoints of the Consus server.
     * [Table of contents](#table-of-contents)
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
+    * [DELETE `api/item`](#delete-apiitem)
     * [POST `/api/model`](#post-apimodel)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
@@ -29,7 +30,8 @@ Create an item.
 {
     "status": "success",
     "data": {
-        "address": "iGwEZUvfA"
+        "address": "iGwEZUvfA",
+        "modelName": "Resistor"
     }
 }
 ```
@@ -57,6 +59,28 @@ Retrieve an item.
 }
 ```
 
+## DELETE `/api/item`
+Delete an item
+
+### Parameters
+
+* `itemAddress`: Address of the item to delete
+
+### Sample Response
+The entire list of items the server contains
+```json
+{
+    "status": "success",
+    "data": {
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "status": "AVAILABLE"
+        }],
+        "modelName": "<NAME OF MODEL THE ITEM BELONGS TO>"
+    }
+}
+```
 ## POST `/api/model`
 
 Create a model.
@@ -82,7 +106,7 @@ Create a model.
         "address": "m8y7nEtAe",
         "name": "Resistor",
         "description": "V = IR",
-        "manufacturer": "Live,
+        "manufacturer": "Live",
         "vendor": "Mouzer",
         "location": "Shelf 14",
         "isFaulty": false,
@@ -215,7 +239,8 @@ Submit a check-in request.
 {
     "status": "success",
     "data": {
-        "itemAddress": "iGwEZUvfA"
+        "itemAddress": "iGwEZUvfA",
+        "modelName": "Resistor"
     }
 }
 ```

@@ -1,6 +1,7 @@
 import { Store } from 'consus-core/flux';
-import CheckinStore from './checkin-store';
 import ItemStore from './item-store';
+import CheckoutStore from './checkout-store';
+import CheckinStore from './checkin-store';
 
 let students = new Object(null);
 students[123456] = {
@@ -8,6 +9,17 @@ students[123456] = {
     name: 'John von Neumann',
     items: []
 };
+
+students[111111] = {
+    id: 111111,
+    name: 'Boaty McBoatface',
+    items: [{
+        address:'iGwEZVeaT',
+        modelAddress: 'm8y7nFLsT',
+        timestamp: 0
+    }]
+};
+
 let studentsByActionId = new Object(null);
 
 class StudentStore extends Store {
@@ -22,6 +34,13 @@ class StudentStore extends Store {
 
     getStudentByActionId(actionId) {
         return studentsByActionId[actionId];
+    }
+
+    hasOverdueItem(id){
+        return students[id].items.some(item => {
+            let now = Math.floor(Date.now() / 1000);
+            return item.timestamp < now;
+        });
     }
 
 }
@@ -44,9 +63,13 @@ store.registerHandler('NEW_STUDENT', data => {
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+
     let student = store.getStudentById(data.studentId);
-    let items = data.itemAddresses.map(address => ItemStore.getItemByAddress(address));
-    student.items = student.items.concat(items);
+
+    data.itemAddresses.forEach(itemAddress => {
+        student.items.push(ItemStore.getItemByAddress(itemAddress));
+    });
 });
 
 store.registerHandler('CHECKIN', data => {

@@ -1,4 +1,5 @@
 import ModelStore from '../../../.dist/store/model-store';
+import ItemStore from '../../../.dist/store/item-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
 
@@ -14,7 +15,7 @@ describe('ModelStore', () => {
         assert.lengthOf(ModelStore.getModels(), 0);
     });
 
-    it('should create a model an retrieve it by the action id', () => {
+    it('should create a model and retrieve it by the action id', () => {
         return addAction('NEW_MODEL', {
             name: 'Transistor'
         }).then(actionId => {
@@ -64,6 +65,22 @@ describe('ModelStore', () => {
             assert.strictEqual(model.faultDescription, '');
             assert.strictEqual(model.price, 11.50);
             assert.strictEqual(model.count, 14);
+        });
+    });
+
+    it('should inc/dec the count for item creation/deletion', () =>{
+        assert.strictEqual(model.count, 14);
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(actionId => {
+            let item = ItemStore.getItemByActionId(actionId);
+            assert.strictEqual(model.count, 15);
+            return addAction('DELETE_ITEM', {
+                itemAddress: item.address,
+                modelAddress: model.address
+            }).then(() => {
+                assert.strictEqual(model.count, 14);
+            });
         });
     });
 

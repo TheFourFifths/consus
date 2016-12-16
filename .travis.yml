@@ -1,6 +1,7 @@
 language: node_js
 
 node_js:
+  - 'node' # ensure we're always testing on the latest version of Node.js
   - '6'
   - '4'
 
@@ -12,10 +13,9 @@ install:
   - npm install
 
 script:
-  - npm test
+  - npm run coverage
 
 after_success:
-  - npm run coverage
   - bash <(curl -s https://codecov.io/bash)
 
 notifications:

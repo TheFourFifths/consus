@@ -23,6 +23,16 @@ module.exports = function(grunt) {
                         dest: '.test/'
                     }
                 ]
+            },
+            tools: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'tools/',
+                        src: ['**/*.js'],
+                        dest: '.tools/'
+                    }
+                ]
             }
         },
         copy: {
@@ -64,7 +74,8 @@ module.exports = function(grunt) {
         clean: {
             coverage: ['coverage/', 'coverage.lcov', '.nyc_output'],
             dist: ['.dist/'],
-            test: ['.test/']
+            test: ['.test/'],
+            tools: ['.tools/']
         }
     });
 
@@ -78,5 +89,6 @@ module.exports = function(grunt) {
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('test', ['lint', 'build', 'clean:test', 'babel:test', 'mochacli']);
     grunt.registerTask('prepublish', ['test', 'clean:dist', 'babel:dist']);
+    grunt.registerTask('tools', ['build', 'clean:tools', 'babel:tools']);
 
 };
