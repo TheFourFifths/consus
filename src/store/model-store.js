@@ -85,4 +85,14 @@ store.registerHandler('NEW_MODEL', data => {
     models.push(model);
 });
 
+store.registerHandler('NEW_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    data.equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'model'){
+            store.getModelByAddress(address);
+        }
+    });
+});
+
 export default store;

@@ -1,13 +1,16 @@
 import { Store } from 'consus-core/flux';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
+import { readAddress } from 'consus-core/identifiers';
 
 let students = new Object(null);
 students[123456] = {
     id: 123456,
     name: 'John von Neumann',
-    items: []
+    items: [],
+    models: []
 };
 
 students[111111] = {
@@ -17,7 +20,8 @@ students[111111] = {
         address:'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
         timestamp: 0
-    }]
+    }],
+    models: []
 };
 
 let studentsByActionId = new Object(null);
@@ -56,7 +60,8 @@ store.registerHandler('NEW_STUDENT', data => {
     let student = {
         id: data.id,
         name: data.name,
-        items: []
+        items: [],
+        models: []
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;
@@ -67,8 +72,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
 
     let student = store.getStudentById(data.studentId);
 
-    data.itemAddresses.forEach(itemAddress => {
-        student.items.push(ItemStore.getItemByAddress(itemAddress));
+    data.equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'item'){
+            student.items.push(ItemStore.getItemByAddress(address));
+        }
+        else if (result.type == 'model') {
+            student.models.push(ModelStore.getModelByAddress(address));
+        }
     });
 });
 
