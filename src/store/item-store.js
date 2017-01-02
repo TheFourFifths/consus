@@ -1,22 +1,30 @@
 import { Store } from 'consus-core/flux';
+import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
+import moment from 'moment-timezone';
 
 let items = [
     {
         address: 'iGwEZUvfA',
         modelAddress: 'm8y7nEtAe',
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: ''
     },
     {
         address: 'iGwEZVHHE',
         modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: ''
     },
     {
         address: 'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: ''
     }
 ];
 let itemsByActionId = new Object(null);
@@ -24,7 +32,7 @@ let itemsByActionId = new Object(null);
 class ItemStore extends Store {
 
     getItems() {
-        return items;
+        return items.filter(item => item !== undefined);
     }
 
     getItemByAddress(address) {
@@ -37,6 +45,14 @@ class ItemStore extends Store {
 
     getItemByActionId(actionId) {
         return itemsByActionId[actionId];
+    }
+
+    deleteItemByAddress(address){
+        let result = readAddress(address);
+        if(result.type !== 'item' ){
+            throw new Error('Address is not an item.');
+        }
+        delete items[result.index];
     }
 
 }
@@ -59,8 +75,21 @@ store.registerHandler('NEW_ITEM', data => {
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
+
+        let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
+        let hour = parseInt(timestamp.format('H'));
+        let minute = parseInt(timestamp.format('m'));
+        // check for times past 4:50pm
+        if (hour > 16 || (hour === 16 && minute >= 50)) {
+            // increment to the next day
+            timestamp = timestamp.add(1, 'd');
+        }
+        timestamp.hour(17).minute(0).second(0);
+        let dueTime = parseInt(timestamp.format('X'));
+        store.getItemByAddress(address).timestamp = dueTime;
     });
 });
 
@@ -72,4 +101,7 @@ store.registerHandler('CHECKIN', data => {
     store.getItemByAddress(data.itemAddress).status = 'AVAILABLE';
 });
 
+store.registerHandler('DELETE_ITEM', data => {
+    store.deleteItemByAddress(data.itemAddress);
+});
 export default store;

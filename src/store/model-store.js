@@ -12,7 +12,8 @@ let models = [
         isFaulty: false,
         faultDescription: '',
         price: 10.50,
-        count: 20
+        count: 20,
+        items: ['iGwEZUvfA', 'iGwEZVHHE', 'iGwEZVeaT']
     },
     {
         address: 'm8y7nFLsT',
@@ -24,7 +25,8 @@ let models = [
         isFaulty: false,
         faultDescription: '',
         price: 4.00,
-        count: 10
+        count: 10,
+        items: []
 
     }
 ];
@@ -56,6 +58,16 @@ store.registerHandler('CLEAR_ALL_DATA', () => {
     modelsByActionId = new Object(null);
 });
 
+store.registerHandler('NEW_ITEM', data => {
+    let model = store.getModelByAddress(data.modelAddress);
+    model.count += 1;
+});
+
+store.registerHandler('DELETE_ITEM', data => {
+    let model = store.getModelByAddress(data.modelAddress);
+    model.count -= 1;
+});
+
 store.registerHandler('NEW_MODEL', data => {
     let model = {
         address: createAddress(models.length, 'model'),
@@ -68,7 +80,6 @@ store.registerHandler('NEW_MODEL', data => {
         faultDescription: data.faultDescription,
         price: data.price,
         count: data.count
-
     };
     modelsByActionId[data.actionId] = model;
     models.push(model);
