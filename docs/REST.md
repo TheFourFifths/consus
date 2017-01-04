@@ -215,6 +215,7 @@ Submit a checkout request.
 
 * `studentId`: The student's identifier
 * `items`: An array of item identifiers
+* `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 
 ### Sample Response
 
