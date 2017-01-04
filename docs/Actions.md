@@ -72,7 +72,7 @@ Checkouts items to a student.
 ```json
 {
     "adminCode": "1123581321",
-    "itemAddresses": [ "iGwEZUvfA", "iGwEVVHHE", "iGwEZeaT" ]
+    "itemAddresses": [ "iGwEZUvfA", "iGwEVVHHE", "iGwEZeaT" ],
     "studentId": "123456"
 }
 ```
@@ -111,7 +111,7 @@ Creates a new model.
 
 ```json
 {
-    "count": 20<
+    "count": 20,
     "description": "V = I*R",
     "faultDescription": "",
     "isFaulty": false,
