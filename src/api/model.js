@@ -20,8 +20,7 @@ app.post('/', (req, res) => {
         manufacturer: req.body.manufacturer,
         vendor: req.body.vendor,
         location: req.body.location,
-        isFaulty: req.body.isFaulty,
-        faultDescription: req.body.faultDescription,
+        allowCheckout: req.body.allowCheckout,
         price: req.body.price,
         count: req.body.count
     })

@@ -1,4 +1,5 @@
 import { Store } from 'consus-core/flux';
+import CheckoutStore from './checkout-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
 let models = [
@@ -9,10 +10,10 @@ let models = [
         manufacturer: 'Pancakes R\' Us',
         vendor: 'Mouzer',
         location: 'Shelf 14',
-        isFaulty: false,
-        faultDescription: '',
+        allowCheckout: true,
         price: 10.50,
         count: 20,
+        inStock: 20,
         items: ['iGwEZUvfA', 'iGwEZVHHE', 'iGwEZVeaT']
     },
     {
@@ -22,12 +23,10 @@ let models = [
         manufacturer: 'Vroom Industries',
         vendor: 'Fankserrogatoman Inc',
         location: 'Shelf 2',
-        isFaulty: false,
-        faultDescription: '',
+        allowCheckout: false,
         price: 4.00,
-        count: 10,
+        count: 0,
         items: []
-
     }
 ];
 let modelsByActionId = new Object(null);
@@ -76,10 +75,10 @@ store.registerHandler('NEW_MODEL', data => {
         manufacturer: data.manufacturer,
         vendor: data.vendor,
         location: data.location,
-        isFaulty: data.isFaulty,
-        faultDescription: data.faultDescription,
+        allowCheckout: data.allowCheckout,
         price: data.price,
-        count: data.count
+        count: data.count,
+        inStock: data.count
     };
     modelsByActionId[data.actionId] = model;
     models.push(model);
