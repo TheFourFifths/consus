@@ -1,6 +1,7 @@
 import express from 'express';
 import StudentStore from '../store/student-store';
-
+import { addAction } from '../lib/database';
+import xlsx from 'xlsx';
 let app = express();
 
 app.get('/', (req, res) => {
@@ -15,4 +16,26 @@ app.get('/', (req, res) => {
     res.successJson(student);
 });
 
+app.post('/', (req, res) => {
+    let workbook = xlsx.read(req.body.data, {type: 'binary'});
+    let studentJSON = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {range:1});
+    for (let key in studentJSON) {
+        if (studentJSON.hasOwnProperty(key)) {
+            let s = studentJSON[key];
+            let student = {
+                id: s['Student ID'],
+                name: s['Student'],
+                status: s['Status'],
+                email: s['E-mail'],
+                major: s['Major']
+            };
+            if (StudentStore.isCurrentStudent(student) && StudentStore.isNewStudent(student)) {
+                addAction('NEW_STUDENT', student);
+            }else {
+                addAction('UPDATE_STUDENT', student);
+            }
+        }
+    }
+    res.successJson();
+});
 export default app;
