@@ -15,6 +15,8 @@ This document describes the Flux actions used in the Consus client.
     - [NEW_ITEM](#new_item)
     - [NEW_MODEL](#new_model)
     - [NEW_STUDENT](#new_student)
+    - [UPDATE_STUDENT](#update_student)
+
 
 ## CHECKIN
 
@@ -132,10 +134,38 @@ Create a new student.
 
 - `id`: The student's ID number
 - `name`: The student's name
+- `email`: The student's new email
+- `major`: The student's new major
+- `status`: Whether the student is currently attending or not
 
 ```json
 {
     "id": "123456",
-    "name": "John von Neumann"
+    "name": "John von Neumann",
+    "email": "nuemann@msoe.edu",
+    "major": "Aircrafts underwater Engineer",
+    "status": "Inactive"
+}
+```
+
+## UPDATE_STUDENT
+
+Updates a student that is already in the database.
+
+### Data
+
+A student object
+
+- `id`: The student's ID number
+- `name`: The student's new name
+- `email`: The student's new email
+- `major`: The student's new major
+
+```json
+{
+    "id": "123456",
+    "name": "John von Neumann",
+    "email": "nuemann@msoe.edu",
+    "major": "Aircrafts underwater Engineer"
 }
 ```
