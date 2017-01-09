@@ -7,7 +7,7 @@ import ModelStore from '../../.dist/store/model-store';
 describe('New model', () => {
 
     before(() => {
-        return server.start();
+        return server.start(8080);
     });
 
     after(() => {
