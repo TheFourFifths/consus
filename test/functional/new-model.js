@@ -59,7 +59,7 @@ describe('New model', () => {
             faultDescription: '',
             price: 3.50,
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model name must be a string: expected undefined to be a string');
@@ -76,7 +76,7 @@ describe('New model', () => {
             faultDescription: '',
             price: 3.50,
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model description must be a string: expected undefined to be a string');
@@ -93,7 +93,7 @@ describe('New model', () => {
             faultDescription: '',
             price: 3.50,
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model manufacturer must be a string: expected undefined to be a string');
@@ -110,7 +110,7 @@ describe('New model', () => {
             faultDescription: '',
             price: 3.50,
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model vendor must be a string: expected undefined to be a string');
@@ -127,7 +127,7 @@ describe('New model', () => {
             faultDescription: '',
             price: 3.50,
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model location must be a string: expected undefined to be a string');
@@ -144,7 +144,7 @@ describe('New model', () => {
             faultDescription: '',
             price: 3.50,
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model "isFaulty" must be a boolean: expected undefined to be a boolean');
@@ -161,7 +161,7 @@ describe('New model', () => {
             isFaulty: false,
             price: 3.50,
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model fault description must be a string: expected undefined to be a string');
@@ -178,7 +178,7 @@ describe('New model', () => {
             isFaulty: false,
             faultDescription: '',
             count: 10
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model price must be a number: expected undefined to be a number');
@@ -195,7 +195,7 @@ describe('New model', () => {
             isFaulty: false,
             faultDescription: '',
             price: 3.50
-        }).then(response => {
+        }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
             assert.strictEqual(e.message, 'The model count must be a number: expected undefined to be a number');
