@@ -54,7 +54,7 @@ describe('New Item', () => {
         return post('item', {}).then(() => {
             throw new Error("Promise unexpectedly fulfilled");
         }).catch(e => {
-            assert.strictEqual(e.message, "Cannot read property 'slice' of undefined");
+            assert.strictEqual(e.message, "Model address required to make item");
         });
     });
 

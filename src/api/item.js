@@ -15,6 +15,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
+    if(!req.body.modelAddress) return res.failureJson("Model address required to make item");
+
     addAction('NEW_ITEM', {
         modelAddress: req.body.modelAddress
     })
