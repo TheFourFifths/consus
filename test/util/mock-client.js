@@ -23,7 +23,7 @@ function call(endpoint, method, qs, json) {
             if (body.status === 'success') {
                 resolve(body.data);
             } else {
-                reject(body.message);
+                reject(new Error(body.message));
             }
         });
     });
