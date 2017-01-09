@@ -1,4 +1,5 @@
 import { Store } from 'consus-core/flux';
+import { assert } from 'chai';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
 let models = [
@@ -69,6 +70,15 @@ store.registerHandler('DELETE_ITEM', data => {
 });
 
 store.registerHandler('NEW_MODEL', data => {
+    assert.isString(data.name, 'The model name must be a string');
+    assert.isString(data.description, 'The model description must be a string');
+    assert.isString(data.manufacturer, 'The model manufacturer must be a string');
+    assert.isString(data.vendor, 'The model vendor must be a string');
+    assert.isString(data.location, 'The model location must be a string');
+    assert.isBoolean(data.isFaulty, 'The model "isFaulty" must be a boolean');
+    assert.isString(data.faultDescription, 'The model fault description must be a string');
+    assert.isNumber(data.price, 'The model price must be a number');
+    assert.isNumber(data.count, 'The model count must be a number');
     let model = {
         address: createAddress(models.length, 'model'),
         name: data.name,

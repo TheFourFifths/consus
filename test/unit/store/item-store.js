@@ -13,7 +13,15 @@ describe('ItemStore', () => {
     beforeEach(() => {
         return addAction('CLEAR_ALL_DATA').then(() => {
             return addAction('NEW_MODEL', {
-                name: 'Resistor'
+                name: 'Resistor',
+                description: 'V = IR',
+                manufacturer: 'Pancakes R\' Us',
+                vendor: 'Mouzer',
+                location: 'Shelf 14',
+                isFaulty: false,
+                faultDescription: '',
+                price: 10.50,
+                count: 20
             });
         }).then(actionId => {
             model = ModelStore.getModelByActionId(actionId);
