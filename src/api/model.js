@@ -8,11 +8,13 @@ app.get('/', (req, res) => {
     let model = ModelStore.getModelByAddress(req.query.address);
     res.successJson(model);
 });
+
 app.get('/all', (req, res) => {
     res.successJson({
         models: ModelStore.getModels()
     });
 });
+
 app.post('/', (req, res) => {
     addAction('NEW_MODEL', {
         name: req.body.name,
@@ -24,14 +26,12 @@ app.post('/', (req, res) => {
         faultDescription: req.body.faultDescription,
         price: req.body.price,
         count: req.body.count
-    })
-        .then(actionId => {
-            let model = ModelStore.getModelByActionId(actionId);
-            res.successJson(model);
-        })
-        .catch(e => {
-            res.failureJson(e.message);
-        });
+    }).then(actionId => {
+        let model = ModelStore.getModelByActionId(actionId);
+        res.successJson(model);
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
 });
 
 export default app;
