@@ -34,5 +34,5 @@ export function get(endpoint, data) {
 }
 
 export function post(endpoint, data) {
-    retrn call(endpoint, 'POST', undefined, data);
+    return call(endpoint, 'POST', undefined, data);
 }
