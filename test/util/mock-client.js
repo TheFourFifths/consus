@@ -1,8 +1,12 @@
 import request from 'request';
 
+const PROTOCOL = 'http';
+const HOST = 'localhost';
+const PORT = 8080;
+
 function call(endpoint, method, qs, json) {
     let options = {
-        uri: `http://localhost/api/${endpoint}`,
+        uri: `${PROTOCOL}://${HOST}:${PORT}/api/${endpoint}`,
         method
     };
     if (typeof qs !== 'undefined') {
