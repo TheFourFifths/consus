@@ -1,6 +1,7 @@
 import { Store } from 'consus-core/flux';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
+import StudentStore from './student-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 import moment from 'moment-timezone';
 
@@ -45,6 +46,12 @@ class ItemStore extends Store {
 
     getItemByActionId(actionId) {
         return itemsByActionId[actionId];
+    }
+
+    getOverdueItems() {
+        return StudentStore.getStudents().reduce((overdueItems, student) => {
+            return overdueItems.concat(student.items.filter(item => item.timestamp < Math.floor(Date.now() / 1000)));
+        }, []);
     }
 
     deleteItemByAddress(address){

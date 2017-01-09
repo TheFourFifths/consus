@@ -9,6 +9,7 @@ This document describes the API endpoints of the Consus server.
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
+    * [GET `/api/item/overdue`](#get-apiitemoverdue)
     * [POST `/api/model`](#post-apimodel)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
@@ -81,6 +82,25 @@ The entire list of items the server contains
     }
 }
 ```
+
+## GET `/api/item/overdue`
+
+Get a list of all currently overdue items.
+
+```json
+{
+    "status": "success",
+    "data": {
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "status": "CHECKED_OUT",
+            "timestamp": 123
+        }]
+    }
+}
+```
+
 ## POST `/api/model`
 
 Create a model.
