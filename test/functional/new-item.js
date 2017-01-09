@@ -50,5 +50,13 @@ describe('New Item', () => {
         });
     });
 
+    it('should fail to add an item with no model address', () => {
+        return post('item', {}).then(() => {
+            throw new Error("Promise unexpectedly fulfilled");
+        }).catch(e => {
+            assert.strictEqual(e.message, "Cannot read property 'slice' of undefined");
+        });
+    });
+
 
 });
