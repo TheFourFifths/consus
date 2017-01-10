@@ -39,8 +39,9 @@ app.get('/all', (req, res) => {
 });
 
 app.delete('/', (req, res) => {
-    let itemToDelete = ItemStore.getItemByAddress(req.query.itemAddress);
-    let model = ModelStore.getModelByAddress(itemToDelete.modelAddress);
+    if(!req.query.itemAddress) return res.failureJson("Item address required to delete");
+    if(!req.query.modelAddress) return res.failureJson("Model address required to delete");
+    let model = ModelStore.getModelByAddress(req.query.modelAddress);
     addAction('DELETE_ITEM', {
         itemAddress: req.query.itemAddress,
         modelAddress: req.query.modelAddress
