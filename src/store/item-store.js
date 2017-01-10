@@ -50,7 +50,13 @@ class ItemStore extends Store {
 
     getOverdueItems() {
         return StudentStore.getStudents().reduce((overdueItems, student) => {
-            return overdueItems.concat(student.items.filter(item => item.timestamp < Math.floor(Date.now() / 1000)));
+            return overdueItems.concat(student.items.filter(item => {
+                item.student = {
+                    name: student.name,
+                    id: student.id
+                };
+                return item.timestamp < Math.floor(Date.now() / 1000);
+            }));
         }, []);
     }
 

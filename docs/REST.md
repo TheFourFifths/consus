@@ -94,8 +94,11 @@ Get a list of all currently overdue items.
         "items": [{
             "address": "iGwEZUvfA",
             "modelAddress": "m8y7nEtAe",
-            "status": "CHECKED_OUT",
-            "timestamp": 123
+            "timestamp": 123,
+            "student": {
+                "name": "<Student Name>",
+                "id": "<StudentID>"
+            }
         }]
     }
 }
