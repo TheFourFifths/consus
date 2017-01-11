@@ -89,7 +89,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
     data.equipmentAddresses.forEach(address => {
         let result = readAddress(address);
         if(result.type == 'model'){
-            store.getModelByAddress(address);
+            store.getModelByAddress(address).inStock--;
         }
     });
 });

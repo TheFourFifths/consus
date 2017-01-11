@@ -1,7 +1,6 @@
 import { Store } from 'consus-core/flux';
 import AuthStore from './auth-store';
 import ItemStore from './item-store';
-import ModelStore from './model-store';
 import StudentStore from './student-store';
 import { readAddress } from 'consus-core/identifiers';
 
@@ -47,9 +46,6 @@ store.registerHandler('NEW_CHECKOUT', data => {
             if (ItemStore.getItemByAddress(address).status !== 'AVAILABLE') {
                 throw new Error('An item in the cart is not available for checkout.');
             }
-        }
-        else if(result.type == 'model'){
-            // TODO: Check to make sure there are available models
         }
     });
 

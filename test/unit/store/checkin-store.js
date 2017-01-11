@@ -45,7 +45,7 @@ describe('CheckinStore', () => {
             student = StudentStore.getStudentByActionId(actionId);
             return addAction('NEW_CHECKOUT', {
                 studentId: student.id,
-                itemAddresses: [items[0].address, items[2].address]
+                equipmentAddresses: [items[0].address, items[2].address]
             });
         });
     });

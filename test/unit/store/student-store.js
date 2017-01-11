@@ -74,7 +74,7 @@ describe('StudentStore', () => {
     it('should add items upon checkout', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddresses: [items[0].address, items[2].address]
+            equipmentAddresses: [items[0].address, items[2].address]
         }).then(() => {
             assert.include(student.items, items[0]);
             assert.notInclude(student.items, items[1]);

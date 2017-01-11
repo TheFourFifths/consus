@@ -67,7 +67,7 @@ describe('ItemStore', () => {
     it('should check out multiple items', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddresses: [items[0].address, items[1].address]
+            equipmentAddresses: [items[0].address, items[1].address]
         }).then(() => {
             assert.strictEqual(items[0].status, 'CHECKED_OUT');
             assert.strictEqual(items[1].status, 'CHECKED_OUT');
