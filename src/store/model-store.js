@@ -10,10 +10,9 @@ let models = [
         manufacturer: 'Pancakes R\' Us',
         vendor: 'Mouzer',
         location: 'Shelf 14',
-        allowCheckout: true,
+        allowCheckout: false,
         price: 10.50,
-        count: 20,
-        inStock: 20,
+        count: 3,
         items: ['iGwEZUvfA', 'iGwEZVHHE', 'iGwEZVeaT']
     },
     {
@@ -25,7 +24,8 @@ let models = [
         location: 'Shelf 2',
         allowCheckout: false,
         price: 4.00,
-        count: 0,
+        count: 20,
+        inStock: 20,
         items: []
     }
 ];

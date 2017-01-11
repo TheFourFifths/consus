@@ -1,11 +1,14 @@
 import ModelStore from '../../../.dist/store/model-store';
 import ItemStore from '../../../.dist/store/item-store';
+import StudentStore from '../../../.dist/store/student-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
 
 describe('ModelStore', () => {
 
     let model;
+    let models = [];
+    let student;
 
     before(() => {
         return addAction('CLEAR_ALL_DATA');
@@ -79,6 +82,33 @@ describe('ModelStore', () => {
             }).then(() => {
                 assert.strictEqual(model.count, 14);
             });
+        });
+    });
+
+    it('should check out models', () => {
+        // I would pull this into a beforeEach, but it's only used here so far and would mess up the instantiate empty test
+        return addAction('CLEAR_ALL_DATA').then(() => {
+            return addAction('NEW_MODEL', {
+                name: 'Transistor',
+                allowCheckout: true,
+                count: 20,
+            });
+        }).then(actionId => {
+            model = ModelStore.getModelByActionId(actionId);
+            return addAction('NEW_STUDENT', {
+                id: '123456',
+                name: 'John von Neumann'
+            });
+        }).then(actionId => {
+            student = StudentStore.getStudentByActionId(actionId);
+            models = ModelStore.getModels();
+        }).then(() => {
+            return addAction('NEW_CHECKOUT', {
+                studentId: student.id,
+                equipmentAddresses: [models[0].address]
+            });
+        }).then(() => {
+            assert.strictEqual(models[0].inStock, 19);
         });
     });
 

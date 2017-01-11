@@ -8,6 +8,7 @@ describe('StudentStore', () => {
 
     let model;
     let items = [];
+    let models = [];
     let student;
 
     before(() => {
@@ -35,6 +36,15 @@ describe('StudentStore', () => {
             return addAction('NEW_ITEM', {
                 modelAddress: model.address
             });
+        }).then(actionId => {
+            items.push(ItemStore.getItemByActionId(actionId));
+            return addAction('NEW_MODEL', {
+                name: 'Transistor',
+                allowCheckout: true,
+                count: 20,
+            });
+        }).then(actionId => {
+            models.push(ModelStore.getModelByActionId(actionId));
         });
     });
 
@@ -71,14 +81,15 @@ describe('StudentStore', () => {
         });
     });
 
-    it('should add items upon checkout', () => {
+    it('should add items and models upon checkout', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address, items[2].address]
+            equipmentAddresses: [items[0].address, items[2].address, models[0].address]
         }).then(() => {
             assert.include(student.items, items[0]);
             assert.notInclude(student.items, items[1]);
             assert.include(student.items, items[2]);
+            assert.include(student.models, models[0]);
         });
     });
 
