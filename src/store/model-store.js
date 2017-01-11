@@ -22,7 +22,7 @@ let models = [
         manufacturer: 'Vroom Industries',
         vendor: 'Fankserrogatoman Inc',
         location: 'Shelf 2',
-        allowCheckout: false,
+        allowCheckout: true,
         price: 4.00,
         count: 20,
         inStock: 20,
