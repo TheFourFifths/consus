@@ -6,9 +6,13 @@ import CheckinStore from './checkin-store';
 import { readAddress } from 'consus-core/identifiers';
 
 let students = new Object(null);
+const ACTIVE_STATUS = 'C - Current';
 students[123456] = {
     id: 123456,
     name: 'John von Neumann',
+    status: ACTIVE_STATUS,
+    email: 'neumannJ@msoe.edu',
+    major: 'Software Engineering',
     items: [],
     models: []
 };
@@ -16,6 +20,9 @@ students[123456] = {
 students[111111] = {
     id: 111111,
     name: 'Boaty McBoatface',
+    status: ACTIVE_STATUS,
+    email: 'mcboatfaceb@msoe.edu',
+    major: 'Hyperdimensional Nautical Machines Engineering',
     items: [{
         address:'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
@@ -47,9 +54,25 @@ class StudentStore extends Store {
         });
     }
 
+    isCurrentStudent(student){
+        return student.status === ACTIVE_STATUS;
+    }
+
+    isNewStudent(student) {
+
+        return this.getStudentById(student.id) === undefined;
+    }
+
 }
 
 const store = new StudentStore();
+
+function updateStudent(id, name, email, major){
+    let student = students[id];
+    student.name = name;
+    student.email = email;
+    student.major = major;
+}
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     students = new Object(null);
@@ -60,6 +83,9 @@ store.registerHandler('NEW_STUDENT', data => {
     let student = {
         id: data.id,
         name: data.name,
+        status: data.status,
+        email: data.email,
+        major: data.major,
         items: [],
         models: []
     };
@@ -93,4 +119,7 @@ store.registerHandler('CHECKIN', data => {
     student.items.splice(student.items.indexOf(item), 1);
 });
 
+store.registerHandler('UPDATE_STUDENT', student => {
+    updateStudent(student.id, student.name, student.email, student.major);
+});
 export default store;
