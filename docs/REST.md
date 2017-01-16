@@ -124,7 +124,7 @@ Retrieve a model.
 
 ### Parameters
 
-* `id`: The model's identifier
+* `address`: The model's identifier
 
 ### Sample Response
 
@@ -151,7 +151,6 @@ Retrieve a model.
 ## GET `/api/model/all`
 
 Retrieve all models.
-
 
 ### Sample Response
 An array containing each model and its data.
