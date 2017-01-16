@@ -23,7 +23,7 @@ Create an item.
 
 ### Parameters
 
-* `modelId`: The identifier of the item's model
+* `modelAddress`: The identifier of the item's model
 
 ### Sample Response
 
