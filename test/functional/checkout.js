@@ -71,7 +71,7 @@ describe('Check out items', () => {
         });
     });
 
-    it('should mot be able to check out an unavailable item', () => {
+    it('should not be able to check out an unavailable item', () => {
         assert.lengthOf(CheckoutStore.getCheckouts(), 1);
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 1);
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 0);
