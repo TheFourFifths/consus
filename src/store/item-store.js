@@ -69,7 +69,6 @@ class ItemStore extends Store {
     }
 
 }
-
 const store = new ItemStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
@@ -116,5 +115,10 @@ store.registerHandler('CHECKIN', data => {
 
 store.registerHandler('DELETE_ITEM', data => {
     store.deleteItemByAddress(data.itemAddress);
+});
+
+store.registerHandler('DELETE_MODEL', data => {
+    let itemsOfModel = store.getItems().filter(item => item.modelAddress === data.modelAddress);
+    itemsOfModel.forEach(item => store.deleteItemByAddress(item.address));
 });
 export default store;
