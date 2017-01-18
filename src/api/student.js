@@ -18,7 +18,13 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
     let workbook = xlsx.read(req.body.data, {type: 'binary'});
-    let studentJSON = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {range:1});
+    let studentJSON;
+    try{
+        studentJSON = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {range:1});
+    }catch (e) {
+        res.status(400);
+        return res.failureJson('File not in the correct format!');
+    }
     for (let key in studentJSON) {
         if (studentJSON.hasOwnProperty(key)) {
             let s = studentJSON[key];
@@ -29,6 +35,11 @@ app.post('/', (req, res) => {
                 email: s['E-mail'],
                 major: s['Major']
             };
+            if (student.id === undefined || student.name === undefined || student.status === undefined ||
+                    student.email === undefined || student.major === undefined) {
+                res.status(400);
+                return res.failureJson('File not in the correct format!');
+            }
             if (StudentStore.isCurrentStudent(student) && StudentStore.isNewStudent(student)) {
                 addAction('NEW_STUDENT', student);
             }else {
