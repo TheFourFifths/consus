@@ -46,18 +46,16 @@ class ItemStore extends Store {
     getItemByActionId(actionId) {
         return itemsByActionId[actionId];
     }
-
-    deleteItemByAddress(address){
-        let result = readAddress(address);
-        if(result.type !== 'item' ){
-            throw new Error('Address is not an item.');
-        }
-        delete items[result.index];
-    }
-
 }
-
 const store = new ItemStore();
+
+function deleteItemByAddress(address){
+    let result = readAddress(address);
+    if(result.type !== 'item' ){
+        throw new Error('Address is not an item.');
+    }
+    delete items[result.index];
+}
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     items = [];
@@ -102,6 +100,11 @@ store.registerHandler('CHECKIN', data => {
 });
 
 store.registerHandler('DELETE_ITEM', data => {
-    store.deleteItemByAddress(data.itemAddress);
+    deleteItemByAddress(data.itemAddress);
+});
+
+store.registerHandler('DELETE_MODEL', data => {
+    let itemsOfModel = store.getItems().filter(item => item.modelAddress === data.modelAddress);
+    itemsOfModel.forEach(item => deleteItemByAddress(item.address));
 });
 export default store;
