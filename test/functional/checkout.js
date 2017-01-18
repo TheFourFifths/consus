@@ -2,9 +2,9 @@ import { assert } from 'chai';
 import { addAction } from '../util/database';
 import { post } from '../util/mock-client';
 import server from '../../.dist/lib/server';
-import CheckinStore from '../../.dist/store/checkin-store';
+import CheckoutStore from '../../.dist/store/checkout-store';
 import ItemStore from '../../.dist/store/item-store';
-import ModelStore from '../../.dist/store/model-store';
+import StudentStore from '../../.dist/store/student-store';
 
 
 describe('Check out items', () => {
@@ -50,14 +50,62 @@ describe('Check out items', () => {
             return addAction('NEW_ITEM', {
                 modelAddress: 'm8y7nEtAe'
             });
+        });
+    });
+
+    it('should check out an item', () => {
+        assert.lengthOf(CheckoutStore.getCheckouts(), 0);
+        assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 0);
+        assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 1);
+        return post('checkout', {
+            studentId: '123456',
+            itemAddresses: [
+                'iGwEZUvfA'
+            ]
+        }).then(data => {
+            assert.isUndefined(data);
+            assert.lengthOf(CheckoutStore.getCheckouts(), 1);
+            assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 1);
+            assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 0);
+            assert.strictEqual(StudentStore.getStudentById('123456').items[0].address, 'iGwEZUvfA');
+        });
+    });
+
+    it('should mot be able to check out an unavailable item', () => {
+        assert.lengthOf(CheckoutStore.getCheckouts(), 1);
+        assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 1);
+        assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 0);
+        return post('checkout', {
+            studentId: '111111',
+            itemAddresses: [
+                'iGwEZUvfA'
+            ]
         }).then(() => {
-            return addAction('NEW_ITEM', {
-                modelAddress: 'm8y7nEtAe'
-            });
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'An item in the cart is not available for checkout.');
+        });
+    });
+
+    it('should require a student id', () => {
+        return post('checkout', {
+            itemAddresses: [
+                'iGwEZUvfA'
+            ]
         }).then(() => {
-            return addAction('NEW_ITEM', {
-                modelAddress: 'm8y7nEtAe'
-            });
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'A student id is required.');
+        });
+    });
+
+    it('should require item addresses', () => {
+        return post('checkout', {
+            studentId: '111111'
+        }).then(() => {
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'An array of item addresses is required.');
         });
     });
 
