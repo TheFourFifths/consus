@@ -98,6 +98,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
     });
 });
 
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    let student = store.getStudentById(data.studentId);
+    data.itemAddresses.forEach(itemAddress => {
+        student.items.push(ItemStore.getItemByAddress(itemAddress));
+    });
+});
+
 store.registerHandler('CHECKIN', data => {
     store.waitFor(CheckinStore);
     if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {

@@ -5,11 +5,18 @@ import StudentStore from './student-store';
 
 let checkouts = new Object(null);
 let checkoutErrors = new Object(null);
-
+let longTermCheckouts = new Object(null);
 class CheckoutStore extends Store {
 
     getCheckouts() {
         return Object.keys(checkouts).map(key => checkouts[key]);
+    }
+    getLongTermCheckouts() {
+        return Object.keys(longTermCheckouts).map(key => longTermCheckouts[key]);
+    }
+
+    getLongTermCheckoutByActionId(actionId){
+        return longTermCheckouts[actionId];
     }
 
     getCheckoutErrors() {
@@ -38,7 +45,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
         studentId: data.studentId,
         itemAddresses: data.itemAddresses
     };
-    
+
     data.itemAddresses.forEach(itemAddress => {
         if (ItemStore.getItemByAddress(itemAddress).status !== 'AVAILABLE') {
             throw new Error('An item in the cart is not available for checkout.');
@@ -55,6 +62,33 @@ store.registerHandler('NEW_CHECKOUT', data => {
         throw new Error('Student has overdue item');
     } else {
         checkouts[data.actionId] = checkout;
+    }
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    let longTermCheckout = {
+        studentId: data.studentId,
+        itemAddresses: data.itemAddresses,
+        longTermDueDate: data.longTermDueDate,
+        longtermProfessor: data.longtermProfessor
+    };
+
+    data.itemAddresses.forEach(itemAddress => {
+        if (ItemStore.getItemByAddress(itemAddress).status !== 'AVAILABLE') {
+            throw new Error('An item in the cart is not available for checkout.');
+        }
+    });
+
+    if (data.adminCode){
+        if(AuthStore.verifyAdmin(data.adminCode)) {
+            longTermCheckouts[data.actionId] = longTermCheckout;
+        } else {
+            throw new Error('Invalid Admin');
+        }
+    } else if (StudentStore.hasOverdueItem(data.studentId)) {
+        throw new Error('Student has overdue item');
+    } else {
+        longTermCheckouts[data.actionId] = longTermCheckout;
     }
 });
 

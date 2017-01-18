@@ -93,6 +93,23 @@ store.registerHandler('NEW_CHECKOUT', data => {
     });
 });
 
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    data.itemAddresses.forEach(address => {
+        store.getItemByAddress(address).status = 'CHECKED_OUT';
+        let timestamp = moment.tz(data.longtermDueDate, 'America/Chicago');
+        console.log('TIMESTAMP FORMAT: ' + timestamp.format('LL'));
+        let hour = parseInt(timestamp.format('H'));
+        let minute = parseInt(timestamp.format('m'));
+        if (hour > 16 || (hour === 16 && minute >= 50)) {
+            // increment to the next day
+            timestamp = timestamp.add(1, 'd');
+        }
+        let dueTime = parseInt(timestamp.format('X'));
+        store.getItemByAddress(address).timestamp = dueTime;
+    });
+});
+
 store.registerHandler('CHECKIN', data => {
     store.waitFor(CheckinStore);
     if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
