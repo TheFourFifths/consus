@@ -14,6 +14,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
     * [GET `/api/student`](#get-apistudent)
+    * [POST `/api/student`](#post-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
     * [POST `api/checkin`](#post-apicheckin)
 
@@ -23,7 +24,7 @@ Create an item.
 
 ### Parameters
 
-* `modelId`: The identifier of the item's model
+* `modelAddress`: The identifier of the item's model
 
 ### Sample Response
 
@@ -146,7 +147,7 @@ Retrieve a model.
 
 ### Parameters
 
-* `id`: The model's identifier
+* `address`: The model's identifier
 
 ### Sample Response
 
@@ -173,7 +174,6 @@ Retrieve a model.
 ## GET `/api/model/all`
 
 Retrieve all models.
-
 
 ### Sample Response
 An array containing each model and its data.
@@ -224,9 +224,26 @@ Retrieve a student.
                 {
                     "id": "789"
                 }
-            ]
+            ],
+            "email": "vonneumann@msoe.edu",
+            "major": "Chemical Engineering & Mathematics"
         }
     }
+}
+```
+## POST `/api/student`
+
+Upload new student information based on an excel binary string.
+
+### Parameters
+
+* `data`: The excel file in binary string format
+
+### Sample Response
+
+```json
+{
+    "status": "success"
 }
 ```
 
