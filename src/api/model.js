@@ -34,4 +34,36 @@ app.post('/', (req, res) => {
     });
 });
 
+app.patch('/', (req, res) => {
+    addAction('EDIT_MODEL', {
+        address: req.query.address,
+        name: req.body.name,
+        description: req.body.description,
+        manufacturer: req.body.manufacturer,
+        vendor: req.body.vendor,
+        location: req.body.location,
+        isFaulty: req.body.isFaulty,
+        faultDescription: req.body.faultDescription,
+        price: req.body.price
+    }).then(() => {
+        let modelUpdated = ModelStore.getRecentlyUpdatedModel();
+        res.successJson(modelUpdated);
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+
+});
+
+app.delete('/', (req, res) => {
+    addAction('DELETE_MODEL', {
+        modelAddress: req.query.modelAddress
+    }).then(() => {
+        res.successJson({
+            deletedModel: ModelStore.getDeletedModel()
+        });
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
 export default app;

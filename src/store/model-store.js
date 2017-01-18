@@ -32,11 +32,13 @@ let models = [
     }
 ];
 let modelsByActionId = new Object(null);
+let deletedModel = null;
+let recentlyUpdatedModel = null;
 
 class ModelStore extends Store {
 
     getModels() {
-        return models;
+        return models.filter(model => model !== undefined);
     }
 
     getModelByAddress(address) {
@@ -50,9 +52,40 @@ class ModelStore extends Store {
     getModelByActionId(actionId) {
         return modelsByActionId[actionId];
     }
+
+    getDeletedModel() {
+        return deletedModel;
+    }
+    getRecentlyUpdatedModel(){
+        return recentlyUpdatedModel;
+    }
 }
 
 const store = new ModelStore();
+
+function deleteModelByAddress(address) {
+    let result = readAddress(address);
+    if (result.type !== 'model' ) {
+        throw new Error('Address is not a model.');
+    }
+    deletedModel = models[result.index];
+    if (deletedModel === null || deletedModel === undefined)
+        throw new Error(`Model address (${address}) does not exist`);
+    delete models[result.index];
+}
+function updateModel(address, name, description, manufacturer, vendor, location, isFaulty, faultDescription, price){
+    let modelToUpdate = store.getModelByAddress(address);
+    modelToUpdate.name = name;
+    modelToUpdate.description = description;
+    modelToUpdate.manufacturer = manufacturer;
+    modelToUpdate.vendor = vendor;
+    modelToUpdate.location = location;
+    modelToUpdate.isFaulty = isFaulty;
+    modelToUpdate.faultDescription = faultDescription;
+    modelToUpdate.price = price;
+    recentlyUpdatedModel = modelToUpdate;
+    return modelToUpdate;
+}
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     models = [];
@@ -93,6 +126,15 @@ store.registerHandler('NEW_MODEL', data => {
     };
     modelsByActionId[data.actionId] = model;
     models.push(model);
+});
+
+store.registerHandler('DELETE_MODEL', data => {
+    deleteModelByAddress(data.modelAddress);
+});
+
+store.registerHandler('EDIT_MODEL', data => {
+    updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.isFaulty,
+                    data.faultDescription, data.price);
 });
 
 export default store;
