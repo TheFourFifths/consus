@@ -109,4 +109,16 @@ describe('ItemStore', () => {
         });
     });
 
+    it('should longterm-check out multiple items', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[1].address],
+            longtermDueDate: '2017-5-5',
+            longtermProfessor: 'Professor Vroom'
+        }).then(() => {
+            assert.strictEqual(items[0].status, 'CHECKED_OUT');
+            assert.strictEqual(items[1].status, 'CHECKED_OUT');
+        });
+    });
+
 });

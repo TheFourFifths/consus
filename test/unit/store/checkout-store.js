@@ -128,4 +128,42 @@ describe('CheckoutStore', () => {
         });
     });
 
+    it('should allow for admin to override failure to longterm-checkout due to overdue item', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address]
+        }).then(() => {
+            student.items[0].timestamp = 0;
+            assert.isTrue(StudentStore.hasOverdueItem(student.id));
+            addAction('NEW_LONGTERM_CHECKOUT', {
+                studentId: student.id,
+                itemAddresses: [items[1].address],
+                adminCode: '112994',
+
+            }).then(() => {
+                assert.strictEqual(student.items.length, 2);
+            });
+        });
+    });
+
+    it('should fail to check out an unavailable item', () => {
+        return addAction('NEW_LONGTERM_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[1].address],
+            longtermDueDate: '2017-11-5',
+            longtermProfessor: 'Professor Vroom'
+        }).then(() => {
+            return addAction('NEW_LONGTERM_CHECKOUT', {
+                studentId: student.id,
+                itemAddresses: [items[0].address],
+                longtermDueDate: '2017-11-5',
+                longtermProfessor: 'Professor Vroom'
+            });
+        }).then(() => {
+            assert.isTrue(false);
+        }).catch(e => {
+            assert.strictEqual(e.message, 'An item in the cart is not available for checkout.');
+        });
+    });
+
 });

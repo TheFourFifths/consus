@@ -96,7 +96,6 @@ store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
         let timestamp = moment.tz(data.longtermDueDate, 'America/Chicago');
-        console.log('TIMESTAMP FORMAT: ' + timestamp.format('LL'));
         let hour = parseInt(timestamp.format('H'));
         let minute = parseInt(timestamp.format('m'));
         if (hour > 16 || (hour === 16 && minute >= 50)) {

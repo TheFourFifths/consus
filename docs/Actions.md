@@ -12,6 +12,7 @@ This document describes the Flux actions used in the Consus client.
     - [CLEAR_ALL_DATA](#clear_all_data)
     - [DELETE_ITEM](#delete_item)
     - [NEW_CHECKOUT](#new_checkout)
+    - [NEW_LONGTERM_CHECKOUT](#NEW_LONGTERM_CHECKOUT)
     - [NEW_ITEM](#new_item)
     - [NEW_MODEL](#new_model)
     - [NEW_STUDENT](#new_student)
@@ -76,6 +77,29 @@ Checkouts items to a student.
     "adminCode": "1123581321",
     "itemAddresses": [ "iGwEZUvfA", "iGwEVVHHE", "iGwEZeaT" ],
     "studentId": "123456"
+}
+```
+
+
+## NEW_LONGTERM_CHECKOUT
+
+Checkouts items to a student and changes due date to provided date
+
+### Data
+
+- `adminCode`: (_Optional_) Admin override code
+- `itemAddresses`: Address of the item ...
+- `studentId`: The student's ID who is checking out
+- `longtermDueDate`: Date the items are due at
+- `longtermProfessor`: Professors name for longterm authorization
+
+```json
+{
+    "adminCode": "1123581321",
+    "itemAddresses": [ "iGwEZUvfA", "iGwEVVHHE", "iGwEZeaT" ],
+    "studentId": "123456",
+    "longtermDueDate": "2017-8-11",
+    "longtermProfessor": "Professor Vroom"
 }
 ```
 

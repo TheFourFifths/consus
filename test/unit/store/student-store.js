@@ -175,4 +175,18 @@ describe('StudentStore', () => {
             assert.lengthOf(student.items, 0);
         });
     });
+
+    it('should add items upon checkout', () => {
+        return addAction('NEW_LONGTERM_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[2].address],
+            longtermDueDate: '2017-12-5',
+            longtermProfessor: 'Professor Vroom'
+        }).then(() => {
+            assert.strictEqual(student.items[0].address, items[0].address);
+            assert.notInclude(student.items, items[1]);
+            assert.strictEqual(student.items[1].address, items[2].address);
+        });
+    });
+
 });

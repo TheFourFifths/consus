@@ -317,6 +317,19 @@ Submit a checkout request.
 * `items`: An array of item identifiers
 * `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 
+## POST `/api/checkout/longterm`
+
+Submit a checkout request and make the checkout be longterm for given date
+
+### Parameters
+
+* `studentId`: The student's identifier
+* `items`: An array of item identifiers
+* `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
+* `longtermDueDate`: Date the items are due back
+* `longtermProfessor`: Professors name for validation of longterm checkout(Not used by system)
+
+
 ### Sample Response
 
 ```json
