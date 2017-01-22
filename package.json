@@ -1,7 +1,7 @@
 {
   "name": "consus",
   "description": "The inventory management system for the Milwaukee School of Engineering's tech support",
-  "version": "0.5.0",
+  "version": "0.5.1-0",
   "author": "The Four Fiths",
   "contributors": [
     "Jordan Longato",
