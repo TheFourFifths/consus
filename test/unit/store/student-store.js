@@ -161,4 +161,18 @@ describe('StudentStore', () => {
             assert.strictEqual(updatedStudent.items[0].address, items[0].address);
         });
     });
+
+    it('should remove items from students items list when model is deleted', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[2].address]
+        }).then(() => {
+            assert.lengthOf(student.items, 2);
+            return addAction('DELETE_MODEL', {
+                modelAddress: items[0].modelAddress
+            });
+        }).then(() => {
+            assert.lengthOf(student.items, 0);
+        });
+    });
 });

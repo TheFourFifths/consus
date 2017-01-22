@@ -10,8 +10,10 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
     * [POST `/api/model`](#post-apimodel)
+    * [PATCH `/api/model`](#patch-apimodel)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
+    * [DELETE `api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
     * [POST `/api/student`](#post-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
@@ -118,6 +120,57 @@ Create a model.
 }
 ```
 
+## PATCH `/api/model`
+
+Updates a model
+
+### Parameters
+
+Query string:
+* `address`: Address of the model to update
+
+Body:
+* `name`: The new name of the model
+* `description`: The new description of the model
+* `manufacturer`: The new manufacturer of the model
+* `vendor`: The bew vendor who sold the model
+* `location`: New location where the model is stored
+* `isFaulty`: Whether the model is faulty of not
+* `faultDescription`: New description of the fault
+* `price`: New price of one model
+
+### Sample Request
+
+```http
+PATCH /api/model?address=m8y7nEtAe HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Resistor",
+    "description": "It impedes electrons",
+    "vendor": "Mouser"
+}
+```
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": {
+        "address": "m8y7nEtAe",
+        "name": "Resistor",
+        "description": "It impedes electrons",
+        "manufacturer": "Live",
+        "vendor": "Mouser",
+        "location": "Shelf 14",
+        "isFaulty": false,
+        "faultDescription": "",
+        "price": 10.50,
+        "count": 20
+    }
+}
+```
 ## GET `/api/model`
 
 Retrieve a model.
@@ -170,6 +223,36 @@ An array containing each model and its data.
             "price": 10.50,
             "count": 20
         }]
+    }
+}
+```
+
+## DELETE `/api/model`
+
+Delete a model
+
+### Parameters
+
+* `modelAddress`: Address of the model to delete
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": {
+        "deletedModel": {
+            "address": "m8y7nEtAe",
+            "name": "Resistor",
+            "description": "V = IR",
+            "manufacturer": "Pancakes R Us",
+            "vendor": "Mouzer",
+            "location": "Shelf 14",
+            "isFaulty": false,
+            "faultDescription": "",
+            "price": 10.50,
+            "count": 20
+        }
     }
 }
 ```
