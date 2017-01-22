@@ -1,7 +1,7 @@
 {
   "name": "consus",
   "description": "The inventory management system for the Milwaukee School of Engineering's tech support",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": "The Four Fiths",
   "contributors": [
     "Jordan Longato",
@@ -61,6 +61,7 @@
     "consus-core": "^0.5.3",
     "daemonize2": "0.4.2",
     "express": "4.14.0",
-    "moment-timezone": "^0.5.9"
+    "moment-timezone": "^0.5.9",
+    "xlsx": "0.8.1"
   }
 }

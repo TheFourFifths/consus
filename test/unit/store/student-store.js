@@ -10,7 +10,7 @@ describe('StudentStore', () => {
     let items = [];
     let student;
 
-    before(() => {
+    beforeEach(() => {
         return addAction('CLEAR_ALL_DATA').then(() => {
             return addAction('NEW_MODEL', {
                 name: 'Resistor'
@@ -35,20 +35,25 @@ describe('StudentStore', () => {
             return addAction('NEW_ITEM', {
                 modelAddress: model.address
             });
+        }).then(() => {
+            return addAction('NEW_STUDENT', {
+                id: '123456',
+                name: 'John von Neumann',
+                email: 'neumannj@msoe.edu',
+                status: 'C - Current',
+                major: 'Hyperspace Engineer'
+            });
+        }).then(actionId => {
+            student = StudentStore.getStudentByActionId(actionId);
         });
-    });
-
-    it('should instantiate without any students', () => {
-        assert.lengthOf(StudentStore.getStudents(), 0);
     });
 
     it('should create a student', () => {
         return addAction('NEW_STUDENT', {
-            id: '123456',
-            name: 'John von Neumann'
-        }).then(actionId => {
-            student = StudentStore.getStudentByActionId(actionId);
-            assert.lengthOf(StudentStore.getStudents(), 1);
+            id: '786459',
+            name: 'Loopy doo'
+        }).then(() => {
+            assert.lengthOf(StudentStore.getStudents(), 2);
         });
     });
 
@@ -76,32 +81,98 @@ describe('StudentStore', () => {
             studentId: student.id,
             itemAddresses: [items[0].address, items[2].address]
         }).then(() => {
-            assert.include(student.items, items[0]);
+            assert.strictEqual(student.items[0].address, items[0].address);
             assert.notInclude(student.items, items[1]);
-            assert.include(student.items, items[2]);
+            assert.strictEqual(student.items[1].address, items[2].address);
         });
     });
 
     it('should remove an item upon checkin', () => {
-        return addAction('CHECKIN', {
+        return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddress: items[0].address
+            itemAddresses: [items[0].address, items[2].address]
         }).then(() => {
+            return addAction('CHECKIN', {
+                studentId: student.id,
+                itemAddress: items[0].address
+            });
+        }).then (() => {
             assert.notInclude(student.items, items[0]);
             assert.notInclude(student.items, items[1]);
-            assert.include(student.items, items[2]);
+            assert.strictEqual(student.items[0].address, items[2].address);
         });
     });
 
-    it('should remove another item upon checkin', () => {
-        return addAction('CHECKIN', {
-            studentId: student.id,
-            itemAddress: items[2].address
-        }).then(() => {
-            assert.notInclude(student.items, items[0]);
-            assert.notInclude(student.items, items[1]);
-            assert.notInclude(student.items, items[2]);
+    it('should verify current student', () => {
+        assert.isTrue(StudentStore.isCurrentStudent(student));
+        student.status = 'dead';
+        assert.isFalse(StudentStore.isCurrentStudent(student));
+    });
+
+    it('should verify new student', () => {
+        assert.isFalse(StudentStore.isNewStudent(student));
+        let newStudent = {
+            id: 1
+        };
+        assert.isTrue(StudentStore.isNewStudent(newStudent));
+    });
+
+    it('should update existing student', () => {
+        let newName = 'BoomPow';
+        let newMajor = 'Reverse Engineer';
+        let newEmail = 'wopmoob.msoe.edu';
+        let updatedStudentInfo = {
+            id: student.id,
+            name: newName,
+            major: newMajor,
+            email: newEmail
+        };
+        return addAction('UPDATE_STUDENT', updatedStudentInfo).then(() => {
+            assert.lengthOf(StudentStore.getStudents(), 1);
+            let updatedStudent = StudentStore.getStudentById(student.id);
+            assert.strictEqual(updatedStudent.name, newName);
+            assert.strictEqual(updatedStudent.email, newEmail);
+            assert.strictEqual(updatedStudent.major, newMajor);
         });
     });
 
+    it('should keep checked out items after updating existing student', () => {
+        let newName = 'BoomPow';
+        let newMajor = 'Reverse Engineer';
+        let newEmail = 'wopmoob.msoe.edu';
+        let updatedStudentInfo = {
+            id: student.id,
+            name: newName,
+            major: newMajor,
+            email: newEmail
+        };
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address]
+        }).then(() => {
+            assert.strictEqual(student.items[0].address, items[0].address);
+            return addAction('UPDATE_STUDENT', updatedStudentInfo);
+        }).then(() => {
+            assert.lengthOf(StudentStore.getStudents(), 1);
+            let updatedStudent = StudentStore.getStudentById(student.id);
+            assert.strictEqual(updatedStudent.name, newName);
+            assert.strictEqual(updatedStudent.email, newEmail);
+            assert.strictEqual(updatedStudent.major, newMajor);
+            assert.strictEqual(updatedStudent.items[0].address, items[0].address);
+        });
+    });
+
+    it('should remove items from students items list when model is deleted', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[2].address]
+        }).then(() => {
+            assert.lengthOf(student.items, 2);
+            return addAction('DELETE_MODEL', {
+                modelAddress: items[0].modelAddress
+            });
+        }).then(() => {
+            assert.lengthOf(student.items, 0);
+        });
+    });
 });

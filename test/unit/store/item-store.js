@@ -109,4 +109,14 @@ describe('ItemStore', () => {
         });
     });
 
+    it('should get 0 overdue items when no items are overdue', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: "123456",
+            itemAddresses: [ItemStore.getItems()[0].address]
+        }).then(() => {
+            assert.lengthOf(ItemStore.getOverdueItems(), 0);
+        });
+    });
+    //Note: There should probably be a test that it does get overdue items, but we can't just
+    //give a student an overdue item so that's untestable right now.
 });
