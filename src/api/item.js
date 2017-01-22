@@ -36,6 +36,12 @@ app.get('/all', (req, res) => {
     });
 });
 
+app.get('/overdue', (req, res) => {
+    res.successJson({
+        items: ItemStore.getOverdueItems()
+    });
+});
+
 app.delete('/', (req, res) => {
     let itemToDelete = ItemStore.getItemByAddress(req.query.itemAddress);
     let model = ModelStore.getModelByAddress(itemToDelete.modelAddress);
