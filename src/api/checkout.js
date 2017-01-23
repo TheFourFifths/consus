@@ -9,7 +9,7 @@ app.post('/', (req, res) => {
     }
     if (typeof req.body.itemAddresses !== 'object'
         || typeof req.body.itemAddresses[0] !== 'string') {
-        return res.failureJson('An array of item addresses is required.');
+        return res.status(400).failureJson('An array of item addresses is required.');
     }
     addAction('NEW_CHECKOUT', {
         studentId: req.body.studentId,
