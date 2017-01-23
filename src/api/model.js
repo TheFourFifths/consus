@@ -35,6 +35,9 @@ app.post('/', (req, res) => {
 });
 
 app.patch('/', (req, res) => {
+    if (typeof req.query.address !== 'string') {
+        return res.failureJson('A model address is required.');
+    }
     addAction('EDIT_MODEL', {
         address: req.query.address,
         name: req.body.name,

@@ -88,6 +88,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['clean:dist', 'babel:dist', 'copy']);
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('test', ['lint', 'build', 'clean:test', 'babel:test', 'mochacli']);
+    grunt.registerTask('lintless-test', ['build', 'clean:test', 'babel:test', 'mochacli']);
     grunt.registerTask('prepublish', ['test', 'clean:dist', 'babel:dist']);
     grunt.registerTask('tools', ['build', 'clean:tools', 'babel:tools']);
 

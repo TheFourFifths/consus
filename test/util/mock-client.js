@@ -40,3 +40,7 @@ export function get(endpoint, data) {
 export function post(endpoint, data) {
     return call(endpoint, 'POST', undefined, data);
 }
+
+export function patch(endpoint, qs, data) {
+    return call(endpoint, 'PATCH', qs, data);
+}
