@@ -13,7 +13,15 @@ describe('ItemStore', () => {
     beforeEach(() => {
         return addAction('CLEAR_ALL_DATA').then(() => {
             return addAction('NEW_MODEL', {
-                name: 'Resistor'
+                name: 'Resistor',
+                description: 'V = IR',
+                manufacturer: 'Pancakes R\' Us',
+                vendor: 'Mouzer',
+                location: 'Shelf 14',
+                isFaulty: false,
+                faultDescription: '',
+                price: 10.50,
+                count: 20
             });
         }).then(actionId => {
             model = ModelStore.getModelByActionId(actionId);
@@ -74,10 +82,25 @@ describe('ItemStore', () => {
         });
     });
 
-    it('should check an item in', () => {
-        return addAction('CHECKIN', {
+    it('should check out a single item', () => {
+        return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddress: items[0].address
+            itemAddresses: [items[0].address]
+        }).then(() => {
+            assert.strictEqual(items[0].status, 'CHECKED_OUT');
+            assert.strictEqual(items[1].status, 'AVAILABLE');
+        });
+    });
+
+    it('should check an item in', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address]
+        }).then(() => {
+            return addAction('CHECKIN', {
+                studentId: student.id,
+                itemAddress: items[0].address
+            });
         }).then(() => {
             assert.strictEqual(items[0].status, 'AVAILABLE');
         });
