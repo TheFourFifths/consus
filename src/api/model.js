@@ -55,6 +55,9 @@ app.patch('/', (req, res) => {
 });
 
 app.delete('/', (req, res) => {
+    if (typeof req.query.modelAddress !== 'string') {
+        return res.failureJson('A model address is required.');
+    }
     addAction('DELETE_MODEL', {
         modelAddress: req.query.modelAddress
     }).then(() => {

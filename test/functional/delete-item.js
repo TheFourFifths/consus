@@ -6,7 +6,7 @@ import ModelStore from '../../.dist/store/model-store';
 import ItemStore from '../../.dist/store/item-store';
 
 
-describe('Get all items', () => {
+describe('Delete item', () => {
 
     before(() => {
         return server.start(8080);
