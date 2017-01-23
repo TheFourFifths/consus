@@ -4,5 +4,5 @@ const PORT = 80;
 
 server.start(PORT).then(() => {
     /* eslint-disable no-console */
-    console.log('The consus server is now listening on port 80.');
+    console.log(`The consus server is now listening on port ${PORT}.`);
 });
