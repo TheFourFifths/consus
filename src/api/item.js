@@ -38,6 +38,12 @@ app.get('/all', (req, res) => {
     });
 });
 
+app.get('/overdue', (req, res) => {
+    res.successJson({
+        items: ItemStore.getOverdueItems()
+    });
+});
+
 app.delete('/', (req, res) => {
     if(!req.query.itemAddress) return res.failureJson("Item address required to delete");
     if(!req.query.modelAddress) return res.failureJson("Model address required to delete");
