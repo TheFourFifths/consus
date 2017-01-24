@@ -43,6 +43,14 @@ class StudentStore extends Store {
         return studentsByActionId[actionId];
     }
 
+    getStudentsWithDueItems(){
+        return students.filter(student => {
+            return student.items.some(item => {
+                item.timestamp - 1800 <= Date.now()/1000;
+            });
+        });
+    }
+
     hasOverdueItem(id){
         return students[id].items.some(item => {
             let now = Math.floor(Date.now() / 1000);
@@ -106,17 +114,6 @@ store.registerHandler('NEW_CHECKOUT', data => {
         student.items.push(ItemStore.getItemByAddress(itemAddress));
     });
 });
-
-store.registerHandler('NOTIFY_STUDENTS', data => {
-    if (data.type === 'DUE_ITEMS'){
-        var toNotify = store.getStudents().filter(student => {
-            return student.items.some(item => {
-                item.timestamp - 1800 <= Date.now()/1000;
-            });
-        });
-        //TODO: Once system is in place, send the list of students to notify to the email system.
-    }
-})
 
 store.registerHandler('CHECKIN', data => {
     store.waitFor(CheckinStore);
