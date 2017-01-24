@@ -107,6 +107,17 @@ store.registerHandler('NEW_CHECKOUT', data => {
     });
 });
 
+store.registerHandler('NOTIFY_STUDENTS', data => {
+    if (data.type === 'DUE_ITEMS'){
+        var toNotify = store.getStudents().filter(student => {
+            return student.items.some(item => {
+                item.timestamp - 1800 <= Date.now()/1000;
+            });
+        });
+        //TODO: Once system is in place, send the list of students to notify to the email system.
+    }
+})
+
 store.registerHandler('CHECKIN', data => {
     store.waitFor(CheckinStore);
     if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
