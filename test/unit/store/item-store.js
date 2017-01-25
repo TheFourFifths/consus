@@ -134,7 +134,7 @@ describe('ItemStore', () => {
 
     it('should get 0 overdue items when no items are overdue', () => {
         return addAction('NEW_CHECKOUT', {
-            studentId: "123456",
+            studentId: 123456,
             itemAddresses: [ItemStore.getItems()[0].address]
         }).then(() => {
             assert.lengthOf(ItemStore.getOverdueItems(), 0);
