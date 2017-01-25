@@ -1,6 +1,7 @@
 import { Store } from 'consus-core/flux';
 import AuthStore from './auth-store';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 import StudentStore from './student-store';
 import { readAddress } from 'consus-core/identifiers';
 
@@ -45,6 +46,12 @@ store.registerHandler('NEW_CHECKOUT', data => {
         if(result.type == 'item'){
             if (ItemStore.getItemByAddress(address).status !== 'AVAILABLE') {
                 throw new Error('An item in the cart is not available for checkout.');
+            }
+        }
+        if(result.type == 'model'){
+            let model = ModelStore.getModelByAddress(address);
+            if(!model.allowCheckout || model.instock <= 0) {
+                throw new Error('A model in the cart is not available for checkout.');
             }
         }
     });
