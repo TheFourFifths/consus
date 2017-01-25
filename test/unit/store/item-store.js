@@ -85,8 +85,10 @@ describe('ItemStore', () => {
 
     it('should fail to delete an item', () =>{
         assert.strictEqual(items.length, 2);
+        let modelAddress = items[0].modelAddress;
         return addAction('DELETE_ITEM', {
-            itemAddress: 'This is not an address'
+            itemAddress: 'This is not an address',
+            modelAddress: modelAddress
         }).then(assert.fail)
           .catch(e => {
               assert.strictEqual(e.message, 'Unknown type.');
