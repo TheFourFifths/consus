@@ -8,13 +8,15 @@ let app = express();
 app.get('/', (req, res) => {
     let regex = new RegExp("^[a-zA-Z0-9]+$");
     if(!regex.test(req.query.id)){
-        return res.failureJson('Invalid Characters in item address');
+        return res.status(400).failureJson('Invalid Characters in item address');
     }
     let item = ItemStore.getItemByAddress(req.query.address);
     res.successJson(item);
 });
 
 app.post('/', (req, res) => {
+    if(!req.body.modelAddress) return res.status(400).failureJson("Model address required to make item");
+
     addAction('NEW_ITEM', {
         modelAddress: req.body.modelAddress
     })
@@ -36,9 +38,16 @@ app.get('/all', (req, res) => {
     });
 });
 
+app.get('/overdue', (req, res) => {
+    res.successJson({
+        items: ItemStore.getOverdueItems()
+    });
+});
+
 app.delete('/', (req, res) => {
-    let itemToDelete = ItemStore.getItemByAddress(req.query.itemAddress);
-    let model = ModelStore.getModelByAddress(itemToDelete.modelAddress);
+    if(!req.query.itemAddress) return res.status(400).failureJson("Item address required to delete");
+    if(!req.query.modelAddress) return res.status(400).failureJson("Model address required to delete");
+    let model = ModelStore.getModelByAddress(req.query.modelAddress);
     addAction('DELETE_ITEM', {
         itemAddress: req.query.itemAddress,
         modelAddress: req.query.modelAddress

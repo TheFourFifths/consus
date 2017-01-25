@@ -30,7 +30,15 @@ describe('ModelStore', () => {
 
     it('should create a model and retrieve it by the action id', () => {
         return addAction('NEW_MODEL', {
-            name: 'Bangarang'
+            name: 'Bangarang',
+            description: 'Something used in computers',
+            manufacturer: 'Vroom Industries',
+            vendor: 'Fankserrogatoman Inc',
+            location: 'Shelf 2',
+            isFaulty: false,
+            faultDescription: '',
+            price: 4.00,
+            count: 10
         }).then(actionId => {
             let testModel = ModelStore.getModelByActionId(actionId);
             assert.strictEqual(testModel.name, 'Bangarang');
@@ -44,11 +52,27 @@ describe('ModelStore', () => {
 
     it('should create more models', () => {
         return addAction('NEW_MODEL', {
-            name: 'Resistor'
+            name: 'Resistor',
+            description: 'V = IR',
+            manufacturer: 'Pancakes R\' Us',
+            vendor: 'Mouzer',
+            location: 'Shelf 14',
+            isFaulty: false,
+            faultDescription: '',
+            price: 10.50,
+            count: 20
         }).then(() => {
             assert.lengthOf(ModelStore.getModels(), 2);
             return addAction('NEW_MODEL', {
-                name: 'Wire'
+                name: 'Wire',
+                description: 'Thin',
+                manufacturer: 'A factory',
+                vendor: 'A store',
+                location: 'A shelf',
+                isFaulty: true,
+                faultDescription: 'Shattered into a million pieces',
+                price: 3.50,
+                count: 1000000
             });
         }).then(() => {
             assert.lengthOf(ModelStore.getModels(), 3);
