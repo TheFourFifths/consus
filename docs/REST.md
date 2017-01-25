@@ -295,7 +295,7 @@ Retrieve a student.
     "status": "success",
     "data": {
         "student": {
-            "id": "123456",
+            "id": 123456,
             "name": "John von Neumann",
             "items": [
                 {

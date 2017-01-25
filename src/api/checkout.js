@@ -4,7 +4,7 @@ import { addAction } from '../lib/database';
 let app = express();
 
 app.post('/', (req, res) => {
-    if (typeof req.body.studentId !== 'string') {
+    if (typeof req.body.studentId !== 'number') {
         return res.status(400).failureJson('A student id is required.');
     }
     if (typeof req.body.itemAddresses !== 'object'
