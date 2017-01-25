@@ -1,6 +1,7 @@
 import { Store } from 'consus-core/flux';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
+import StudentStore from './student-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 import moment from 'moment-timezone';
 
@@ -46,16 +47,29 @@ class ItemStore extends Store {
     getItemByActionId(actionId) {
         return itemsByActionId[actionId];
     }
+
+    getOverdueItems() {
+        return StudentStore.getStudents().reduce((overdueItems, student) => {
+            return overdueItems.concat(student.items.filter(item => {
+                item.student = {
+                    name: student.name,
+                    id: student.id
+                };
+                return item.timestamp < Math.floor(Date.now() / 1000);
+            }));
+        }, []);
+    }
+
+    deleteItemByAddress(address){
+        let result = readAddress(address);
+        if(result.type !== 'item' ){
+            throw new Error('Address is not an item.');
+        }
+        delete items[result.index];
+    }
+
 }
 const store = new ItemStore();
-
-function deleteItemByAddress(address){
-    let result = readAddress(address);
-    if(result.type !== 'item' ){
-        throw new Error('Address is not an item.');
-    }
-    delete items[result.index];
-}
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     items = [];
@@ -116,11 +130,11 @@ store.registerHandler('CHECKIN', data => {
 });
 
 store.registerHandler('DELETE_ITEM', data => {
-    deleteItemByAddress(data.itemAddress);
+    store.deleteItemByAddress(data.itemAddress);
 });
 
 store.registerHandler('DELETE_MODEL', data => {
     let itemsOfModel = store.getItems().filter(item => item.modelAddress === data.modelAddress);
-    itemsOfModel.forEach(item => deleteItemByAddress(item.address));
+    itemsOfModel.forEach(item => store.deleteItemByAddress(item.address));
 });
 export default store;

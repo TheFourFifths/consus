@@ -35,14 +35,20 @@ store.registerHandler('CLEAR_ALL_DATA', () => {
 store.registerHandler('CHECKIN', data => {
     let student = StudentStore.getStudentById(data.studentId);
     if (typeof student !== 'object') {
-        return checkinErrors[data.actionId] = 'Student could not be found.';
+        let msg = 'Student could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
     }
     let item = ItemStore.getItemByAddress(data.itemAddress);
     if (typeof item !== 'object') {
-        return checkinErrors[data.actionId] = 'Item could not be found.';
+        let msg = 'Item could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
     }
     if (student.items.indexOf(item) === -1) {
-        return checkinErrors[data.actionId] = 'This item is not checked out by the student.';
+        let msg = 'This item is not checked out by that student.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
     }
     checkins[data.actionId] = {
         student,
