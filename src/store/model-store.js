@@ -1,4 +1,5 @@
 import { Store } from 'consus-core/flux';
+import { assert } from 'chai';
 import CheckoutStore from './checkout-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
@@ -30,11 +31,13 @@ let models = [
     }
 ];
 let modelsByActionId = new Object(null);
+let deletedModel = null;
+let recentlyUpdatedModel = null;
 
 class ModelStore extends Store {
 
     getModels() {
-        return models;
+        return models.filter(model => model !== undefined);
     }
 
     getModelByAddress(address) {
@@ -48,9 +51,39 @@ class ModelStore extends Store {
     getModelByActionId(actionId) {
         return modelsByActionId[actionId];
     }
+
+    getDeletedModel() {
+        return deletedModel;
+    }
+    getRecentlyUpdatedModel(){
+        return recentlyUpdatedModel;
+    }
 }
 
 const store = new ModelStore();
+
+function deleteModelByAddress(address) {
+    let result = readAddress(address);
+    if (result.type !== 'model' ) {
+        throw new Error('Address is not a model.');
+    }
+    deletedModel = models[result.index];
+    if (deletedModel === null || deletedModel === undefined)
+        throw new Error(`Model address (${address}) does not exist`);
+    delete models[result.index];
+}
+function updateModel(address, name, description, manufacturer, vendor, location, allowCheckout, price){
+    let modelToUpdate = store.getModelByAddress(address);
+    modelToUpdate.name = name;
+    modelToUpdate.description = description;
+    modelToUpdate.manufacturer = manufacturer;
+    modelToUpdate.vendor = vendor;
+    modelToUpdate.location = location;
+    modelToUpdate.allowCheckout = allowCheckout;
+    modelToUpdate.price = price;
+    recentlyUpdatedModel = modelToUpdate;
+    return modelToUpdate;
+}
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     models = [];
@@ -68,6 +101,14 @@ store.registerHandler('DELETE_ITEM', data => {
 });
 
 store.registerHandler('NEW_MODEL', data => {
+    assert.isString(data.name, 'The model name must be a string');
+    assert.isString(data.description, 'The model description must be a string');
+    assert.isString(data.manufacturer, 'The model manufacturer must be a string');
+    assert.isString(data.vendor, 'The model vendor must be a string');
+    assert.isString(data.location, 'The model location must be a string');
+    assert.isBoolean(data.allowCheckout, 'The model allowCheckout must be a boolean');
+    assert.isNumber(data.price, 'The model price must be a number');
+    assert.isNumber(data.count, 'The model count must be a number');
     let model = {
         address: createAddress(models.length, 'model'),
         name: data.name,
@@ -92,6 +133,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
             store.getModelByAddress(address).inStock--;
         }
     });
+});
+
+store.registerHandler('DELETE_MODEL', data => {
+    deleteModelByAddress(data.modelAddress);
+});
+
+store.registerHandler('EDIT_MODEL', data => {
+    updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.allowCheckout, data.price);
 });
 
 export default store;

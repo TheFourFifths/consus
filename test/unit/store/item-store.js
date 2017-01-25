@@ -13,7 +13,14 @@ describe('ItemStore', () => {
     beforeEach(() => {
         return addAction('CLEAR_ALL_DATA').then(() => {
             return addAction('NEW_MODEL', {
-                name: 'Resistor'
+                name: 'Resistor',
+                description: 'V = IR',
+                manufacturer: 'Pancakes R\' Us',
+                vendor: 'Mouzer',
+                location: 'Shelf 14',
+                allowCheckout: false,
+                price: 10.50,
+                count: 20
             });
         }).then(actionId => {
             model = ModelStore.getModelByActionId(actionId);
@@ -74,10 +81,25 @@ describe('ItemStore', () => {
         });
     });
 
-    it('should check an item in', () => {
-        return addAction('CHECKIN', {
+    it('should check out a single item', () => {
+        return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddress: items[0].address
+            equipmentAddresses: [items[0].address]
+        }).then(() => {
+            assert.strictEqual(items[0].status, 'CHECKED_OUT');
+            assert.strictEqual(items[1].status, 'AVAILABLE');
+        });
+    });
+
+    it('should check an item in', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            equipmentAddresses: [items[0].address]
+        }).then(() => {
+            return addAction('CHECKIN', {
+                studentId: student.id,
+                itemAddress: items[0].address
+            });
         }).then(() => {
             assert.strictEqual(items[0].status, 'AVAILABLE');
         });
@@ -111,4 +133,14 @@ describe('ItemStore', () => {
         });
     });
 
+    it('should get 0 overdue items when no items are overdue', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: "123456",
+            equipmentAddresses: [ItemStore.getItems()[0].address]
+        }).then(() => {
+            assert.lengthOf(ItemStore.getOverdueItems(), 0);
+        });
+    });
+    //Note: There should probably be a test that it does get overdue items, but we can't just
+    //give a student an overdue item so that's untestable right now.
 });
