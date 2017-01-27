@@ -32,7 +32,7 @@ describe('Check out items', () => {
             });
         }).then(() => {
             return addAction('NEW_STUDENT', {
-                id: '123456',
+                id: 123456,
                 name: 'John von Neumann',
                 email: 'jvn@example.com',
                 major: 'Chemical Engineering & Mathematics',
@@ -40,7 +40,7 @@ describe('Check out items', () => {
             });
         }).then(() => {
             return addAction('NEW_STUDENT', {
-                id: '111111',
+                id: 111111,
                 name: 'Latey McLateface',
                 email: 'mclatefacel@msoe.edu',
                 major: 'Underwater Basket Weaving',
@@ -58,7 +58,7 @@ describe('Check out items', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 0);
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 1);
         return post('checkout', {
-            studentId: '123456',
+            studentId: 123456,
             itemAddresses: [
                 'iGwEZUvfA'
             ]
@@ -76,7 +76,7 @@ describe('Check out items', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 1);
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 0);
         return post('checkout', {
-            studentId: '111111',
+            studentId: 111111,
             itemAddresses: [
                 'iGwEZUvfA'
             ]
@@ -101,7 +101,7 @@ describe('Check out items', () => {
 
     it('should require item addresses', () => {
         return post('checkout', {
-            studentId: '111111'
+            studentId: 111111
         }).then(() => {
             throw new Error('Unexpected success');
         }).catch(e => {
