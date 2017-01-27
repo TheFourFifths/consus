@@ -74,11 +74,11 @@ describe('Checkin items', () => {
                 return Promise.all([
                     addAction('NEW_CHECKOUT', {
                         itemAddresses: [ItemStore.getItems()[0].address],
-                        studentId: '111111'
+                        studentId: 111111
                     }),
                     addAction('NEW_CHECKOUT', {
                         itemAddresses: [ItemStore.getItems()[1].address],
-                        studentId: '123456'
+                        studentId: 123456
                     })
                 ]);
             });
@@ -92,7 +92,7 @@ describe('Checkin items', () => {
 
         let chkdInItem = ItemStore.getItems()[1];
         return post('checkin', {
-            studentId: '123456',
+            studentId: 123456,
             itemAddress: chkdInItem.address
         }).then(data => {
             assert.lengthOf(CheckinStore.getCheckins(), 1);
@@ -113,11 +113,11 @@ describe('Checkin items', () => {
 
         return Promise.all([
             post('checkin', {
-                studentId: '111111',
+                studentId: 111111,
                 itemAddress: ItemStore.getItems()[0].address
             }),
             post('checkin', {
-                studentId: '123456',
+                studentId: 123456,
                 itemAddress: ItemStore.getItems()[1].address
             })
         ]).then(() => {
@@ -132,7 +132,7 @@ describe('Checkin items', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 2);
 
         return post('checkin', {
-            studentId: '123456'
+            studentId: 123456
         }).then(() => {
             throw new Error('Unexpected success');
         }).catch(e => {
@@ -162,7 +162,7 @@ describe('Checkin items', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 2);
 
         return post('checkin', {
-            studentId: '666666',
+            studentId: 666666,
             itemAddress: ItemStore.getItems()[0].address
         }).then(() => {
             throw new Error('Unexpected success');
@@ -177,7 +177,7 @@ describe('Checkin items', () => {
 
         return Promise.all([
             post('checkin', {
-                studentId: '123456',
+                studentId: 123456,
                 itemAddress: 'bad'
             }).then(() => {
                 throw new Error('Unexpected success');
@@ -186,7 +186,7 @@ describe('Checkin items', () => {
             }),
 
             post('checkin', {
-                studentId: '123456',
+                studentId: 123456,
                 itemAddress: ModelStore.getModels()[0].address
             }).then(() => {
                 throw new Error('Unexpected success');
@@ -201,7 +201,7 @@ describe('Checkin items', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 2);
 
         return post('checkin', {
-            studentId: '123456',
+            studentId: 123456,
             itemAddress: ItemStore.getItems()[0].address
         }).then(() => {
             throw new Error('Unexpected success');
@@ -215,7 +215,7 @@ describe('Checkin items', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 2);
 
         return post('checkin', {
-            studentId: '123456',
+            studentId: 123456,
             itemAddress: 'iGwEZVvgu'
         }).then(() => {
             throw new Error('Unexpected success');

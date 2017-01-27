@@ -197,4 +197,19 @@ describe('StudentStore', () => {
         });
     });
 
+
+    it('should remove item from students items list when item is deleted', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[2].address]
+        }).then(() => {
+            assert.lengthOf(student.items, 2);
+            return addAction('DELETE_ITEM', {
+                itemAddress: items[0].address,
+                modelAddress: items[0].modelAddress
+            });
+        }).then(() => {
+            assert.lengthOf(student.items, 1);
+        });
+    });
 });
