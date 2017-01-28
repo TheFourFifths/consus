@@ -45,7 +45,10 @@ app.patch('/', (req, res) => {
         vendor: req.body.vendor,
         location: req.body.location,
         allowCheckout: req.body.allowCheckout,
-        price: req.body.price
+        price: req.body.price,
+        count: req.body.count,
+        changeStock: req.body.changeStock,
+        inStock: req.body.inStock
     }).then(() => {
         let modelUpdated = ModelStore.getRecentlyUpdatedModel();
         res.successJson(modelUpdated);

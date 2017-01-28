@@ -41,14 +41,14 @@ describe('Edit model', () => {
             vendor: 'New vendor',
             location: 'New location',
             allowCheckout: false,
-            price: 3.50
+            price: 3.50,
+            count: 20,
+            inStock: 20
         };
         return patch('model', {
             address: model.address
         }, newModel).then(response => {
             newModel.address = model.address;
-            newModel.count = model.count;
-            newModel.inStock = model.inStock;
             assert.deepEqual(response, newModel);
             assert.deepEqual(model, newModel);
         });

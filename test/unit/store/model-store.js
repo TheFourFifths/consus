@@ -190,7 +190,10 @@ describe('ModelStore', () => {
             vendor: 'vendor',
             location: 'Neptune',
             allowCheckout: false,
-            price: 11.50
+            price: 11.50,
+            count: 20,
+            changeStock: false,
+            inStock: 20
         }).then(() => {
             let modifiedModel = ModelStore.getRecentlyUpdatedModel();
             assert.strictEqual('computer', modifiedModel.name);
@@ -200,6 +203,7 @@ describe('ModelStore', () => {
             assert.strictEqual('Neptune', modifiedModel.location);
             assert.strictEqual(false, modifiedModel.allowCheckout);
             assert.strictEqual(11.50, modifiedModel.price);
+            assert.strictEqual(20, modifiedModel.count);
         });
     });
 });

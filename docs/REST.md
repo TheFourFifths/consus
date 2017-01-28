@@ -118,8 +118,7 @@ Create a model.
 * `manufacturer`: The manufacturer of the model
 * `vendor`: The vendor who sold the model
 * `location`: Location where the model is stored
-* `isFaulty`: Whether the model is faulty of not
-* `faultDescription`: Description of the fault
+* `allowCheckout`: If true, the model itself can be checked out
 * `price`: Price of one model
 * `count`: Amount of this model in stock
 
@@ -135,8 +134,7 @@ Create a model.
         "manufacturer": "Live",
         "vendor": "Mouzer",
         "location": "Shelf 14",
-        "isFaulty": false,
-        "faultDescription": "",
+        "allowCheckout": false,
         "price": 10.50,
         "count": 20
     }
@@ -158,9 +156,11 @@ Body:
 * `manufacturer`: The new manufacturer of the model
 * `vendor`: The bew vendor who sold the model
 * `location`: New location where the model is stored
-* `isFaulty`: Whether the model is faulty of not
-* `faultDescription`: New description of the fault
+* `allowCheckout`: If true, the model can be checked out as if it were an item
 * `price`: New price of one model
+* `count`: The total amount of the model
+* `changeStock`: If true, the number of models in stock is manually changed
+* `inStock`: The number of models in stock
 
 ### Sample Request
 
@@ -187,10 +187,10 @@ Content-Type: application/json
         "manufacturer": "Live",
         "vendor": "Mouser",
         "location": "Shelf 14",
-        "isFaulty": false,
-        "faultDescription": "",
+        "allowCheckout": true,
         "price": 10.50,
-        "count": 20
+        "count": 20,
+        "inStock": 20
     }
 }
 ```

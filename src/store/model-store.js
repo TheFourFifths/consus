@@ -72,15 +72,24 @@ function deleteModelByAddress(address) {
         throw new Error(`Model address (${address}) does not exist`);
     delete models[result.index];
 }
-function updateModel(address, name, description, manufacturer, vendor, location, allowCheckout, price){
+function updateModel(address, name, description, manufacturer, vendor, location, allowCheckout, price, count, changeStock, inStock){
     let modelToUpdate = store.getModelByAddress(address);
+    let originalStock = modelToUpdate.inStock;
+    let changeInCount = count - modelToUpdate.count;
+
     modelToUpdate.name = name;
     modelToUpdate.description = description;
     modelToUpdate.manufacturer = manufacturer;
     modelToUpdate.vendor = vendor;
     modelToUpdate.location = location;
-    modelToUpdate.allowCheckout = allowCheckout;
     modelToUpdate.price = price;
+    if(allowCheckout)
+        modelToUpdate.count = count;
+    if(allowCheckout && changeStock)
+        modelToUpdate.inStock = inStock;
+    else
+        modelToUpdate.inStock = originalStock + changeInCount;
+
     recentlyUpdatedModel = modelToUpdate;
     return modelToUpdate;
 }
@@ -140,7 +149,15 @@ store.registerHandler('DELETE_MODEL', data => {
 });
 
 store.registerHandler('EDIT_MODEL', data => {
-    updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.allowCheckout, data.price);
+    assert.isString(data.name, 'The model name must be a string');
+    assert.isString(data.description, 'The model description must be a string');
+    assert.isString(data.manufacturer, 'The model manufacturer must be a string');
+    assert.isString(data.vendor, 'The model vendor must be a string');
+    assert.isString(data.location, 'The model location must be a string');
+    assert.isNumber(data.price, 'The model price must be a number');
+    assert.isNumber(data.count, 'The model count must be a number');
+    assert.isNumber(data.inStock, 'The model stock amount must be a number');
+    updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.allowCheckout, data.price, data.count, data.changeStock, data.inStock);
 });
 
 export default store;
