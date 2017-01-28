@@ -50,7 +50,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
         }
         if(result.type == 'model'){
             let model = ModelStore.getModelByAddress(address);
-            if(!model.allowCheckout || model.instock <= 0) {
+            if(!model.allowCheckout || model.inStock <= 0) {
                 throw new Error('A model in the cart is not available for checkout.');
             }
         }
