@@ -69,6 +69,28 @@ class ItemStore extends Store {
     }
 
 }
+function getItemToEdit(itemAddress){
+    let result = readAddress(itemAddress);
+    if (result.type !== 'item') {
+        throw new Error('Address is not an item.');
+    }
+    return items[result.index];
+}
+function changeTimestamp(itemAddress, date){
+    let itemToChange = getItemToEdit(itemAddress);
+    let timestamp = moment.tz(date, 'America/Chicago');
+    let hour = parseInt(timestamp.format('H'));
+    let minute = parseInt(timestamp.format('m'));
+    // check for times past 4:50pm
+    if (hour > 16 || (hour === 16 && minute >= 50)) {
+        // increment to the next day
+        timestamp = timestamp.add(1, 'd');
+    }
+    timestamp.hour(17).minute(0).second(0);
+    let dueTime = parseInt(timestamp.format('X'));
+    itemToChange.timestamp = dueTime;
+}
+
 const store = new ItemStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
@@ -136,5 +158,9 @@ store.registerHandler('DELETE_ITEM', data => {
 store.registerHandler('DELETE_MODEL', data => {
     let itemsOfModel = store.getItems().filter(item => item.modelAddress === data.modelAddress);
     itemsOfModel.forEach(item => store.deleteItemByAddress(item.address));
+});
+
+store.registerHandler('EDIT_ITEM_DUEDATE', data => {
+    changeTimestamp(data.itemAddress, data.date);
 });
 export default store;

@@ -17,6 +17,7 @@ This document describes the API endpoints of the Consus server.
     * [DELETE `api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
     * [POST `/api/student`](#post-apistudent)
+    * [PATCH `/api/stuendet/item`](#patch-apiitemstudent)
     * [POST `/api/checkout`](#post-apicheckout)
     * [POST `api/checkin`](#post-apicheckin)
 
@@ -321,6 +322,28 @@ Upload new student information based on an excel binary string.
 ### Parameters
 
 * `data`: The excel file in binary string format
+
+### Sample Response
+
+```json
+{
+    "status": "success"
+}
+```
+
+```
+## PATCH `/api/student/item`
+
+Edit an item's duedate that is checked out to a student
+
+### Parameters
+
+Query string:
+* `studentId`: Id of the student who has the item
+
+Body:
+* `itemAddress`: The address of the item
+* `date`: The new date the item is due
 
 ### Sample Response
 

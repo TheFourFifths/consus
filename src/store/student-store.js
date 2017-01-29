@@ -132,4 +132,15 @@ store.registerHandler('UPDATE_STUDENT', student => {
 store.registerHandler('DELETE_MODEL', data => {
     removeModelFromAllStudents(data.modelAddress);
 });
+
+store.registerHandler('EDIT_ITEM_DUEDATE', data => {
+    store.waitFor(ItemStore);
+    let updatedItem = ItemStore.getItemByAddress(data.itemAddress);
+    let student = students[data.studentId];
+    for(let i = 0; i < student.items.length; i++){
+        if(student.items[i].address === updatedItem.address){
+            student.items[i] = updatedItem;
+        }
+    }
+});
 export default store;

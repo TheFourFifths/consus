@@ -49,4 +49,21 @@ app.post('/', (req, res) => {
     }
     res.successJson();
 });
+
+app.patch('/item', (req, res) => {
+    if (typeof req.query.studentId !== 'string') {
+        return res.status(400).failureJson('A studentId is required.');
+    }
+    console.log('received id of: ' + req.query.studentId);
+    addAction('EDIT_ITEM_DUEDATE', {
+        studentId: req.query.studentId,
+        date: req.body.date,
+        itemAddress: req.body.itemAddress
+    }).then(() => {
+        res.successJson(StudentStore.getStudentById(req.query.studentId));
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+
+});
 export default app;
