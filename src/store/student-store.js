@@ -79,6 +79,17 @@ function removeModelFromAllStudents(modelAddress) {
         }
     }
 }
+
+function removeItemFromAllStudents(itemAddress) {
+    let studentsJSON = store.getStudents();
+    for (let key in studentsJSON) {
+        if (studentsJSON.hasOwnProperty(key)) {
+            let s = studentsJSON[key];
+            s.items = s.items.filter(item => item.address !== itemAddress);
+        }
+    }
+}
+
 store.registerHandler('CLEAR_ALL_DATA', () => {
     students = new Object(null);
     studentsByActionId = new Object(null);
@@ -127,6 +138,10 @@ store.registerHandler('CHECKIN', data => {
 
 store.registerHandler('UPDATE_STUDENT', student => {
     updateStudent(student.id, student.name, student.email, student.major);
+});
+
+store.registerHandler('DELETE_ITEM', data => {
+    removeItemFromAllStudents(data.itemAddress);
 });
 
 store.registerHandler('DELETE_MODEL', data => {

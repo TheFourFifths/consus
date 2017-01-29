@@ -3,7 +3,6 @@ import ItemStore from '../../../.dist/store/item-store';
 import ModelStore from '../../../.dist/store/model-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
-import moment from 'moment-timezone';
 
 describe('StudentStore', () => {
 
@@ -198,7 +197,22 @@ describe('StudentStore', () => {
         });
     });
 
-    it.only(`should edit item's duedate in student's list of items`, () => {
+
+    it('should remove item from students items list when item is deleted', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[2].address]
+        }).then(() => {
+            assert.lengthOf(student.items, 2);
+            return addAction('DELETE_ITEM', {
+                itemAddress: items[0].address,
+                modelAddress: items[0].modelAddress
+            });
+        }).then(() => {
+            assert.lengthOf(student.items, 1);
+        });
+    });
+    it(`should edit item's duedate in student's list of items`, () => {
         let today = moment.tz('America/Chicago');
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,

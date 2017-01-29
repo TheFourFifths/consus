@@ -168,7 +168,7 @@ describe('CheckoutStore', () => {
                 longtermProfessor: 'Professor Vroom'
             });
         }).then(() => {
-            assert.isTrue(false);
+            throw new Error('Unexpected success');
         }).catch(e => {
             assert.strictEqual(e.message, 'An item in the cart is not available for checkout.');
         });
