@@ -331,7 +331,6 @@ Upload new student information based on an excel binary string.
 }
 ```
 
-```
 ## PATCH `/api/student/item`
 
 Edit an item's duedate that is checked out to a student
