@@ -3,6 +3,7 @@ import ItemStore from '../../../.dist/store/item-store';
 import ModelStore from '../../../.dist/store/model-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
+import moment from 'moment-timezone';
 
 describe('StudentStore', () => {
 
