@@ -133,8 +133,9 @@ describe('Check out items and models', () => {
 
     it('should check out a model', () => {
         assert.lengthOf(CheckoutStore.getCheckouts(), 1);
-        assert.strictEqual(ModelStore.getModelByAddress('m8y7nFLsT').count, 100);
-        assert.strictEqual(ModelStore.getModelByAddress('m8y7nFLsT').inStock, 100);
+        let model = ModelStore.getModels()[1];
+        assert.strictEqual(model.count, 100);
+        assert.strictEqual(model.inStock, 100);
         return post('checkout', {
             studentId: 123456,
             equipmentAddresses: [
@@ -143,8 +144,8 @@ describe('Check out items and models', () => {
         }).then(data => {
             assert.isUndefined(data);
             assert.lengthOf(CheckoutStore.getCheckouts(), 2);
-            assert.strictEqual(ModelStore.getModelByAddress('m8y7nFLsT').count, 100);
-            assert.strictEqual(ModelStore.getModelByAddress('m8y7nFLsT').inStock, 99);
+            assert.strictEqual(model.count, 100);
+            assert.strictEqual(model.inStock, 99);
             assert.strictEqual(StudentStore.getStudentById('123456').models[0].address, 'm8y7nFLsT');
         });
     });
@@ -168,8 +169,9 @@ describe('Check out items and models', () => {
 
     it('should not check out an out of stock model', () => {
         assert.lengthOf(CheckoutStore.getCheckouts(), 2);
-        assert.strictEqual(ModelStore.getModelByAddress('m8y7nFnMs').allowCheckout, true);
-        assert.strictEqual(ModelStore.getModelByAddress('m8y7nFnMs').inStock, 0);
+        let model = ModelStore.getModels()[2];
+        assert.strictEqual(model.allowCheckout, true);
+        assert.strictEqual(model.inStock, 0);
         return post('checkout', {
             studentId: 123456,
             equipmentAddresses: [
