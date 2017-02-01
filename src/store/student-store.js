@@ -96,9 +96,8 @@ store.registerHandler('CLEAR_ALL_DATA', () => {
 });
 
 store.registerHandler('NEW_STUDENT', data => {
-    let studentId = parseInt(data.id);
     let student = {
-        id: studentId,
+        id: data.id,
         name: data.name,
         status: data.status,
         email: data.email,
