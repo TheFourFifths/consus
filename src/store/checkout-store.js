@@ -3,8 +3,8 @@ import AuthStore from './auth-store';
 import ItemStore from './item-store';
 import StudentStore from './student-store';
 
-let checkouts = new Object(null);
-let checkoutErrors = new Object(null);
+let checkouts = Object.create(null);
+let checkoutErrors = Object.create(null);
 
 class CheckoutStore extends Store {
 
@@ -29,8 +29,8 @@ class CheckoutStore extends Store {
 const store = new CheckoutStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkouts = new Object(null);
-    checkoutErrors = new Object(null);
+    checkouts = Object.create(null);
+    checkoutErrors = Object.create(null);
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
@@ -38,7 +38,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
         studentId: data.studentId,
         itemAddresses: data.itemAddresses
     };
-    
+
     data.itemAddresses.forEach(itemAddress => {
         if (ItemStore.getItemByAddress(itemAddress).status !== 'AVAILABLE') {
             throw new Error('An item in the cart is not available for checkout.');
