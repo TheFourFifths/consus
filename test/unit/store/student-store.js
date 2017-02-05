@@ -213,8 +213,9 @@ describe('StudentStore', () => {
             assert.lengthOf(student.items, 1);
         });
     });
+
     it(`should edit item's duedate in student's list of items`, () => {
-        let today = moment.tz('America/Chicago');
+        let today = moment();
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
             itemAddresses: [items[0].address, items[2].address]
