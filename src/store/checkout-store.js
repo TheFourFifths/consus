@@ -5,7 +5,7 @@ import StudentStore from './student-store';
 
 let checkouts = new Object(null);
 let checkoutErrors = new Object(null);
-let longTermCheckouts = new Object(null);
+let longTermCheckouts = Object.create(null);
 class CheckoutStore extends Store {
 
     getCheckouts() {
@@ -79,17 +79,14 @@ store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
         }
     });
 
-    if (data.adminCode){
-        if(AuthStore.verifyAdmin(data.adminCode)) {
-            longTermCheckouts[data.actionId] = longTermCheckout;
-        } else {
+    if (data.adminCode) {
+        if (!AuthStore.verifyAdmin(data.adminCode)) {
             throw new Error('Invalid Admin');
         }
     } else if (StudentStore.hasOverdueItem(data.studentId)) {
         throw new Error('Student has overdue item');
-    } else {
-        longTermCheckouts[data.actionId] = longTermCheckout;
     }
+    longTermCheckouts[data.actionId] = longTermCheckout;
 });
 
 export default store;
