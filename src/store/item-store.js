@@ -28,7 +28,7 @@ let items = [
         faultDescription: ''
     }
 ];
-let itemsByActionId = new Object(null);
+let itemsByActionId = Object.create(null);
 
 class ItemStore extends Store {
 
@@ -73,7 +73,7 @@ const store = new ItemStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     items = [];
-    itemsByActionId = new Object(null);
+    itemsByActionId = Object.create(null);
 });
 
 store.registerHandler('NEW_ITEM', data => {
