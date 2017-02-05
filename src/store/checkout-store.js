@@ -3,9 +3,10 @@ import AuthStore from './auth-store';
 import ItemStore from './item-store';
 import StudentStore from './student-store';
 
-let checkouts = new Object(null);
-let checkoutErrors = new Object(null);
+let checkouts = Object.create(null);
+let checkoutErrors = Object.create(null);
 let longTermCheckouts = Object.create(null);
+
 class CheckoutStore extends Store {
 
     getCheckouts() {
@@ -36,8 +37,8 @@ class CheckoutStore extends Store {
 const store = new CheckoutStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkouts = new Object(null);
-    checkoutErrors = new Object(null);
+    checkouts = Object.create(null);
+    checkoutErrors = Object.create(null);
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
