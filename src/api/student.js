@@ -51,12 +51,12 @@ app.post('/', (req, res) => {
 });
 
 app.patch('/item', (req, res) => {
-    if (typeof req.query.studentId !== 'number') {
+    if (typeof req.query.studentId !== 'string') {
         return res.status(400).failureJson('A studentId is required.');
     }
-
+    let studentNumber = parseInt(req.query.studentId);
     addAction('EDIT_ITEM_DUEDATE', {
-        studentId: req.query.studentId,
+        studentId: studentNumber,
         date: req.body.date,
         itemAddress: req.body.itemAddress
     }).then(() => {
