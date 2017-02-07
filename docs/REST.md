@@ -337,7 +337,7 @@ Submit a checkout request.
 ### Parameters
 
 * `studentId`: The student's identifier
-* `items`: An array of item identifiers
+* `equipmentAddresses`: An array of item and model identifiers
 * `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 
 ### Sample Response
