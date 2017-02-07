@@ -5,8 +5,8 @@ import ModelStore from './model-store';
 import StudentStore from './student-store';
 import { readAddress } from 'consus-core/identifiers';
 
-let checkouts = new Object(null);
-let checkoutErrors = new Object(null);
+let checkouts = Object.create(null);
+let checkoutErrors = Object.create(null);
 
 class CheckoutStore extends Store {
 
@@ -31,8 +31,8 @@ class CheckoutStore extends Store {
 const store = new CheckoutStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkouts = new Object(null);
-    checkoutErrors = new Object(null);
+    checkouts = Object.create(null);
+    checkoutErrors = Object.create(null);
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {

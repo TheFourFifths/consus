@@ -44,7 +44,9 @@ describe('New Item', () => {
             delete item.address;
             assert.deepEqual(item, {
                 modelAddress: ModelStore.getModels()[0].address,
-                status: "AVAILABLE"
+                status: "AVAILABLE",
+                isFaulty: false,
+                faultDescription: ''
             });
         });
     });

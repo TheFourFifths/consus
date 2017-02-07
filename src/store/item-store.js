@@ -23,12 +23,13 @@ let items = [
     {
         address: 'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE',
+        status: 'CHECKED_OUT',
         isFaulty: false,
-        faultDescription: ''
+        faultDescription: '',
+        timestamp: 0
     }
 ];
-let itemsByActionId = new Object(null);
+let itemsByActionId = Object.create(null);
 
 class ItemStore extends Store {
 
@@ -73,14 +74,16 @@ const store = new ItemStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     items = [];
-    itemsByActionId = new Object(null);
+    itemsByActionId = Object.create(null);
 });
 
 store.registerHandler('NEW_ITEM', data => {
     let item = {
         address: createAddress(items.length, 'item'),
         modelAddress: data.modelAddress,
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: ''
     };
     itemsByActionId[data.actionId] = item;
     items.push(item);

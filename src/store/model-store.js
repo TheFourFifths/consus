@@ -30,7 +30,7 @@ let models = [
         items: []
     }
 ];
-let modelsByActionId = new Object(null);
+let modelsByActionId = Object.create(null);
 let deletedModel = null;
 let recentlyUpdatedModel = null;
 
@@ -96,7 +96,7 @@ function updateModel(address, name, description, manufacturer, vendor, location,
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     models = [];
-    modelsByActionId = new Object(null);
+    modelsByActionId = Object.create(null);
 });
 
 store.registerHandler('NEW_ITEM', data => {
