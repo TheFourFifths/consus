@@ -2,19 +2,82 @@
 
 'use strict';
 
-var daemon = require('daemonize2').setup({
-    main: '../index.js',
-    name: 'consusd',
-    pidfile: 'consusd.pid'
-});
+// Capture an optional port from the command line args
+const PORT = process.argv.reduce((port, arg) => {
+    return (arg.match(/^--port=(\d+)$/) || [0, port])[1];
+}, 80);
 
-switch (process.argv[2]) {
-    case 'start':
-        daemon.start();
-        break;
-    case 'stop':
-        daemon.stop();
-        break;
-    default:
-        console.log('Usage: [start|stop]');
+var path = require('path');
+var spawn = require('child_process').spawn;
+var fs = require('fs');
+
+function start() {
+    console.log('Attempting to start the Consus server on port ' + PORT + '...');
+    try {
+        fs.writeFileSync(path.join(__dirname, '/../.pid'), '', {
+            flag: 'wx'
+        });
+    } catch (e) {
+        console.log('Failed to start the Consus server!');
+        console.log('The server is probably already running: the ".pid" file already exists.');
+        return;
+    }
+    var child = spawn('node', [path.join(__dirname, '../.dist/index'), '--port=' + PORT], {
+        stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
+        detached: true
+    });
+    fs.writeFileSync(path.join(__dirname, '/../.pid'), child.pid.toString(), {
+        flag: 'w',
+        encoding: 'ascii'
+    });
+    child.unref();
+    console.log('Consus server started!');
 }
+
+function stop() {
+    console.log('Attempting to stop the Consus server...');
+    var pid;
+    try {
+        pid = fs.readFileSync(path.join(__dirname, '/../.pid'), {
+            flag: 'r',
+            encoding: 'ascii'
+        });
+    } catch (e) {
+        console.log('Failed to stop the Consus server!');
+        console.log('The server is probably not running: the ".pid" file does not exist.');
+        return;
+    }
+    fs.unlinkSync(path.join(__dirname, '/../.pid'));
+    try {
+        process.kill(pid);
+    } catch(e) {
+        console.log('Failed to stop the consus server!');
+        console.log('The server is probably not running: the process does not exist.');
+        return;
+    }
+    console.log('Consus server stopped!');
+}
+
+function restart() {
+    console.log('Attempting to restart the Consus server...');
+    console.log();
+    stop();
+    console.log();
+    start();
+}
+
+switch (process.argv[2].toLowerCase()) {
+case 'start':
+    start();
+    break;
+case 'stop':
+    stop();
+    break;
+case 'restart':
+    restart();
+    break;
+default:
+    console.log('Unknown command. Run "consusd start", "consusd stop", or "consusd restart".');
+}
+
+process.exit(0);
