@@ -60,7 +60,6 @@
     "body-parser": "1.16.0",
     "chai": "3.5.0",
     "consus-core": "^0.6.0",
-    "daemonize2": "0.4.2",
     "express": "4.14.0",
     "moment-timezone": "^0.5.9",
     "xlsx": "0.8.1"
