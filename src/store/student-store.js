@@ -20,14 +20,7 @@ students[111111] = {
     status: ACTIVE_STATUS,
     email: 'mcboatfaceb@msoe.edu',
     major: 'Hyperdimensional Nautical Machines Engineering',
-    items: [{
-        address:'iGwEZVeaT',
-        modelAddress: 'm8y7nFLsT',
-        status: 'CHECKED_OUT',
-        isFaulty: false,
-        faultDescription: '',
-        timestamp: 0
-    }]
+    items: [ItemStore.getItemByAddress('iGwEZVeaT')]
 };
 
 let studentsByActionId = Object.create(null);
