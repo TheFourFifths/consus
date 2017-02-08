@@ -112,7 +112,7 @@ describe('Check out items', () => {
     it('should do a longterm checkout ', () => {
         let studentId = 123456;
         let adminCode = undefined;
-        let longtermDueDate = '12-12-2020';
+        let longtermDueDate = '2020-12-12';
         let longtermProfessor = 'Professor Dunglebottom';
         return addAction('NEW_ITEM', {
             modelAddress: 'm8y7nEtAe'

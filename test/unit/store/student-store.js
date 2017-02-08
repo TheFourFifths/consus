@@ -189,7 +189,7 @@ describe('StudentStore', () => {
         return addAction('NEW_LONGTERM_CHECKOUT', {
             studentId: student.id,
             itemAddresses: [items[0].address, items[2].address],
-            longtermDueDate: '2017-12-5',
+            longtermDueDate: '2017-12-05',
             longtermProfessor: 'Professor Vroom'
         }).then(() => {
             assert.strictEqual(student.items[0].address, items[0].address);
@@ -215,7 +215,7 @@ describe('StudentStore', () => {
     });
 
     it(`should edit item's duedate in student's list of items`, () => {
-        let today = moment();
+        let today = moment(Date.now(), 'x');
         let hour = parseInt(today.format('H'));
         let minute = parseInt(today.format('m'));
         // check for times past 4:50pm

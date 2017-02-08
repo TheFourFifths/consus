@@ -158,13 +158,13 @@ describe('CheckoutStore', () => {
         return addAction('NEW_LONGTERM_CHECKOUT', {
             studentId: student.id,
             itemAddresses: [items[0].address, items[1].address],
-            longtermDueDate: '2017-11-5',
+            longtermDueDate: '2017-11-05',
             longtermProfessor: 'Professor Vroom'
         }).then(() => {
             return addAction('NEW_LONGTERM_CHECKOUT', {
                 studentId: student.id,
                 itemAddresses: [items[0].address],
-                longtermDueDate: '2017-11-5',
+                longtermDueDate: '2017-11-05',
                 longtermProfessor: 'Professor Vroom'
             });
         }).then(() => {
@@ -178,7 +178,7 @@ describe('CheckoutStore', () => {
         return addAction('NEW_LONGTERM_CHECKOUT', {
             studentId: student.id,
             itemAddresses: [items[0].address, items[1].address],
-            longtermDueDate: '2017-11-5',
+            longtermDueDate: '2017-11-05',
             longtermProfessor: 'Professor Vroom'
         }).then(actionId => {
             assert.lengthOf(CheckoutStore.getLongTermCheckouts(), 1);
