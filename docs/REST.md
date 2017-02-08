@@ -314,6 +314,7 @@ Retrieve a student.
     }
 }
 ```
+
 ## POST `/api/student`
 
 Upload new student information based on an excel binary string.
@@ -340,6 +341,14 @@ Submit a checkout request.
 * `items`: An array of item identifiers
 * `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 
+### Sample Response
+
+```json
+{
+    "status": "success"
+}
+```
+
 ## POST `/api/checkout/longterm`
 
 Submit a checkout request and make the checkout be longterm for given date
@@ -351,7 +360,6 @@ Submit a checkout request and make the checkout be longterm for given date
 * `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 * `longtermDueDate`: Date the items are due back
 * `longtermProfessor`: Professors name for validation of longterm checkout(Not used by system)
-
 
 ### Sample Response
 
