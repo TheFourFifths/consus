@@ -23,8 +23,7 @@ describe('New Item', () => {
                 manufacturer: 'Pancakes R\' Us',
                 vendor: 'Mouzer',
                 location: 'Shelf 14',
-                isFaulty: false,
-                faultDescription: '',
+                allowCheckout: false,
                 price: 10.50,
                 count: 20
             });

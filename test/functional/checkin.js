@@ -26,8 +26,7 @@ describe('Checkin items', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
                     count: 10
                 }),
@@ -37,8 +36,7 @@ describe('Checkin items', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
                     count: 10
                 }),
@@ -73,11 +71,11 @@ describe('Checkin items', () => {
             }).then(() => {
                 return Promise.all([
                     addAction('NEW_CHECKOUT', {
-                        itemAddresses: [ItemStore.getItems()[0].address],
+                        equipmentAddresses: [ItemStore.getItems()[0].address],
                         studentId: 111111
                     }),
                     addAction('NEW_CHECKOUT', {
-                        itemAddresses: [ItemStore.getItems()[1].address],
+                        equipmentAddresses: [ItemStore.getItems()[1].address],
                         studentId: 123456
                     })
                 ]);

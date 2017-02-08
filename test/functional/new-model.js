@@ -26,8 +26,7 @@ describe('New model', () => {
             manufacturer: 'The Factory',
             vendor: 'The Store',
             location: 'The shelf',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             price: 3.50,
             count: 10
         }).then(response => {
@@ -41,10 +40,10 @@ describe('New model', () => {
                 manufacturer: 'The Factory',
                 vendor: 'The Store',
                 location: 'The shelf',
-                isFaulty: false,
-                faultDescription: '',
+                allowCheckout: false,
                 price: 3.50,
-                count: 10
+                count: 10,
+                inStock: 10
             });
         });
     });
@@ -55,8 +54,7 @@ describe('New model', () => {
             manufacturer: 'The Factory',
             vendor: 'The Store',
             location: 'The shelf',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             price: 3.50,
             count: 10
         }).then(() => {
@@ -72,8 +70,7 @@ describe('New model', () => {
             manufacturer: 'The Factory',
             vendor: 'The Store',
             location: 'The shelf',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             price: 3.50,
             count: 10
         }).then(() => {
@@ -89,8 +86,7 @@ describe('New model', () => {
             description: 'A widget',
             vendor: 'The Store',
             location: 'The shelf',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             price: 3.50,
             count: 10
         }).then(() => {
@@ -106,8 +102,7 @@ describe('New model', () => {
             description: 'A widget',
             manufacturer: 'The Factory',
             location: 'The shelf',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             price: 3.50,
             count: 10
         }).then(() => {
@@ -123,8 +118,7 @@ describe('New model', () => {
             description: 'A widget',
             manufacturer: 'The Factory',
             vendor: 'The Store',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             price: 3.50,
             count: 10
         }).then(() => {
@@ -134,37 +128,19 @@ describe('New model', () => {
         });
     });
 
-    it('should fail without "isFaulty"', () => {
+    it('should fail without allowCheckout', () => {
         return post('model', {
             name: 'Widget',
             description: 'A widget',
             manufacturer: 'The Factory',
             vendor: 'The Store',
             location: 'The shelf',
-            faultDescription: '',
             price: 3.50,
             count: 10
         }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
         }).catch(e => {
-            assert.strictEqual(e.message, 'The model "isFaulty" must be a boolean: expected undefined to be a boolean');
-        });
-    });
-
-    it('should fail without a fault description', () => {
-        return post('model', {
-            name: 'Widget',
-            description: 'A widget',
-            manufacturer: 'The Factory',
-            vendor: 'The Store',
-            location: 'The shelf',
-            isFaulty: false,
-            price: 3.50,
-            count: 10
-        }).then(() => {
-            throw new Error('Promise was unexpectedly fulfilled.');
-        }).catch(e => {
-            assert.strictEqual(e.message, 'The model fault description must be a string: expected undefined to be a string');
+            assert.strictEqual(e.message, 'The model allowCheckout must be a boolean: expected undefined to be a boolean');
         });
     });
 
@@ -175,8 +151,7 @@ describe('New model', () => {
             manufacturer: 'The Factory',
             vendor: 'The Store',
             location: 'The shelf',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             count: 10
         }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');
@@ -192,8 +167,7 @@ describe('New model', () => {
             manufacturer: 'The Factory',
             vendor: 'The Store',
             location: 'The shelf',
-            isFaulty: false,
-            faultDescription: '',
+            allowCheckout: false,
             price: 3.50
         }).then(() => {
             throw new Error('Promise was unexpectedly fulfilled.');

@@ -24,8 +24,7 @@ describe('Get all models', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
                     count: 0
                 }),
@@ -35,8 +34,7 @@ describe('Get all models', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
                     count: 0
                 })
@@ -57,10 +55,10 @@ describe('Get all models', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
-                    count: 0
+                    count: 0,
+                    inStock: 0
                 },
                 {
                     name: 'OtherThing',
@@ -68,10 +66,10 @@ describe('Get all models', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
-                    count: 0
+                    count: 0,
+                    inStock: 0
                 }
             ]);
         });
