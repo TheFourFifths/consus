@@ -69,7 +69,7 @@ Checkouts items to a student.
 ### Data
 
 - `adminCode`: (_Optional_) Admin override code
-- `itemAddresses`: Address of the item
+- `itemAddresses`: Addresses of the items
 - `studentId`: The student's ID who is checking out
 
 ```json
@@ -88,7 +88,7 @@ Checks items out to a student and changes due date to provided date
 ### Data
 
 - `adminCode`: (_Optional_) Admin override code
-- `itemAddresses`: Address of the item
+- `itemAddresses`: Addresses of the items
 - `studentId`: The student's ID who is checking out
 - `longtermDueDate`: Date the items are due at
 - `longtermProfessor`: Professors name for longterm authorization
