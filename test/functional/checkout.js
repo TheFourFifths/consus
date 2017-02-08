@@ -111,20 +111,24 @@ describe('Check out items', () => {
 
     it('should do a longterm checkout ', () => {
         let studentId = 123456;
-        let itemAddresses = ['iGwEZUvfA'];
         let adminCode = undefined;
         let longtermDueDate = '12-12-2020';
         let longtermProfessor = 'Professor Dunglebottom';
-
-        return post('checkout/longterm', {
-            studentId: studentId,
-            itemAddresses: itemAddresses,
-            adminCode: adminCode,
-            longtermDueDate: longtermDueDate,
-            longtermProfessor: longtermProfessor
+        return addAction('NEW_ITEM', {
+            modelAddress: 'm8y7nEtAe'
+        }).then(actionId => {
+            let item = ItemStore.getItemByActionId(actionId);
+            let itemAddresses = [item.address];
+            return post('checkout/longterm', {
+                studentId: studentId,
+                itemAddresses: itemAddresses,
+                adminCode: adminCode,
+                longtermDueDate: longtermDueDate,
+                longtermProfessor: longtermProfessor
+            });
         }).then(() => {
             assert.lengthOf(CheckoutStore.getLongTermCheckouts(), 1);
-            assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 1);
+            assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'CHECKED_OUT'), 2);
             assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 0);
             assert.strictEqual(StudentStore.getStudentById('123456').items[0].address, 'iGwEZUvfA');
         });
