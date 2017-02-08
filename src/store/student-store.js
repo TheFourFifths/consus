@@ -23,6 +23,9 @@ students[111111] = {
     items: [{
         address:'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
+        status: 'CHECKED_OUT',
+        isFaulty: false,
+        faultDescription: '',
         timestamp: 0
     }]
 };
