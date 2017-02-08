@@ -3,7 +3,7 @@ import ItemStore from './item-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 
-let students = new Object(null);
+let students = Object.create(null);
 const ACTIVE_STATUS = 'C - Current';
 students[123456] = {
     id: 123456,
@@ -27,7 +27,7 @@ students[111111] = {
     }]
 };
 
-let studentsByActionId = new Object(null);
+let studentsByActionId = Object.create(null);
 
 class StudentStore extends Store {
 
@@ -91,13 +91,14 @@ function removeItemFromAllStudents(itemAddress) {
 }
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    students = new Object(null);
-    studentsByActionId = new Object(null);
+    students = Object.create(null);
+    studentsByActionId = Object.create(null);
 });
 
 store.registerHandler('NEW_STUDENT', data => {
+    let studentId = parseInt(data.id);
     let student = {
-        id: data.id,
+        id: studentId,
         name: data.name,
         status: data.status,
         email: data.email,

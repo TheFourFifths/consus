@@ -2,8 +2,8 @@ import { Store } from 'consus-core/flux';
 import StudentStore from './student-store';
 import ItemStore from './item-store';
 
-let checkins = new Object(null);
-let checkinErrors = new Object(null);
+let checkins = Object.create(null);
+let checkinErrors = Object.create(null);
 
 class CheckinStore extends Store {
 
@@ -28,8 +28,8 @@ class CheckinStore extends Store {
 const store = new CheckinStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkins = new Object(null);
-    checkinErrors = new Object(null);
+    checkins = Object.create(null);
+    checkinErrors = Object.create(null);
 });
 
 store.registerHandler('CHECKIN', data => {

@@ -3,9 +3,10 @@ import AuthStore from './auth-store';
 import ItemStore from './item-store';
 import StudentStore from './student-store';
 
-let checkouts = new Object(null);
-let checkoutErrors = new Object(null);
-let longTermCheckouts = new Object(null);
+let checkouts = Object.create(null);
+let checkoutErrors = Object.create(null);
+let longTermCheckouts = Object.create(null);
+
 class CheckoutStore extends Store {
 
     getCheckouts() {
@@ -36,9 +37,9 @@ class CheckoutStore extends Store {
 const store = new CheckoutStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkouts = new Object(null);
-    checkoutErrors = new Object(null);
-    longTermCheckouts = new Object(null);
+    checkouts = Object.create(null);
+    checkoutErrors = Object.create(null);
+    longTermCheckouts = Object.create(null);
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
@@ -80,17 +81,14 @@ store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
         }
     });
 
-    if (data.adminCode){
-        if(AuthStore.verifyAdmin(data.adminCode)) {
-            longTermCheckouts[data.actionId] = longTermCheckout;
-        } else {
+    if (data.adminCode) {
+        if (!AuthStore.verifyAdmin(data.adminCode)) {
             throw new Error('Invalid Admin');
         }
     } else if (StudentStore.hasOverdueItem(data.studentId)) {
         throw new Error('Student has overdue item');
-    } else {
-        longTermCheckouts[data.actionId] = longTermCheckout;
     }
+    longTermCheckouts[data.actionId] = longTermCheckout;
 });
 
 export default store;
