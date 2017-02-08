@@ -189,7 +189,7 @@ describe('StudentStore', () => {
         return addAction('NEW_LONGTERM_CHECKOUT', {
             studentId: student.id,
             itemAddresses: [items[0].address, items[2].address],
-            longtermDueDate: '2017-12-5',
+            longtermDueDate: '2017-12-05',
             longtermProfessor: 'Professor Vroom'
         }).then(() => {
             assert.strictEqual(student.items[0].address, items[0].address);
@@ -235,7 +235,7 @@ describe('StudentStore', () => {
             });
         }).then(() => {
             assert.strictEqual(student.items[0].address, items[0].address);
-            assert.equal(student.items[0].timestamp, today.format('X'));
+            assert.strictEqual(student.items[0].timestamp.toString(), today.format('X'));
         });
     });
 
