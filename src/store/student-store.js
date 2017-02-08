@@ -14,14 +14,16 @@ students[123456] = {
     items: []
 };
 
-students[111111] = {
-    id: 111111,
-    name: 'Boaty McBoatface',
-    status: ACTIVE_STATUS,
-    email: 'mcboatfaceb@msoe.edu',
-    major: 'Hyperdimensional Nautical Machines Engineering',
-    items: [ItemStore.getItemByAddress('iGwEZVeaT')]
-};
+setTimeout(function() {
+    students[111111] = {
+        id: 111111,
+        name: 'Boaty McBoatface',
+        status: ACTIVE_STATUS,
+        email: 'mcboatfaceb@msoe.edu',
+        major: 'Hyperdimensional Nautical Machines Engineering',
+        items: [ItemStore.getItemByAddress('iGwEZVeaT')]
+    };
+}, 1000);
 
 let studentsByActionId = Object.create(null);
 
