@@ -216,13 +216,6 @@ describe('StudentStore', () => {
 
     it(`should edit item's duedate in student's list of items`, () => {
         let today = moment();
-        let hour = parseInt(today.format('H'));
-        let minute = parseInt(today.format('m'));
-        // check for times past 4:50pm
-        if (hour > 16 || (hour === 16 && minute >= 50)) {
-            // increment to the next day
-            today = today.add(1, 'd');
-        }
         today.hour(17).minute(0).second(0);
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
