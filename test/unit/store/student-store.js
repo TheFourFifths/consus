@@ -3,6 +3,7 @@ import ItemStore from '../../../.dist/store/item-store';
 import ModelStore from '../../../.dist/store/model-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
+import moment from 'moment-timezone';
 
 describe('StudentStore', () => {
 
@@ -212,4 +213,30 @@ describe('StudentStore', () => {
             assert.lengthOf(student.items, 1);
         });
     });
+
+    it(`should edit item's duedate in student's list of items`, () => {
+        let today = moment();
+        let hour = parseInt(today.format('H'));
+        let minute = parseInt(today.format('m'));
+        // check for times past 4:50pm
+        if (hour > 16 || (hour === 16 && minute >= 50)) {
+            // increment to the next day
+            today = today.add(1, 'd');
+        }
+        today.hour(17).minute(0).second(0);
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[2].address]
+        }).then(() => {
+            return addAction('EDIT_ITEM_DUEDATE', {
+                studentId: student.id,
+                itemAddress: items[0].address,
+                date: today.format('L')
+            });
+        }).then(() => {
+            assert.strictEqual(student.items[0].address, items[0].address);
+            assert.equal(student.items[0].timestamp, today.format('X'));
+        });
+    });
+
 });
