@@ -215,7 +215,7 @@ describe('StudentStore', () => {
     });
 
     it(`should edit item's duedate in student's list of items`, () => {
-        let today = moment(Date.now(), 'x');
+        let today = moment();
         let hour = parseInt(today.format('H'));
         let minute = parseInt(today.format('m'));
         // check for times past 4:50pm
@@ -235,7 +235,7 @@ describe('StudentStore', () => {
             });
         }).then(() => {
             assert.strictEqual(student.items[0].address, items[0].address);
-            assert.equal(student.items[0].timestamp, today.format('X'));
+            assert.strictEqual(student.items[0].timestamp.toString(), today.format('X'));
         });
     });
 
