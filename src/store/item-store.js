@@ -23,9 +23,10 @@ let items = [
     {
         address: 'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE',
+        status: 'CHECKED_OUT',
         isFaulty: false,
-        faultDescription: ''
+        faultDescription: '',
+        timestamp: 0
     }
 ];
 let itemsByActionId = Object.create(null);
@@ -80,7 +81,9 @@ store.registerHandler('NEW_ITEM', data => {
     let item = {
         address: createAddress(items.length, 'item'),
         modelAddress: data.modelAddress,
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: ''
     };
     itemsByActionId[data.actionId] = item;
     items.push(item);
