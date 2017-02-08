@@ -38,6 +38,7 @@ const store = new CheckoutStore();
 store.registerHandler('CLEAR_ALL_DATA', () => {
     checkouts = new Object(null);
     checkoutErrors = new Object(null);
+    longTermCheckouts = new Object(null);
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {

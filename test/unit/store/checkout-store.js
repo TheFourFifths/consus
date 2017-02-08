@@ -174,4 +174,20 @@ describe('CheckoutStore', () => {
         });
     });
 
+    it('should create a longterm checkout', () => {
+        return addAction('NEW_LONGTERM_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[1].address],
+            longtermDueDate: '2017-11-5',
+            longtermProfessor: 'Professor Vroom'
+        }).then(actionId => {
+            assert.lengthOf(CheckoutStore.getLongTermCheckouts(), 1);
+            let checkout = CheckoutStore.getLongTermCheckoutByActionId(actionId);
+            assert.strictEqual(checkout.studentId, student.id);
+            assert.strictEqual(checkout.itemAddresses[0], items[0].address);
+            assert.strictEqual(checkout.itemAddresses[1], items[1].address);
+            assert.strictEqual(checkout.longtermProfessor, 'Professor Vroom');
+        });
+    });
+
 });
