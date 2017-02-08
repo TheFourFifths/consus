@@ -217,6 +217,7 @@ describe('StudentStore', () => {
     it(`should edit item's duedate in student's list of items`, () => {
         let today = moment();
         today.hour(17).minute(0).second(0);
+        today.days(1);
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
             itemAddresses: [items[0].address, items[2].address]

@@ -79,7 +79,7 @@ function getItemToEdit(itemAddress){
 }
 function changeTimestamp(itemAddress, date){
     let itemToChange = getItemToEdit(itemAddress);
-    let timestamp = moment.tz(date, 'America/Chicago');
+    let timestamp = moment(date);
     let hour = parseInt(timestamp.format('H'));
     let minute = parseInt(timestamp.format('m'));
     // check for times past 4:50pm
