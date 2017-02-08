@@ -19,7 +19,7 @@ students[111111] = {
     name: 'Boaty McBoatface',
     status: ACTIVE_STATUS,
     email: 'mcboatfaceb@msoe.edu',
-    major: 'Hyperdimensional Nautical Machines Engineering',
+    major: 'Extradimensional Nautical Machines Engineering',
     items: [{
         address:'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
