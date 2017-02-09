@@ -80,13 +80,6 @@ function getItemToEdit(itemAddress){
 function changeTimestamp(itemAddress, date){
     let itemToChange = getItemToEdit(itemAddress);
     let timestamp = moment(date);
-    let hour = parseInt(timestamp.format('H'));
-    let minute = parseInt(timestamp.format('m'));
-    // check for times past 4:50pm
-    if (hour > 16 || (hour === 16 && minute >= 50)) {
-        // increment to the next day
-        timestamp = timestamp.add(1, 'd');
-    }
     timestamp.hour(17).minute(0).second(0);
     let dueTime = parseInt(timestamp.format('X'));
     itemToChange.timestamp = dueTime;
