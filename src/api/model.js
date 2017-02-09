@@ -48,7 +48,7 @@ app.post('/', (req, res) => {
 
 app.patch('/', (req, res) => {
     if (typeof req.query.address !== 'string') {
-        return res.status(400).failureJson('A model address is required.');
+        return res.failureJson('A model address is required.');
     }
     addAction('EDIT_MODEL', {
         address: req.query.address,
@@ -72,7 +72,7 @@ app.patch('/', (req, res) => {
 
 app.delete('/', (req, res) => {
     if (typeof req.query.modelAddress !== 'string') {
-        return res.status(400).failureJson('A model address is required.');
+        return res.failureJson('A model address is required.');
     }
     addAction('DELETE_MODEL', {
         modelAddress: req.query.modelAddress

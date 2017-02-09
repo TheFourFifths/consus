@@ -5,11 +5,11 @@ let app = express();
 
 app.post('/', (req, res) => {
     if (typeof req.body.studentId !== 'number') {
-        return res.status(400).failureJson('A student id is required.');
+        return res.failureJson('A student id is required.');
     }
     if (typeof req.body.itemAddresses !== 'object'
         || typeof req.body.itemAddresses[0] !== 'string') {
-        return res.status(400).failureJson('An array of item addresses is required.');
+        return res.failureJson('An array of item addresses is required.');
     }
     addAction('NEW_CHECKOUT', {
         studentId: req.body.studentId,
@@ -20,7 +20,7 @@ app.post('/', (req, res) => {
         res.successJson();
     })
     .catch(e => {
-        res.status(400).failureJson(e.message);
+        res.failureJson(e.message);
     });
 });
 
