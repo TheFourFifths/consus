@@ -4,7 +4,7 @@ import { Store } from 'consus-core/flux';
 import { assert } from 'chai';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
-const MODEL_PHOTO_DIR = '../assets/img';
+const MODEL_PHOTO_DIR = 'assets/img';
 
 let models = [
     {
@@ -65,8 +65,21 @@ class ModelStore extends Store {
         return recentlyUpdatedModel;
     }
 
-    getPhotoPath(address) {
-        return path.resolve(MODEL_PHOTO_DIR, address);
+    /**
+     * Returns the path to the model's image, or a placeholder
+     * @param {string} address - the address of the model
+     * @param {boolean} create - true to always return where the model's image would be, else
+     *                           false (default) for a file that exists now
+     * @return {string} The path to a model's photo
+     */
+    getPhotoPath(address, create = false) {
+        let modelPath = path.resolve(MODEL_PHOTO_DIR, address);
+        let placeholderPath = path.resolve(MODEL_PHOTO_DIR, 'placeholder');
+        if (fs.existsSync(modelPath) || create) {
+            return modelPath;
+        } else {
+            return placeholderPath;
+        }
     }
 }
 
@@ -100,7 +113,7 @@ function updateModel(address, name, description, manufacturer, vendor, location,
 
 function savePhoto(b64Str, address) {
     let bitmap = Buffer.from(b64Str, 'base64');
-    let photoPath = store.getPhotoPath(address);
+    let photoPath = store.getPhotoPath(address, true);
     fs.writeFileSync(photoPath, bitmap);
     return photoPath;
 }
