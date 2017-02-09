@@ -16,6 +16,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/model/all`](#get-apimodelall)
     * [DELETE `api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
+    * [GET `/api/student/all`](#get-apistudentall)
     * [POST `/api/student`](#post-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
     * [POST `api/checkin`](#post-apicheckin)
@@ -279,7 +280,6 @@ Delete a model
     }
 }
 ```
-
 ## GET `/api/student`
 
 Retrieve a student.
@@ -312,6 +312,43 @@ Retrieve a student.
             "major": "Chemical Engineering & Mathematics"
         }
     }
+}
+```
+## GET `/api/student/all`
+
+Retrieve a list of all students.
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 123456,
+            "name": "John von Neumann",
+            "items": [],
+            "email": "vonneumann@msoe.edu",
+            "major": "Chemical Engineering & Mathematics"
+        },
+        {
+            "id":111111,
+            "name":"Boaty McBoatface",
+            "status":"C - Current",
+            "email":"mcboatfaceb@msoe.edu",
+            "major":"Hyperdimensional Nautical Machines Engineering",
+            "items":[
+                {
+                    "address":"iGwEZVeaT",
+                    "modelAddress":"m8y7nFLsT",
+                    "status":"CHECKED_OUT",
+                    "isFaulty":false,
+                    "faultDescription":"",
+                    "timestamp":0
+                }
+            ]
+        }
+    ]
 }
 ```
 ## POST `/api/student`

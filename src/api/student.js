@@ -16,6 +16,10 @@ app.get('/', (req, res) => {
     res.successJson(student);
 });
 
+app.get('/all', (req, res) => {
+    res.successJson(StudentStore.getStudents());
+});
+
 app.post('/', (req, res) => {
     let workbook = xlsx.read(req.body.data, {type: 'binary'});
     let studentJSON;
