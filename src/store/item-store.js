@@ -109,7 +109,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
 
-        let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
+        let timestamp = moment(data.timestamp * 1000);
         let hour = parseInt(timestamp.format('H'));
         let minute = parseInt(timestamp.format('m'));
         // check for times past 4:50pm
