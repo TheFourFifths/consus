@@ -136,4 +136,58 @@ describe('CheckoutStore', () => {
         });
     });
 
+    it('should allow for admin to override failure to longterm-checkout due to overdue item', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address]
+        }).then(() => {
+            student.items[0].timestamp = 0;
+            assert.isTrue(StudentStore.hasOverdueItem(student.id));
+            addAction('NEW_LONGTERM_CHECKOUT', {
+                studentId: student.id,
+                itemAddresses: [items[1].address],
+                adminCode: '112994',
+
+            }).then(() => {
+                assert.strictEqual(student.items.length, 2);
+            });
+        });
+    });
+
+    it('should fail to check out an unavailable item', () => {
+        return addAction('NEW_LONGTERM_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[1].address],
+            longtermDueDate: '2017-11-05',
+            longtermProfessor: 'Professor Vroom'
+        }).then(() => {
+            return addAction('NEW_LONGTERM_CHECKOUT', {
+                studentId: student.id,
+                itemAddresses: [items[0].address],
+                longtermDueDate: '2017-11-05',
+                longtermProfessor: 'Professor Vroom'
+            });
+        }).then(() => {
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'An item in the cart is not available for checkout.');
+        });
+    });
+
+    it('should create a longterm checkout', () => {
+        return addAction('NEW_LONGTERM_CHECKOUT', {
+            studentId: student.id,
+            itemAddresses: [items[0].address, items[1].address],
+            longtermDueDate: '2017-11-05',
+            longtermProfessor: 'Professor Vroom'
+        }).then(actionId => {
+            assert.lengthOf(CheckoutStore.getLongTermCheckouts(), 1);
+            let checkout = CheckoutStore.getLongTermCheckoutByActionId(actionId);
+            assert.strictEqual(checkout.studentId, student.id);
+            assert.strictEqual(checkout.itemAddresses[0], items[0].address);
+            assert.strictEqual(checkout.itemAddresses[1], items[1].address);
+            assert.strictEqual(checkout.longtermProfessor, 'Professor Vroom');
+        });
+    });
+
 });

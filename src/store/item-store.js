@@ -94,7 +94,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
 
-        let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
+        let timestamp = moment(data.timestamp * 1000);
         let hour = parseInt(timestamp.format('H'));
         let minute = parseInt(timestamp.format('m'));
         // check for times past 4:50pm
@@ -103,6 +103,22 @@ store.registerHandler('NEW_CHECKOUT', data => {
             timestamp = timestamp.add(1, 'd');
         }
         timestamp.hour(17).minute(0).second(0);
+        let dueTime = parseInt(timestamp.format('X'));
+        store.getItemByAddress(address).timestamp = dueTime;
+    });
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    data.itemAddresses.forEach(address => {
+        store.getItemByAddress(address).status = 'CHECKED_OUT';
+        let timestamp = moment.tz(data.longtermDueDate, 'America/Chicago');
+        let hour = parseInt(timestamp.format('H'));
+        let minute = parseInt(timestamp.format('m'));
+        if (hour > 16 || (hour === 16 && minute >= 50)) {
+            // increment to the next day
+            timestamp = timestamp.add(1, 'd');
+        }
         let dueTime = parseInt(timestamp.format('X'));
         store.getItemByAddress(address).timestamp = dueTime;
     });

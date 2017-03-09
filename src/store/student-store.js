@@ -19,7 +19,7 @@ students[111111] = {
     name: 'Boaty McBoatface',
     status: ACTIVE_STATUS,
     email: 'mcboatfaceb@msoe.edu',
-    major: 'Hyperdimensional Nautical Machines Engineering',
+    major: 'Extradimensional Nautical Machines Engineering',
     items: [{
         address:'iGwEZVeaT',
         modelAddress: 'm8y7nFLsT',
@@ -117,6 +117,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
 
     let student = store.getStudentById(data.studentId);
 
+    data.itemAddresses.forEach(itemAddress => {
+        student.items.push(ItemStore.getItemByAddress(itemAddress));
+    });
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    let student = store.getStudentById(data.studentId);
     data.itemAddresses.forEach(itemAddress => {
         student.items.push(ItemStore.getItemByAddress(itemAddress));
     });
