@@ -20,6 +20,12 @@ app.get('/all', (req, res) => {
     res.successJson(StudentStore.getStudents());
 });
 
+app.patch('/', (req, res) => {
+    addAction('UPDATE_STUDENT', req.body).then(() => {
+        res.successJson(StudentStore.getStudentById(req.body.id));
+    });
+});
+
 app.post('/', (req, res) => {
     let workbook = xlsx.read(req.body.data, {type: 'binary'});
     let studentJSON;
