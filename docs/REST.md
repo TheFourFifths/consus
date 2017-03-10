@@ -18,6 +18,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/student`](#get-apistudent)
     * [GET `/api/student/all`](#get-apistudentall)
     * [POST `/api/student`](#post-apistudent)
+    * [PATCH `/api/student`](#patch-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
     * [POST `api/checkin`](#post-apicheckin)
 
@@ -366,6 +367,30 @@ Upload new student information based on an excel binary string.
     "status": "success"
 }
 ```
+
+## PATCH `/api/student`
+
+Update a student's information via a JSON object.
+Note that fields that don't exist in the updated student will be maintained.
+
+### Parameters
+
+* `student`: A JSON object containing the ID of the student and the fields to update.
+
+### Sample Response
+
+```json
+{
+    "status":"success",
+    "data":{
+        "id":111111,
+        "name":"string",
+        "status":"C - Current",
+        "email":"email",
+        "major":"string",
+        "items":[]
+    }
+}
 
 ## POST `/api/checkout`
 
