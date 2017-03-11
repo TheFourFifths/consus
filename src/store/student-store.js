@@ -1,7 +1,9 @@
 import { Store } from 'consus-core/flux';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
+import { readAddress } from 'consus-core/identifiers';
 
 let students = Object.create(null);
 const ACTIVE_STATUS = 'C - Current';
@@ -11,19 +13,26 @@ students[123456] = {
     status: ACTIVE_STATUS,
     email: 'neumannJ@msoe.edu',
     major: 'Software Engineering',
-    items: []
+    items: [],
+    models: []
 };
 
-setTimeout(function() {
-    students[111111] = {
-        id: 111111,
-        name: 'Boaty McBoatface',
-        status: ACTIVE_STATUS,
-        email: 'mcboatfaceb@msoe.edu',
-        major: 'Hyperdimensional Nautical Machines Engineering',
-        items: [ItemStore.getItemByAddress('iGwEZVeaT')]
-    };
-}, 1000);
+students[111111] = {
+    id: 111111,
+    name: 'Boaty McBoatface',
+    status: ACTIVE_STATUS,
+    email: 'mcboatfaceb@msoe.edu',
+    major: 'Hyperdimensional Nautical Machines Engineering',
+    items: [{
+        address:'iGwEZVeaT',
+        modelAddress: 'm8y7nFLsT',
+        status: 'CHECKED_OUT',
+        isFaulty: false,
+        faultDescription: '',
+        timestamp: 0
+    }],
+    models: []
+};
 
 let studentsByActionId = Object.create(null);
 
@@ -101,7 +110,8 @@ store.registerHandler('NEW_STUDENT', data => {
         status: data.status,
         email: data.email,
         major: data.major,
-        items: []
+        items: [],
+        models: []
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;
@@ -112,8 +122,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
 
     let student = store.getStudentById(data.studentId);
 
-    data.itemAddresses.forEach(itemAddress => {
-        student.items.push(ItemStore.getItemByAddress(itemAddress));
+    data.equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'item'){
+            student.items.push(ItemStore.getItemByAddress(address));
+        }
+        else if (result.type == 'model') {
+            student.models.push(ModelStore.getModelByAddress(address));
+        }
     });
 });
 

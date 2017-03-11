@@ -19,8 +19,7 @@ describe('CheckinStore', () => {
                 manufacturer: 'Pancakes R\' Us',
                 vendor: 'Mouzer',
                 location: 'Shelf 14',
-                isFaulty: false,
-                faultDescription: '',
+                allowCheckout: false,
                 price: 10.50,
                 count: 20
             });
@@ -53,7 +52,7 @@ describe('CheckinStore', () => {
             student = StudentStore.getStudentByActionId(actionId);
             return addAction('NEW_CHECKOUT', {
                 studentId: student.id,
-                itemAddresses: [items[0].address, items[2].address]
+                equipmentAddresses: [items[0].address, items[2].address]
             });
         });
     });

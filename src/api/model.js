@@ -22,8 +22,7 @@ app.post('/', (req, res) => {
         manufacturer: req.body.manufacturer,
         vendor: req.body.vendor,
         location: req.body.location,
-        isFaulty: req.body.isFaulty,
-        faultDescription: req.body.faultDescription,
+        allowCheckout: req.body.allowCheckout,
         price: req.body.price,
         count: req.body.count
     }).then(actionId => {
@@ -45,9 +44,11 @@ app.patch('/', (req, res) => {
         manufacturer: req.body.manufacturer,
         vendor: req.body.vendor,
         location: req.body.location,
-        isFaulty: req.body.isFaulty,
-        faultDescription: req.body.faultDescription,
-        price: req.body.price
+        allowCheckout: req.body.allowCheckout,
+        price: req.body.price,
+        count: req.body.count,
+        changeStock: req.body.changeStock,
+        inStock: req.body.inStock
     }).then(() => {
         let modelUpdated = ModelStore.getRecentlyUpdatedModel();
         res.successJson(modelUpdated);
