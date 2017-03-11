@@ -21,8 +21,14 @@ app.get('/all', (req, res) => {
 });
 
 app.patch('/', (req, res) => {
-    addAction('UPDATE_STUDENT', req.body).then(() => {
-        res.successJson(StudentStore.getStudentById(req.body.id));
+    addAction('UPDATE_STUDENT', {
+        id: parseInt(req.query.id),
+        name: req.body.name,
+        status: req.body.status,
+        email: req.body.email,
+        major: req.body.major
+    }).then(() => {
+        res.successJson(StudentStore.getStudentById(req.query.id));
     });
 });
 

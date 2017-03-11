@@ -32,16 +32,16 @@ describe('Update Student', () => {
             name: 'Your Mom',
             id: 111123,
             status: "C - Current",
-            email: "xx@xy.com"
+            email: "xx@xy.com",
+            major: ''
         };
-        return patch('student', null, newStudent).then(response => {
+        return patch('student', {id: newStudent.id}, newStudent).then(response => {
             newStudent.items = [];
             newStudent.major = "";
             return assert.deepEqual(response, newStudent);
         }).then(() => {
-            delete newStudent.email;
             newStudent.name = "Joe Blow";
-            return patch('student', null, newStudent);
+            return patch('student', {id: newStudent.id}, newStudent);
         }).then(student => {
             newStudent.email = "xx@xy.com";
             return assert.deepEqual(student, newStudent);
