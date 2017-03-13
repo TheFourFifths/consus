@@ -14,4 +14,4 @@ export default [
         email: 'mcboatfaceb@msoe.edu',
         major: 'Hyperdimensional Nautical Machines Engineering'
     }
-]
+];

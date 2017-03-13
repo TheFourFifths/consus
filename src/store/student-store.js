@@ -3,6 +3,7 @@ import ItemStore from './item-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 
+const ACTIVE_STATUS = 'C - Current';
 let students = Object.create(null);
 
 let studentsByActionId = Object.create(null);
