@@ -5,30 +5,7 @@ import StudentStore from './student-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 import moment from 'moment-timezone';
 
-let items = [
-    {
-        address: 'iGwEZUvfA',
-        modelAddress: 'm8y7nEtAe',
-        status: 'AVAILABLE',
-        isFaulty: false,
-        faultDescription: ''
-    },
-    {
-        address: 'iGwEZVHHE',
-        modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE',
-        isFaulty: false,
-        faultDescription: ''
-    },
-    {
-        address: 'iGwEZVeaT',
-        modelAddress: 'm8y7nFLsT',
-        status: 'CHECKED_OUT',
-        isFaulty: false,
-        faultDescription: '',
-        timestamp: 0
-    }
-];
+let items = [];
 let itemsByActionId = Object.create(null);
 
 class ItemStore extends Store {
