@@ -12,7 +12,7 @@ function start(port) {
         }
         let app = express();
         app.use(express.static(path.join(__dirname, '../public')));
-        app.use(bodyParser.json());
+        app.use(bodyParser.json({ limit: '1MB' }));
         app.use('/api', api);
         server = app.listen(port, () => {
             resolve();

@@ -87,7 +87,7 @@ Updates a model to have new attributes.
     "location": "Shelf 14",
     "price": 10.50,
     "count": 20,
-    "photo": "<Base64 encoding of the model's photo>"
+    "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 }
 ```
 

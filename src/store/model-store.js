@@ -69,12 +69,12 @@ class ModelStore extends Store {
      * Returns the path to the model's image, or a placeholder
      * @param {string} address - the address of the model
      * @param {boolean} create - true to always return where the model's image would be, else
-     *                           false (default) for a file that exists now
+     *                           false (default) for a photo that exists now
      * @return {string} The path to a model's photo
      */
     getPhotoPath(address, create = false) {
-        let modelPath = path.resolve(MODEL_PHOTO_DIR, address);
-        let placeholderPath = path.resolve(MODEL_PHOTO_DIR, 'placeholder');
+        let modelPath = path.resolve(MODEL_PHOTO_DIR, `${address}.jpeg`);
+        let placeholderPath = path.resolve(MODEL_PHOTO_DIR, 'placeholder.jpeg');
         if (fs.existsSync(modelPath) || create) {
             return modelPath;
         } else {

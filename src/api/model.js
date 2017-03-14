@@ -63,6 +63,7 @@ app.patch('/', (req, res) => {
         photo: req.body.photo
     }).then(() => {
         let modelUpdated = ModelStore.getRecentlyUpdatedModel();
+        modelUpdated.photo = getModelPhoto(modelUpdated.address);
         res.successJson(modelUpdated);
     }).catch(e => {
         res.failureJson(e.message);

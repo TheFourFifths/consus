@@ -48,7 +48,10 @@ describe('Get all models', () => {
         assert.lengthOf(ModelStore.getModels(), 2, "Failure During Setup");
         return get('model/all').then(response => {
             response.models.forEach(ele => {
+                assert.property(ele, 'address');
                 delete ele.address;
+                assert.property(ele, 'photo');
+                delete ele.photo;
             });
             assert.deepEqual(response.models, [
                 {

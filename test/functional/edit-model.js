@@ -43,7 +43,8 @@ describe('Edit model', () => {
             location: 'New location',
             isFaulty: true,
             faultDescription: 'it is not working',
-            price: 3.50
+            price: 3.50,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
         };
         return patch('model', {
             address: model.address

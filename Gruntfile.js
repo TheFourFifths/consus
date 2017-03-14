@@ -72,6 +72,7 @@ module.exports = function(grunt) {
             }
         },
         clean: {
+            assets: ['!assets/img/placeholder.jpeg', 'assets/img/m*.jpeg', 'assets/img/i*.jpeg'],
             coverage: ['coverage/', 'coverage.lcov', '.nyc_output'],
             dist: ['.dist/'],
             test: ['.test/'],
