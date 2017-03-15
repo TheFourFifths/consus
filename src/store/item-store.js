@@ -60,7 +60,8 @@ store.registerHandler('NEW_ITEM', data => {
         modelAddress: data.modelAddress,
         status: 'AVAILABLE',
         isFaulty: false,
-        faultDescription: ''
+        faultDescription: '',
+        isCheckedOutTo: null
     };
     itemsByActionId[data.actionId] = item;
     items.push(item);
@@ -70,7 +71,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
     data.itemAddresses.forEach(address => {
         store.getItemByAddress(address).status = 'CHECKED_OUT';
-
+        store.getItemByAddress(address).isCheckedOutTo = data.studentId;
         let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
         let hour = parseInt(timestamp.format('H'));
         let minute = parseInt(timestamp.format('m'));
@@ -91,6 +92,7 @@ store.registerHandler('CHECKIN', data => {
         return;
     }
     store.getItemByAddress(data.itemAddress).status = 'AVAILABLE';
+    store.getItemByAddress(data.itemAddress).isCheckedOutTo = null;
 });
 
 store.registerHandler('DELETE_ITEM', data => {
