@@ -46,7 +46,8 @@ describe('New Item', () => {
                 modelAddress: ModelStore.getModels()[0].address,
                 status: "AVAILABLE",
                 isFaulty: false,
-                faultDescription: ''
+                faultDescription: '',
+                isCheckedOutTo: null
             });
         });
     });

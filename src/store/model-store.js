@@ -3,33 +3,7 @@ import { assert } from 'chai';
 import CheckoutStore from './checkout-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
-let models = [
-    {
-        address: 'm8y7nEtAe',
-        name: 'Resistor',
-        description: 'V = IR',
-        manufacturer: 'Pancakes R\' Us',
-        vendor: 'Mouzer',
-        location: 'Shelf 14',
-        allowCheckout: false,
-        price: 10.50,
-        count: 3,
-        items: ['iGwEZUvfA', 'iGwEZVHHE', 'iGwEZVeaT']
-    },
-    {
-        address: 'm8y7nFLsT',
-        name: 'Transistor',
-        description: 'Something used in computers',
-        manufacturer: 'Vroom Industries',
-        vendor: 'Fankserrogatoman Inc',
-        location: 'Shelf 2',
-        allowCheckout: true,
-        price: 4.00,
-        count: 20,
-        inStock: 20,
-        items: []
-    }
-];
+let models = [];
 let modelsByActionId = Object.create(null);
 let deletedModel = null;
 let recentlyUpdatedModel = null;

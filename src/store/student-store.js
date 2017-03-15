@@ -5,35 +5,9 @@ import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { readAddress } from 'consus-core/identifiers';
 
-let students = Object.create(null);
 const ACTIVE_STATUS = 'C - Current';
-students[123456] = {
-    id: 123456,
-    name: 'John von Neumann',
-    status: ACTIVE_STATUS,
-    email: 'neumannJ@msoe.edu',
-    major: 'Software Engineering',
-    items: [],
-    models: []
-};
 
-students[111111] = {
-    id: 111111,
-    name: 'Boaty McBoatface',
-    status: ACTIVE_STATUS,
-    email: 'mcboatfaceb@msoe.edu',
-    major: 'Hyperdimensional Nautical Machines Engineering',
-    items: [{
-        address:'iGwEZVeaT',
-        modelAddress: 'm8y7nFLsT',
-        status: 'CHECKED_OUT',
-        isFaulty: false,
-        faultDescription: '',
-        timestamp: 0
-    }],
-    models: []
-};
-
+let students = Object.create(null);
 let studentsByActionId = Object.create(null);
 
 class StudentStore extends Store {
