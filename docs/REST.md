@@ -35,7 +35,8 @@ Create an item.
     "status": "success",
     "data": {
         "address": "iGwEZUvfA",
-        "modelName": "Resistor"
+        "modelName": "Resistor",
+        "isCheckedOutTo": null
     }
 }
 ```
@@ -57,7 +58,8 @@ Retrieve an item.
         "item": {
             "address": "iGwEZUvfA",
             "modelAddress": "m8y7nEtAe",
-            "status": "AVAILABLE"
+            "status": "AVAILABLE",
+            "isCheckedOutTo": 123456
         }
     }
 }
@@ -364,7 +366,8 @@ Submit a check-in request.
     "status": "success",
     "data": {
         "itemAddress": "iGwEZUvfA",
-        "modelName": "Resistor"
+        "modelName": "Resistor",
+        "isCheckedOutTo": 123456
     }
 }
 ```
