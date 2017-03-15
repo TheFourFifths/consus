@@ -6,36 +6,8 @@ import { createAddress, readAddress } from 'consus-core/identifiers';
 
 const MODEL_PHOTO_DIR = 'assets/img';
 
-let models = [
-    {
-        address: 'm8y7nEtAe',
-        name: 'Resistor',
-        description: 'V = IR',
-        manufacturer: 'Pancakes R\' Us',
-        vendor: 'Mouzer',
-        location: 'Shelf 14',
-        isFaulty: false,
-        faultDescription: '',
-        price: 10.50,
-        count: 20,
-        items: ['iGwEZUvfA', 'iGwEZVHHE', 'iGwEZVeaT']
-    },
-    {
-        address: 'm8y7nFLsT',
-        name: 'Transistor',
-        description: 'Something used in computers',
-        manufacturer: 'Vroom Industries',
-        vendor: 'Fankserrogatoman Inc',
-        location: 'Shelf 2',
-        isFaulty: false,
-        faultDescription: '',
-        price: 4.00,
-        count: 10,
-        items: []
-
-    }
-];
-let modelsByActionId = new Object(null);
+let models = [];
+let modelsByActionId = Object.create(null);
 let deletedModel = null;
 let recentlyUpdatedModel = null;
 
@@ -120,7 +92,7 @@ function savePhoto(b64Str, address) {
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     models = [];
-    modelsByActionId = new Object(null);
+    modelsByActionId = Object.create(null);
 });
 
 store.registerHandler('NEW_ITEM', data => {

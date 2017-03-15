@@ -5,30 +5,8 @@ import StudentStore from './student-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 import moment from 'moment-timezone';
 
-let items = [
-    {
-        address: 'iGwEZUvfA',
-        modelAddress: 'm8y7nEtAe',
-        status: 'AVAILABLE',
-        isFaulty: false,
-        faultDescription: ''
-    },
-    {
-        address: 'iGwEZVHHE',
-        modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE',
-        isFaulty: false,
-        faultDescription: ''
-    },
-    {
-        address: 'iGwEZVeaT',
-        modelAddress: 'm8y7nFLsT',
-        status: 'AVAILABLE',
-        isFaulty: false,
-        faultDescription: ''
-    }
-];
-let itemsByActionId = new Object(null);
+let items = [];
+let itemsByActionId = Object.create(null);
 
 class ItemStore extends Store {
 
@@ -73,14 +51,16 @@ const store = new ItemStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
     items = [];
-    itemsByActionId = new Object(null);
+    itemsByActionId = Object.create(null);
 });
 
 store.registerHandler('NEW_ITEM', data => {
     let item = {
         address: createAddress(items.length, 'item'),
         modelAddress: data.modelAddress,
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        isFaulty: false,
+        faultDescription: ''
     };
     itemsByActionId[data.actionId] = item;
     items.push(item);
