@@ -16,6 +16,22 @@ app.get('/', (req, res) => {
     res.successJson(student);
 });
 
+app.get('/all', (req, res) => {
+    res.successJson(StudentStore.getStudents());
+});
+
+app.patch('/', (req, res) => {
+    addAction('UPDATE_STUDENT', {
+        id: parseInt(req.query.id),
+        name: req.body.name,
+        status: req.body.status,
+        email: req.body.email,
+        major: req.body.major
+    }).then(() => {
+        res.successJson(StudentStore.getStudentById(req.query.id));
+    });
+});
+
 app.post('/', (req, res) => {
     let workbook = xlsx.read(req.body.data, {type: 'binary'});
     let studentJSON;
