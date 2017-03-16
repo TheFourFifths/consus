@@ -7,7 +7,7 @@ export default [
         location: 'Shelf 14',
         allowCheckout: false,
         price: 10.50,
-        count: 3
+        count: 0
     },
     {
         name: 'Transistor',
