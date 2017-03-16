@@ -1,8 +1,12 @@
+import fs from 'fs';
+import path from 'path';
 import { Store } from 'consus-core/flux';
 import { assert } from 'chai';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
+
+const MODEL_PHOTO_DIR = 'assets/img';
 
 let models = [];
 let modelsByActionId = Object.create(null);
@@ -30,8 +34,26 @@ class ModelStore extends Store {
     getDeletedModel() {
         return deletedModel;
     }
+
     getRecentlyUpdatedModel(){
         return recentlyUpdatedModel;
+    }
+
+    /**
+     * Returns the path to the model's image, or a placeholder
+     * @param {string} address - the address of the model
+     * @param {boolean} create - true to always return where the model's image would be, else
+     *                           false (default) for a photo that exists now
+     * @return {string} The path to a model's photo
+     */
+    getPhotoPath(address, create = false) {
+        let modelPath = path.resolve(MODEL_PHOTO_DIR, `${address}.jpeg`);
+        let placeholderPath = path.resolve(MODEL_PHOTO_DIR, 'placeholder.jpeg');
+        if (fs.existsSync(modelPath) || create) {
+            return modelPath;
+        } else {
+            return placeholderPath;
+        }
     }
 }
 
@@ -47,7 +69,8 @@ function deleteModelByAddress(address) {
         throw new Error(`Model address (${address}) does not exist`);
     delete models[result.index];
 }
-function updateModel(address, name, description, manufacturer, vendor, location, allowCheckout, price, count, changeStock, inStock){
+
+function updateModel(address, name, description, manufacturer, vendor, location, allowCheckout, price, count, changeStock, inStock, b64PhotoStr){
     let modelToUpdate = store.getModelByAddress(address);
     let originalStock = modelToUpdate.inStock;
     let changeInCount = count - modelToUpdate.count;
@@ -64,9 +87,16 @@ function updateModel(address, name, description, manufacturer, vendor, location,
         modelToUpdate.inStock = inStock;
     else
         modelToUpdate.inStock = originalStock + changeInCount;
-
+    savePhoto(b64PhotoStr, address);
     recentlyUpdatedModel = modelToUpdate;
     return modelToUpdate;
+}
+
+function savePhoto(b64Str, address) {
+    let bitmap = Buffer.from(b64Str, 'base64');
+    let photoPath = store.getPhotoPath(address, true);
+    fs.writeFileSync(photoPath, bitmap);
+    return photoPath;
 }
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
@@ -142,7 +172,7 @@ store.registerHandler('EDIT_MODEL', data => {
     assert.isNumber(data.price, 'The model price must be a number');
     assert.isNumber(data.count, 'The model count must be a number');
     assert.isNumber(data.inStock, 'The model stock amount must be a number');
-    updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.allowCheckout, data.price, data.count, data.changeStock, data.inStock);
+    updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.allowCheckout, data.price, data.count, data.changeStock, data.inStock, data.photo);
 });
 
 export default store;

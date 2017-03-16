@@ -209,7 +209,8 @@ describe('ModelStore', () => {
             price: 11.50,
             count: 20,
             changeStock: false,
-            inStock: 20
+            inStock: 20,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
         }).then(() => {
             let modifiedModel = ModelStore.getRecentlyUpdatedModel();
             assert.strictEqual('computer', modifiedModel.name);
@@ -235,7 +236,8 @@ describe('ModelStore', () => {
             price: 11.50,
             count: 30,
             changeStock: true,
-            inStock: 25
+            inStock: 25,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
         }).then(() => {
             let modifiedModel = ModelStore.getRecentlyUpdatedModel();
             assert.strictEqual('computer', modifiedModel.name);

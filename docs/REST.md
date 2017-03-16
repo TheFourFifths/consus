@@ -167,6 +167,7 @@ Body:
 * `count`: The total amount of the model
 * `changeStock`: If true, the number of models in stock is manually changed
 * `inStock`: The number of models in stock
+* `photo`: The model's picture encoded as base64
 
 ### Sample Request
 
@@ -197,6 +198,7 @@ Content-Type: application/json
         "price": 10.50,
         "count": 20,
         "inStock": 20
+        "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg="
     }
 }
 ```
