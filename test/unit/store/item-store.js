@@ -142,4 +142,12 @@ describe('ItemStore', () => {
     });
     //Note: There should probably be a test that it does get overdue items, but we can't just
     //give a student an overdue item so that's untestable right now.
+
+    it('should get all items of a given model', () => {
+        items = ItemStore.getChildrenOfModel(model.address);
+        assert.lengthOf(items, 2);
+        items.forEach(item => {
+            assert.strictEqual(item.modelAddress, model.address);
+        });
+    });
 });

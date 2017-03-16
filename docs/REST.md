@@ -14,6 +14,7 @@ This document describes the API endpoints of the Consus server.
     * [PATCH `/api/model`](#patch-apimodel)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
+    * [GET `/api/model/children`](#get-apimodelchildren)
     * [DELETE `api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
     * [GET `/api/student/all`](#get-apistudentall)
@@ -251,6 +252,41 @@ An array containing each model and its data.
             "faultDescription": "",
             "price": 10.50,
             "count": 20
+        }]
+    }
+}
+```
+
+## GET `/api/model/children`
+
+Retrieve a model and all items belonging to it.
+
+### Parameters
+
+* `modelAddress`: Address of the model to retrieve
+
+### Sample Response
+The model and an array of its items
+```json
+{
+    "status": "success",
+    "data": {
+        "model": {
+            "address": "m8y7nEtAe",
+            "name": "Resistor",
+            "description": "V = IR",
+            "manufacturer": "Pancakes R Us",
+            "vendor": "Mouzer",
+            "location": "Shelf 14",
+            "isFaulty": false,
+            "faultDescription": "",
+            "price": 10.50,
+            "count": 20
+        },
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "status": "CHECKED_OUT"
         }]
     }
 }

@@ -2,6 +2,7 @@ import fs from 'fs';
 import express from 'express';
 import { addAction } from '../lib/database';
 import ModelStore from '../store/model-store';
+import ItemStore from '../store/item-store';
 
 let app = express();
 
@@ -24,6 +25,13 @@ app.get('/all', (req, res) => {
     });
     res.successJson({
         models
+    });
+});
+
+app.get('/children', (req, res) => {
+    res.successJson({
+        model: ModelStore.getModelByAddress(req.query.modelAddress),
+        items: ItemStore.getChildrenOfModel(req.query.modelAddress)
     });
 });
 

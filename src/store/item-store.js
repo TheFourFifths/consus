@@ -46,6 +46,10 @@ class ItemStore extends Store {
         delete items[result.index];
     }
 
+    getChildrenOfModel(modelAddress){
+        return items.filter(item => item.modelAddress === modelAddress);
+    }
+
 }
 const store = new ItemStore();
 
