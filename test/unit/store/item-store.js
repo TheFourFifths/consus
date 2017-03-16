@@ -18,8 +18,7 @@ describe('ItemStore', () => {
                 manufacturer: 'Pancakes R\' Us',
                 vendor: 'Mouzer',
                 location: 'Shelf 14',
-                isFaulty: false,
-                faultDescription: '',
+                allowCheckout: false,
                 price: 10.50,
                 count: 20
             });
@@ -75,7 +74,7 @@ describe('ItemStore', () => {
     it('should check out multiple items', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddresses: [items[0].address, items[1].address]
+            equipmentAddresses: [items[0].address, items[1].address]
         }).then(() => {
             assert.strictEqual(items[0].status, 'CHECKED_OUT');
             assert.strictEqual(items[1].status, 'CHECKED_OUT');
@@ -85,7 +84,7 @@ describe('ItemStore', () => {
     it('should check out a single item', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddresses: [items[0].address]
+            equipmentAddresses: [items[0].address]
         }).then(() => {
             assert.strictEqual(items[0].status, 'CHECKED_OUT');
             assert.strictEqual(items[1].status, 'AVAILABLE');
@@ -95,7 +94,7 @@ describe('ItemStore', () => {
     it('should check an item in', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            itemAddresses: [items[0].address]
+            equipmentAddresses: [items[0].address]
         }).then(() => {
             return addAction('CHECKIN', {
                 studentId: student.id,
@@ -108,8 +107,10 @@ describe('ItemStore', () => {
 
     it('should fail to delete an item', () =>{
         assert.strictEqual(items.length, 2);
+        let modelAddress = items[0].modelAddress;
         return addAction('DELETE_ITEM', {
-            itemAddress: 'This is not an address'
+            itemAddress: 'This is not an address',
+            modelAddress: modelAddress
         }).then(assert.fail)
           .catch(e => {
               assert.strictEqual(e.message, 'Unknown type.');
@@ -135,7 +136,7 @@ describe('ItemStore', () => {
     it('should get 0 overdue items when no items are overdue', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: 123456,
-            itemAddresses: [ItemStore.getItems()[0].address]
+            equipmentAddresses: [ItemStore.getItems()[0].address]
         }).then(() => {
             assert.lengthOf(ItemStore.getOverdueItems(), 0);
         });

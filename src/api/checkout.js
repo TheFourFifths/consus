@@ -7,13 +7,14 @@ app.post('/', (req, res) => {
     if (typeof req.body.studentId !== 'number') {
         return res.failureJson('A student id is required.');
     }
-    if (typeof req.body.itemAddresses !== 'object'
-        || typeof req.body.itemAddresses[0] !== 'string') {
+    if (typeof req.body.equipmentAddresses !== 'object'
+        || typeof req.body.equipmentAddresses[0] !== 'string') {
         return res.failureJson('An array of item addresses is required.');
+
     }
     addAction('NEW_CHECKOUT', {
         studentId: req.body.studentId,
-        itemAddresses: req.body.itemAddresses,
+        equipmentAddresses: req.body.equipmentAddresses,
         adminCode: req.body.adminCode
     })
     .then(() => {

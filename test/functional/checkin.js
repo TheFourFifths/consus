@@ -26,8 +26,7 @@ describe('Checkin items', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
                     count: 10
                 }),
@@ -37,9 +36,18 @@ describe('Checkin items', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
+                    count: 10
+                }),
+                addAction('NEW_MODEL', {
+                    name: 'ThisThat',
+                    description: 'Not the OtherThing',
+                    manufacturer: 'The Factory',
+                    vendor: 'The Store',
+                    location: 'The shelf',
+                    allowCheckout: true,
+                    price: 10.05,
                     count: 10
                 }),
                 addAction('NEW_STUDENT', {
@@ -73,11 +81,11 @@ describe('Checkin items', () => {
             }).then(() => {
                 return Promise.all([
                     addAction('NEW_CHECKOUT', {
-                        itemAddresses: [ItemStore.getItems()[0].address],
+                        equipmentAddresses: [ItemStore.getItems()[0].address],
                         studentId: 111111
                     }),
                     addAction('NEW_CHECKOUT', {
-                        itemAddresses: [ItemStore.getItems()[1].address],
+                        equipmentAddresses: [ItemStore.getItems()[1].address, ModelStore.getModels()[2].address],
                         studentId: 123456
                     })
                 ]);
@@ -102,6 +110,25 @@ describe('Checkin items', () => {
             assert.deepEqual(data, {
                 itemAddress: chkdInItem.address,
                 modelName: 'Widget'
+            });
+        });
+    });
+
+    it('should checkin a model', () => {
+        assert.lengthOf(CheckinStore.getCheckins(), 0);
+        assert.strictEqual(ModelStore.getModels()[2].inStock, 9);
+        return post('checkin/model', {
+            studentId: 123456,
+            modelAddress: ModelStore.getModels()[2].address,
+            quantity: 1
+        }).then(data => {
+            assert.lengthOf(CheckinStore.getCheckins(), 1);
+            // assert response data
+            assert.strictEqual(ModelStore.getModels()[2].inStock, 10);
+            assert.deepEqual(data, {
+                modelAddress: ModelStore.getModels()[2].address,
+                modelName: 'ThisThat',
+                quantity: 1
             });
         });
     });

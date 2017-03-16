@@ -36,6 +36,7 @@ describe('Update Student', () => {
             major: ''
         };
         return patch('student', {id: newStudent.id}, newStudent).then(response => {
+            newStudent.models = [];
             newStudent.items = [];
             newStudent.major = "";
             return assert.deepEqual(response, newStudent);

@@ -46,7 +46,8 @@ describe('Get all students', () => {
                     status: "C - Current",
                     email: "",
                     major: "",
-                    items: []
+                    items: [],
+                    models: []
                 },
                 {
                     name: "That Guy",
@@ -54,7 +55,8 @@ describe('Get all students', () => {
                     status: "C - Current",
                     email: "",
                     major: "",
-                    items: []
+                    items: [],
+                    models: []
                 }
             ]);
         });

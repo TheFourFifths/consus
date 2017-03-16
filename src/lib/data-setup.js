@@ -19,7 +19,7 @@ export function initData(){
 
     addAction('NEW_CHECKOUT', {
         studentId: students[1].id,
-        itemAddresses: [ItemStore.getItems()[2].address]
+        equipmentAddresses: [ItemStore.getItems()[2].address]
     });
 
     ItemStore.getItems()[2].timestamp = 0;

@@ -1,11 +1,13 @@
 import { Store } from 'consus-core/flux';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
+import { readAddress } from 'consus-core/identifiers';
 
 const ACTIVE_STATUS = 'C - Current';
-let students = Object.create(null);
 
+let students = Object.create(null);
 let studentsByActionId = Object.create(null);
 
 class StudentStore extends Store {
@@ -84,7 +86,8 @@ store.registerHandler('NEW_STUDENT', data => {
         status: data.status,
         email: data.email,
         major: data.major,
-        items: []
+        items: [],
+        models: []
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;
@@ -95,8 +98,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
 
     let student = store.getStudentById(data.studentId);
 
-    data.itemAddresses.forEach(itemAddress => {
-        student.items.push(ItemStore.getItemByAddress(itemAddress));
+    data.equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'item'){
+            student.items.push(ItemStore.getItemByAddress(address));
+        }
+        else if (result.type == 'model') {
+            student.models.push(ModelStore.getModelByAddress(address));
+        }
     });
 });
 
@@ -108,6 +117,24 @@ store.registerHandler('CHECKIN', data => {
     let student = store.getStudentById(data.studentId);
     let item = ItemStore.getItemByAddress(data.itemAddress);
     student.items.splice(student.items.indexOf(item), 1);
+});
+
+store.registerHandler('CHECKIN_MODELS', data => {
+    store.waitFor(CheckinStore);
+    if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
+        return;
+    }
+    let student = store.getStudentById(data.studentId);
+    let model = ModelStore.getModelByAddress(data.modelAddress);
+
+    let modelsRemoved = 0;
+    for(let i = 0; i < student.models.length && modelsRemoved < data.quantity; i++){
+        if(student.models[i].address === model.address){
+            student.models.splice(i, 1);
+            i--;
+            modelsRemoved++;
+        }
+    }
 });
 
 store.registerHandler('UPDATE_STUDENT', student => {
