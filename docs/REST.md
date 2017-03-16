@@ -14,9 +14,12 @@ This document describes the API endpoints of the Consus server.
     * [PATCH `/api/model`](#patch-apimodel)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
+    * [GET `/api/model/children`](#get-apimodelchildren)
     * [DELETE `api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
+    * [GET `/api/student/all`](#get-apistudentall)
     * [POST `/api/student`](#post-apistudent)
+    * [PATCH `/api/student`](#patch-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
     * [POST `api/checkin`](#post-apicheckin)
     * [POST `api/checkin/model`](#post-apicheckinmodel)
@@ -253,6 +256,41 @@ An array containing each model and its data.
 }
 ```
 
+## GET `/api/model/children`
+
+Retrieve a model and all items belonging to it.
+
+### Parameters
+
+* `modelAddress`: Address of the model to retrieve
+
+### Sample Response
+The model and an array of its items
+```json
+{
+    "status": "success",
+    "data": {
+        "model": {
+            "address": "m8y7nEtAe",
+            "name": "Resistor",
+            "description": "V = IR",
+            "manufacturer": "Pancakes R Us",
+            "vendor": "Mouzer",
+            "location": "Shelf 14",
+            "isFaulty": false,
+            "faultDescription": "",
+            "price": 10.50,
+            "count": 20
+        },
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "status": "CHECKED_OUT"
+        }]
+    }
+}
+```
+
 ## DELETE `/api/model`
 
 Delete a model
@@ -282,7 +320,6 @@ Delete a model
     }
 }
 ```
-
 ## GET `/api/student`
 
 Retrieve a student.
@@ -317,6 +354,43 @@ Retrieve a student.
     }
 }
 ```
+## GET `/api/student/all`
+
+Retrieve a list of all students.
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 123456,
+            "name": "John von Neumann",
+            "items": [],
+            "email": "vonneumann@msoe.edu",
+            "major": "Chemical Engineering & Mathematics"
+        },
+        {
+            "id":111111,
+            "name":"Boaty McBoatface",
+            "status":"C - Current",
+            "email":"mcboatfaceb@msoe.edu",
+            "major":"Hyperdimensional Nautical Machines Engineering",
+            "items":[
+                {
+                    "address":"iGwEZVeaT",
+                    "modelAddress":"m8y7nFLsT",
+                    "status":"CHECKED_OUT",
+                    "isFaulty":false,
+                    "faultDescription":"",
+                    "timestamp":0
+                }
+            ]
+        }
+    ]
+}
+```
 ## POST `/api/student`
 
 Upload new student information based on an excel binary string.
@@ -332,6 +406,30 @@ Upload new student information based on an excel binary string.
     "status": "success"
 }
 ```
+
+## PATCH `/api/student`
+
+Update a student's information via a JSON object.
+Note that fields that don't exist in the updated student will be maintained.
+
+### Parameters
+
+* `student`: A JSON object containing the ID of the student and the fields to update.
+
+### Sample Response
+
+```json
+{
+    "status":"success",
+    "data":{
+        "id":111111,
+        "name":"string",
+        "status":"C - Current",
+        "email":"email",
+        "major":"string",
+        "items":[]
+    }
+}
 
 ## POST `/api/checkout`
 

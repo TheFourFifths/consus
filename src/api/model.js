@@ -1,6 +1,7 @@
 import express from 'express';
 import { addAction } from '../lib/database';
 import ModelStore from '../store/model-store';
+import ItemStore from '../store/item-store';
 
 let app = express();
 
@@ -12,6 +13,13 @@ app.get('/', (req, res) => {
 app.get('/all', (req, res) => {
     res.successJson({
         models: ModelStore.getModels()
+    });
+});
+
+app.get('/children', (req, res) => {
+    res.successJson({
+        model: ModelStore.getModelByAddress(req.query.modelAddress),
+        items: ItemStore.getChildrenOfModel(req.query.modelAddress)
     });
 });
 
