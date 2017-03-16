@@ -166,7 +166,8 @@ describe('ModelStore', () => {
             location: 'Neptune',
             isFaulty: true,
             faultDescription: 'it bad',
-            price: 11.50
+            price: 11.50,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
         }).then(() => {
             let modifiedModel = ModelStore.getRecentlyUpdatedModel();
             assert.strictEqual('computer', modifiedModel.name);

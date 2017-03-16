@@ -166,6 +166,7 @@ Body:
 * `isFaulty`: Whether the model is faulty of not
 * `faultDescription`: New description of the fault
 * `price`: New price of one model
+* `photo`: The model's picture encoded as base64
 
 ### Sample Request
 
@@ -195,7 +196,8 @@ Content-Type: application/json
         "isFaulty": false,
         "faultDescription": "",
         "price": 10.50,
-        "count": 20
+        "count": 20,
+        "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg="
     }
 }
 ```

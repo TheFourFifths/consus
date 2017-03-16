@@ -38,7 +38,6 @@ app.post('/', (req, res) => {
     try{
         studentJSON = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {range:1});
     }catch (e) {
-        res.status(400);
         return res.failureJson('File not in the correct format!');
     }
     for (let key in studentJSON) {
@@ -53,7 +52,6 @@ app.post('/', (req, res) => {
             };
             if (student.id === undefined || student.name === undefined || student.status === undefined ||
                     student.email === undefined || student.major === undefined) {
-                res.status(400);
                 return res.failureJson('File not in the correct format!');
             }
             if (StudentStore.isCurrentStudent(student) && StudentStore.isNewStudent(student)) {

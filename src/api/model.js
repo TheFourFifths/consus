@@ -1,3 +1,4 @@
+import fs from 'fs';
 import express from 'express';
 import { addAction } from '../lib/database';
 import ModelStore from '../store/model-store';
@@ -5,14 +6,25 @@ import ItemStore from '../store/item-store';
 
 let app = express();
 
+function getModelPhoto(address) {
+    let bitmap = fs.readFileSync(ModelStore.getPhotoPath(address));
+    return Buffer.from(bitmap).toString('base64');
+}
+
 app.get('/', (req, res) => {
     let model = ModelStore.getModelByAddress(req.query.address);
+    model.photo = getModelPhoto(model.address);
     res.successJson(model);
 });
 
 app.get('/all', (req, res) => {
+    let models = ModelStore.getModels();
+
+    models.forEach(model => {
+        model.photo = getModelPhoto(model.address);
+    });
     res.successJson({
-        models: ModelStore.getModels()
+        models
     });
 });
 
@@ -44,7 +56,7 @@ app.post('/', (req, res) => {
 
 app.patch('/', (req, res) => {
     if (typeof req.query.address !== 'string') {
-        return res.status(400).failureJson('A model address is required.');
+        return res.failureJson('A model address is required.');
     }
     addAction('EDIT_MODEL', {
         address: req.query.address,
@@ -55,9 +67,11 @@ app.patch('/', (req, res) => {
         location: req.body.location,
         isFaulty: req.body.isFaulty,
         faultDescription: req.body.faultDescription,
-        price: req.body.price
+        price: req.body.price,
+        photo: req.body.photo
     }).then(() => {
         let modelUpdated = ModelStore.getRecentlyUpdatedModel();
+        modelUpdated.photo = getModelPhoto(modelUpdated.address);
         res.successJson(modelUpdated);
     }).catch(e => {
         res.failureJson(e.message);
@@ -67,7 +81,7 @@ app.patch('/', (req, res) => {
 
 app.delete('/', (req, res) => {
     if (typeof req.query.modelAddress !== 'string') {
-        return res.status(400).failureJson('A model address is required.');
+        return res.failureJson('A model address is required.');
     }
     addAction('DELETE_MODEL', {
         modelAddress: req.query.modelAddress

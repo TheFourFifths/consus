@@ -11,6 +11,7 @@ This document describes the Flux actions used in the Consus client.
     - [CHECKIN](#checkin)
     - [CLEAR_ALL_DATA](#clear_all_data)
     - [DELETE_ITEM](#delete_item)
+    - [EDIT_MODEL](#edit_model)
     - [NEW_CHECKOUT](#new_checkout)
     - [NEW_ITEM](#new_item)
     - [NEW_MODEL](#new_model)
@@ -57,6 +58,36 @@ Deletes an item from the system.
 {
     "itemAddress": "iGwEZUvfA",
     "modelAddress": "m8y7nEtAe"
+}
+```
+
+
+## EDIT_MODEL
+
+Updates a model to have new attributes.
+
+### Date
+
+- `address`: The edited model's address
+- `name`: Name of the model
+- `description`: Textual description of the model
+- `manufacturer`: Model's manufacturer
+- `vendor`: Vendor of the model
+- `location`: Where the model is located
+- `price`: Cost of the model
+- `photo`: The model's photo encoded in base64
+
+```json
+{
+    "address": "m8y7nEtAe",
+    "name": "Resistor",
+    "description": "V = IR",
+    "manufacturer": "Pancakes R Us",
+    "vendor": "Mouser",
+    "location": "Shelf 14",
+    "price": 10.50,
+    "count": 20,
+    "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
 }
 ```
 
