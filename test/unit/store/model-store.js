@@ -138,12 +138,28 @@ describe('ModelStore', () => {
         });
     });
 
-    it('should check out models', () => {
+    it('should check out modelsand change the amount in stock', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
             equipmentAddresses: [unserializedModel.address]
         }).then(() => {
             assert.strictEqual(unserializedModel.inStock, 19);
+        });
+    });
+
+    it('should check in models and change the amount in stock', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            equipmentAddresses: [unserializedModel.address]
+        }).then(() => {
+            assert.strictEqual(unserializedModel.inStock, 19);
+            return addAction('CHECKIN_MODELS', {
+                studentId: student.id,
+                modelAddress: unserializedModel.address,
+                quantity: 1
+            });
+        }).then(() => {
+            assert.strictEqual(unserializedModel.inStock, 20);
         });
     });
 
@@ -204,6 +220,33 @@ describe('ModelStore', () => {
             assert.strictEqual(false, modifiedModel.allowCheckout);
             assert.strictEqual(11.50, modifiedModel.price);
             assert.strictEqual(20, modifiedModel.count);
+        });
+    });
+
+    it('should update a model with new information if the in stock amount changes', () => {
+        return addAction('EDIT_MODEL', {
+            address: unserializedModel.address,
+            name: 'computer',
+            description: 'WHAT A DESCRIPTION',
+            manufacturer: 'Change it up',
+            vendor: 'vendor',
+            location: 'Neptune',
+            allowCheckout: true,
+            price: 11.50,
+            count: 30,
+            changeStock: true,
+            inStock: 25
+        }).then(() => {
+            let modifiedModel = ModelStore.getRecentlyUpdatedModel();
+            assert.strictEqual('computer', modifiedModel.name);
+            assert.strictEqual('WHAT A DESCRIPTION', modifiedModel.description);
+            assert.strictEqual('Change it up', modifiedModel.manufacturer);
+            assert.strictEqual('vendor', modifiedModel.vendor);
+            assert.strictEqual('Neptune', modifiedModel.location);
+            assert.strictEqual(true, modifiedModel.allowCheckout);
+            assert.strictEqual(11.50, modifiedModel.price);
+            assert.strictEqual(30, modifiedModel.count);
+            assert.strictEqual(25, modifiedModel.inStock);
         });
     });
 });

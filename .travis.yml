@@ -3,7 +3,6 @@ language: node_js
 node_js:
   - 'node' # ensure we're always testing on the latest version of Node.js
   - '6'
-  - '4'
 
 cache:
   directories:

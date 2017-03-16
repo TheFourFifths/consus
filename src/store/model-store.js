@@ -1,6 +1,7 @@
 import { Store } from 'consus-core/flux';
 import { assert } from 'chai';
 import CheckoutStore from './checkout-store';
+import CheckinStore from './checkin-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
 let models = [];
@@ -116,6 +117,16 @@ store.registerHandler('NEW_CHECKOUT', data => {
             store.getModelByAddress(address).inStock--;
         }
     });
+});
+
+store.registerHandler('CHECKIN_MODELS', data => {
+    store.waitFor(CheckinStore);
+    if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
+        return;
+    }
+    let model = store.getModelByAddress(data.modelAddress);
+    // Set model inStock to proper number.
+    model.inStock += data.quantity;
 });
 
 store.registerHandler('DELETE_MODEL', data => {

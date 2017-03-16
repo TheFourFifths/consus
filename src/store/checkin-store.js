@@ -1,6 +1,7 @@
 import { Store } from 'consus-core/flux';
 import StudentStore from './student-store';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 
 let checkins = Object.create(null);
 let checkinErrors = Object.create(null);
@@ -53,6 +54,32 @@ store.registerHandler('CHECKIN', data => {
     checkins[data.actionId] = {
         student,
         item
+    };
+});
+
+store.registerHandler('CHECKIN_MODELS', data => {
+    let student = StudentStore.getStudentById(data.studentId);
+    if (typeof student !== 'object') {
+        let msg = 'Student could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
+    }
+    let model = ModelStore.getModelByAddress(data.modelAddress);
+    if (typeof model !== 'object') {
+        let msg = 'Model could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
+    }
+    if (!student.models.includes(model)) {
+        let msg = 'This model is not checked out by that student.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
+    }
+
+    checkins[data.actionId] = {
+        student: student,
+        model: model,
+        quantity: data.quantity
     };
 });
 

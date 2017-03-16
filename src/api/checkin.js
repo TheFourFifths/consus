@@ -28,4 +28,31 @@ app.post('/', (req, res) => {
     });
 });
 
+app.post('/model', (req, res) => {
+    if (!req.body.studentId) {
+        return res.status(400).failureJson('Numeric student ID required when checking in a model');
+    }
+    if (!req.body.modelAddress) {
+        return res.status(400).failureJson('Model address required when checking in a model');
+    }
+    if (!req.body.quantity) {
+        return res.status(400).failureJson('A quantity is required when checking in a model');
+    }
+
+    addAction('CHECKIN_MODELS', {
+        studentId: req.body.studentId,
+        modelAddress: req.body.modelAddress,
+        quantity: req.body.quantity
+    }).then(actionId => {
+        let checkin = CheckinStore.getCheckinByActionId(actionId);
+        res.successJson({
+            modelAddress: checkin.model.address,
+            modelName: checkin.model.name,
+            quantity: checkin.quantity
+        });
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
 export default app;

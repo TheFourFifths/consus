@@ -117,6 +117,24 @@ store.registerHandler('CHECKIN', data => {
     student.items.splice(student.items.indexOf(item), 1);
 });
 
+store.registerHandler('CHECKIN_MODELS', data => {
+    store.waitFor(CheckinStore);
+    if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
+        return;
+    }
+    let student = store.getStudentById(data.studentId);
+    let model = ModelStore.getModelByAddress(data.modelAddress);
+
+    let modelsRemoved = 0;
+    for(let i = 0; i < student.models.length && modelsRemoved < data.quantity; i++){
+        if(student.models[i].address === model.address){
+            student.models.splice(i, 1);
+            i--;
+            modelsRemoved++;
+        }
+    }
+});
+
 store.registerHandler('UPDATE_STUDENT', student => {
     updateStudent(student.id, student.name, student.email, student.major);
 });

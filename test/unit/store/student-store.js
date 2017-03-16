@@ -125,6 +125,22 @@ describe('StudentStore', () => {
         });
     });
 
+    it('should remove a model upon checkin', () => {
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            equipmentAddresses: [models[1].address, models[1].address]
+        }).then(() => {
+            assert.strictEqual(student.models.length, 2);
+            return addAction('CHECKIN_MODELS', {
+                studentId: student.id,
+                modelAddress: models[1].address,
+                quantity: 1
+            });
+        }).then (() => {
+            assert.strictEqual(student.models.length, 1);
+        });
+    });
+
     it('should verify current student', () => {
         assert.isTrue(StudentStore.isCurrentStudent(student));
         student.status = 'dead';
