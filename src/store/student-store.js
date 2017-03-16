@@ -42,11 +42,13 @@ class StudentStore extends Store {
 
 const store = new StudentStore();
 
-function updateStudent(id, name, email, major){
-    let student = students[id];
-    student.name = name;
-    student.email = email;
-    student.major = major;
+function updateStudent(student){
+    let studentToUpdate = students[student.id];
+    for (let key in student){
+        studentToUpdate[key] = student[key];
+    }
+    delete studentToUpdate.actionId;
+    delete studentToUpdate.timestamp;
 }
 
 function removeModelFromAllStudents(modelAddress) {
@@ -109,7 +111,7 @@ store.registerHandler('CHECKIN', data => {
 });
 
 store.registerHandler('UPDATE_STUDENT', student => {
-    updateStudent(student.id, student.name, student.email, student.major);
+    updateStudent(student);
 });
 
 store.registerHandler('DELETE_ITEM', data => {
