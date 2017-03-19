@@ -5,10 +5,9 @@ export default [
         manufacturer: 'Pancakes R\' Us',
         vendor: 'Mouzer',
         location: 'Shelf 14',
-        isFaulty: false,
-        faultDescription: '',
+        allowCheckout: false,
         price: 10.50,
-        count: 20
+        count: 0
     },
     {
         name: 'Transistor',
@@ -16,9 +15,8 @@ export default [
         manufacturer: 'Vroom Industries',
         vendor: 'Fankserrogatoman Inc',
         location: 'Shelf 2',
-        isFaulty: false,
-        faultDescription: '',
+        allowCheckout: true,
         price: 4.00,
-        count: 10
+        count: 20
     }
 ];

@@ -25,8 +25,7 @@ describe('Delete item', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
                     count: 10
                 }),
@@ -36,8 +35,7 @@ describe('Delete item', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
                     count: 10
                 })

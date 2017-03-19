@@ -27,10 +27,9 @@ describe('Get a model and its items', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
-                    count: 10
+                    count: 0
                 }),
                 addAction("NEW_MODEL", {
                     name: 'OtherThing',
@@ -38,10 +37,9 @@ describe('Get a model and its items', () => {
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
-                    isFaulty: false,
-                    faultDescription: '',
+                    allowCheckout: false,
                     price: 3.50,
-                    count: 10
+                    count: 0
                 })
             ]).then(() => {
                 modAddr1 = ModelStore.getModels()[0].address;

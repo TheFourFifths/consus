@@ -26,8 +26,7 @@ describe('Edit model', () => {
                 manufacturer: 'Pancakes R\' Us',
                 vendor: 'Mouzer',
                 location: 'Shelf 14',
-                isFaulty: false,
-                faultDescription: '',
+                allowCheckout: false,
                 price: 10.50,
                 count: 20
             }).then(actionId => {
@@ -44,16 +43,16 @@ describe('Edit model', () => {
             manufacturer: 'New manufacturer',
             vendor: 'New vendor',
             location: 'New location',
-            isFaulty: true,
-            faultDescription: 'it is not working',
+            allowCheckout: false,
             price: 3.50,
+            count: 20,
+            inStock: 20,
             photo: b64SamplePhoto
         };
         return patch('model', {
             address: model.address
         }, newModel).then(response => {
             newModel.address = model.address;
-            newModel.count = model.count;
             assert.deepEqual(response, newModel);
             assert.deepEqual(model, newModel);
         });
@@ -67,8 +66,7 @@ describe('Edit model', () => {
             manufacturer: 'New manufacturer',
             vendor: 'New vendor',
             location: 'New location',
-            isFaulty: true,
-            faultDescription: 'it is not working',
+            allowCheckout: false,
             price: 3.50
         };
         return patch('model', {}, newModel).then(() => {
