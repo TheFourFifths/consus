@@ -1,33 +1,14 @@
 import { Store } from 'consus-core/flux';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
+import { readAddress } from 'consus-core/identifiers';
 
-let students = new Object(null);
 const ACTIVE_STATUS = 'C - Current';
-students[123456] = {
-    id: 123456,
-    name: 'John von Neumann',
-    status: ACTIVE_STATUS,
-    email: 'neumannJ@msoe.edu',
-    major: 'Software Engineering',
-    items: []
-};
 
-students[111111] = {
-    id: 111111,
-    name: 'Boaty McBoatface',
-    status: ACTIVE_STATUS,
-    email: 'mcboatfaceb@msoe.edu',
-    major: 'Hyperdimensional Nautical Machines Engineering',
-    items: [{
-        address:'iGwEZVeaT',
-        modelAddress: 'm8y7nFLsT',
-        timestamp: 0
-    }]
-};
-
-let studentsByActionId = new Object(null);
+let students = Object.create(null);
+let studentsByActionId = Object.create(null);
 
 class StudentStore extends Store {
 
@@ -63,11 +44,13 @@ class StudentStore extends Store {
 
 const store = new StudentStore();
 
-function updateStudent(id, name, email, major){
-    let student = students[id];
-    student.name = name;
-    student.email = email;
-    student.major = major;
+function updateStudent(student){
+    let studentToUpdate = students[student.id];
+    for (let key in student){
+        studentToUpdate[key] = student[key];
+    }
+    delete studentToUpdate.actionId;
+    delete studentToUpdate.timestamp;
 }
 
 function removeModelFromAllStudents(modelAddress) {
@@ -79,19 +62,32 @@ function removeModelFromAllStudents(modelAddress) {
         }
     }
 }
+
+function removeItemFromAllStudents(itemAddress) {
+    let studentsJSON = store.getStudents();
+    for (let key in studentsJSON) {
+        if (studentsJSON.hasOwnProperty(key)) {
+            let s = studentsJSON[key];
+            s.items = s.items.filter(item => item.address !== itemAddress);
+        }
+    }
+}
+
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    students = new Object(null);
-    studentsByActionId = new Object(null);
+    students = Object.create(null);
+    studentsByActionId = Object.create(null);
 });
 
 store.registerHandler('NEW_STUDENT', data => {
+    let studentId = parseInt(data.id);
     let student = {
-        id: data.id,
+        id: studentId,
         name: data.name,
         status: data.status,
         email: data.email,
         major: data.major,
-        items: []
+        items: [],
+        models: []
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;
@@ -102,8 +98,14 @@ store.registerHandler('NEW_CHECKOUT', data => {
 
     let student = store.getStudentById(data.studentId);
 
-    data.itemAddresses.forEach(itemAddress => {
-        student.items.push(ItemStore.getItemByAddress(itemAddress));
+    data.equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'item'){
+            student.items.push(ItemStore.getItemByAddress(address));
+        }
+        else if (result.type == 'model') {
+            student.models.push(ModelStore.getModelByAddress(address));
+        }
     });
 });
 
@@ -117,8 +119,30 @@ store.registerHandler('CHECKIN', data => {
     student.items.splice(student.items.indexOf(item), 1);
 });
 
+store.registerHandler('CHECKIN_MODELS', data => {
+    store.waitFor(CheckinStore);
+    if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
+        return;
+    }
+    let student = store.getStudentById(data.studentId);
+    let model = ModelStore.getModelByAddress(data.modelAddress);
+
+    let modelsRemoved = 0;
+    for(let i = 0; i < student.models.length && modelsRemoved < data.quantity; i++){
+        if(student.models[i].address === model.address){
+            student.models.splice(i, 1);
+            i--;
+            modelsRemoved++;
+        }
+    }
+});
+
 store.registerHandler('UPDATE_STUDENT', student => {
-    updateStudent(student.id, student.name, student.email, student.major);
+    updateStudent(student);
+});
+
+store.registerHandler('DELETE_ITEM', data => {
+    removeItemFromAllStudents(data.itemAddress);
 });
 
 store.registerHandler('DELETE_MODEL', data => {

@@ -4,20 +4,52 @@ import ItemStore from '../../../.dist/store/item-store';
 import StudentStore from '../../../.dist/store/student-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
+import { createAddress } from 'consus-core/identifiers';
 
 describe('CheckinStore', () => {
 
     let model;
+    let unserializedModel;
     let items = [];
     let student;
 
     before(() => {
         return addAction('CLEAR_ALL_DATA').then(() => {
             return addAction('NEW_MODEL', {
-                name: 'Resistor'
+                name: 'Resistor',
+                description: 'V = IR',
+                manufacturer: 'Pancakes R\' Us',
+                vendor: 'Mouzer',
+                location: 'Shelf 14',
+                allowCheckout: false,
+                price: 10.50,
+                count: 20
             });
         }).then(actionId => {
             model = ModelStore.getModelByActionId(actionId);
+            return addAction('NEW_MODEL', {
+                name: 'Transistor',
+                description: 'desc',
+                manufacturer: 'man',
+                vendor: 'vend',
+                location: 'loc',
+                allowCheckout: true,
+                price: 1.00,
+                count: 20
+            });
+        }).then(actionId => {
+            unserializedModel = ModelStore.getModelByActionId(actionId);
+            return addAction('NEW_MODEL', {
+                name: 'Transistor2',
+                description: 'desc2',
+                manufacturer: 'man2',
+                vendor: 'vend2',
+                location: 'loc2',
+                allowCheckout: true,
+                price: 2.00,
+                count: 20
+            });
+        }).then(() => {
             return addAction('NEW_ITEM', {
                 modelAddress: model.address
             });
@@ -45,7 +77,7 @@ describe('CheckinStore', () => {
             student = StudentStore.getStudentByActionId(actionId);
             return addAction('NEW_CHECKOUT', {
                 studentId: student.id,
-                itemAddresses: [items[0].address, items[2].address]
+                equipmentAddresses: [items[0].address, items[2].address, unserializedModel.address]
             });
         });
     });
@@ -75,6 +107,56 @@ describe('CheckinStore', () => {
         }).then(actionId => {
             assert.isObject(CheckinStore.getCheckinByActionId(actionId));
             assert.lengthOf(CheckinStore.getCheckins(), 2);
+        });
+    });
+
+    it('should create a checkin for models', () => {
+        return addAction('CHECKIN_MODELS', {
+            studentId: student.id,
+            modelAddress: unserializedModel.address,
+            quantity: 1
+        }).then(actionId => {
+            assert.isObject(CheckinStore.getCheckinByActionId(actionId));
+            assert.lengthOf(CheckinStore.getCheckins(), 3);
+        });
+    });
+
+    it('should not create a checkin for models if studentId is invalid', () => {
+        return addAction('CHECKIN_MODELS', {
+            studentId: 4,
+            modelAddress: unserializedModel.address,
+            quantity: 1
+        }).then(() => {
+            assert.fail('Unnexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Student could not be found.');
+            assert.lengthOf(CheckinStore.getCheckins(), 3);
+        });
+    });
+
+    it('should not create a checkin for models if modelAddress is invalid', () => {
+        return addAction('CHECKIN_MODELS', {
+            studentId: student.id,
+            modelAddress: createAddress(100, 'model'),
+            quantity: 1
+        }).then(() => {
+            assert.fail('Unnexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Model could not be found.');
+            assert.lengthOf(CheckinStore.getCheckins(), 3);
+        });
+    });
+
+    it('should not create a checkin for models if student does not have the model', () => {
+        return addAction('CHECKIN_MODELS', {
+            studentId: 4,
+            modelAddress: ModelStore.getModels()[2].address,
+            quantity: 1
+        }).then(() => {
+            assert.fail('Unnexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Student could not be found.');
+            assert.lengthOf(CheckinStore.getCheckins(), 3);
         });
     });
 

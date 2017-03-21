@@ -1,10 +1,12 @@
 import { Store } from 'consus-core/flux';
 import AuthStore from './auth-store';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 import StudentStore from './student-store';
+import { readAddress } from 'consus-core/identifiers';
 
-let checkouts = new Object(null);
-let checkoutErrors = new Object(null);
+let checkouts = Object.create(null);
+let checkoutErrors = Object.create(null);
 
 class CheckoutStore extends Store {
 
@@ -29,19 +31,28 @@ class CheckoutStore extends Store {
 const store = new CheckoutStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkouts = new Object(null);
-    checkoutErrors = new Object(null);
+    checkouts = Object.create(null);
+    checkoutErrors = Object.create(null);
 });
 
 store.registerHandler('NEW_CHECKOUT', data => {
     let checkout = {
         studentId: data.studentId,
-        itemAddresses: data.itemAddresses
+        equipmentAddresses: data.equipmentAddresses
     };
-    
-    data.itemAddresses.forEach(itemAddress => {
-        if (ItemStore.getItemByAddress(itemAddress).status !== 'AVAILABLE') {
-            throw new Error('An item in the cart is not available for checkout.');
+
+    data.equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'item'){
+            if (ItemStore.getItemByAddress(address).status !== 'AVAILABLE') {
+                throw new Error('An item in the cart is not available for checkout.');
+            }
+        }
+        if(result.type == 'model'){
+            let model = ModelStore.getModelByAddress(address);
+            if(!model.allowCheckout || model.inStock <= 0) {
+                throw new Error('A model in the cart is not available for checkout.');
+            }
         }
     });
 

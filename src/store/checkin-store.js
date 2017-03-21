@@ -1,9 +1,10 @@
 import { Store } from 'consus-core/flux';
 import StudentStore from './student-store';
 import ItemStore from './item-store';
+import ModelStore from './model-store';
 
-let checkins = new Object(null);
-let checkinErrors = new Object(null);
+let checkins = Object.create(null);
+let checkinErrors = Object.create(null);
 
 class CheckinStore extends Store {
 
@@ -28,25 +29,57 @@ class CheckinStore extends Store {
 const store = new CheckinStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkins = new Object(null);
-    checkinErrors = new Object(null);
+    checkins = Object.create(null);
+    checkinErrors = Object.create(null);
 });
 
 store.registerHandler('CHECKIN', data => {
     let student = StudentStore.getStudentById(data.studentId);
     if (typeof student !== 'object') {
-        return checkinErrors[data.actionId] = 'Student could not be found.';
+        let msg = 'Student could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
     }
     let item = ItemStore.getItemByAddress(data.itemAddress);
     if (typeof item !== 'object') {
-        return checkinErrors[data.actionId] = 'Item could not be found.';
+        let msg = 'Item could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
     }
     if (student.items.indexOf(item) === -1) {
-        return checkinErrors[data.actionId] = 'This item is not checked out by the student.';
+        let msg = 'This item is not checked out by that student.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
     }
     checkins[data.actionId] = {
         student,
         item
+    };
+});
+
+store.registerHandler('CHECKIN_MODELS', data => {
+    let student = StudentStore.getStudentById(data.studentId);
+    if (typeof student !== 'object') {
+        let msg = 'Student could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
+    }
+    let model = ModelStore.getModelByAddress(data.modelAddress);
+    if (typeof model !== 'object') {
+        let msg = 'Model could not be found.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
+    }
+    if (!student.models.includes(model)) {
+        let msg = 'This model is not checked out by that student.';
+        checkinErrors[data.actionId] = msg;
+        throw new Error(msg);
+    }
+
+    checkins[data.actionId] = {
+        student: student,
+        model: model,
+        quantity: data.quantity
     };
 });
 

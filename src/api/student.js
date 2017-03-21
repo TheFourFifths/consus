@@ -16,13 +16,28 @@ app.get('/', (req, res) => {
     res.successJson(student);
 });
 
+app.get('/all', (req, res) => {
+    res.successJson(StudentStore.getStudents());
+});
+
+app.patch('/', (req, res) => {
+    addAction('UPDATE_STUDENT', {
+        id: parseInt(req.query.id),
+        name: req.body.name,
+        status: req.body.status,
+        email: req.body.email,
+        major: req.body.major
+    }).then(() => {
+        res.successJson(StudentStore.getStudentById(req.query.id));
+    });
+});
+
 app.post('/', (req, res) => {
     let workbook = xlsx.read(req.body.data, {type: 'binary'});
     let studentJSON;
     try{
         studentJSON = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {range:1});
     }catch (e) {
-        res.status(400);
         return res.failureJson('File not in the correct format!');
     }
     for (let key in studentJSON) {
@@ -37,7 +52,6 @@ app.post('/', (req, res) => {
             };
             if (student.id === undefined || student.name === undefined || student.status === undefined ||
                     student.email === undefined || student.major === undefined) {
-                res.status(400);
                 return res.failureJson('File not in the correct format!');
             }
             if (StudentStore.isCurrentStudent(student) && StudentStore.isNewStudent(student)) {

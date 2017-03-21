@@ -52,3 +52,4 @@ npm start
     * `store`: Flux stores which contain state and consume actions
 * `test`: The project's tests
     * `unit`: Unit tests
+    * `functional`: Functional tests

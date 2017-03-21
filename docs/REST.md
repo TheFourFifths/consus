@@ -14,11 +14,15 @@ This document describes the API endpoints of the Consus server.
     * [PATCH `/api/model`](#patch-apimodel)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
+    * [GET `/api/model/children`](#get-apimodelchildren)
     * [DELETE `api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
+    * [GET `/api/student/all`](#get-apistudentall)
     * [POST `/api/student`](#post-apistudent)
+    * [PATCH `/api/student`](#patch-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
     * [POST `api/checkin`](#post-apicheckin)
+    * [POST `api/checkin/model`](#post-apicheckinmodel)
 
 ## POST `/api/item`
 
@@ -35,7 +39,8 @@ Create an item.
     "status": "success",
     "data": {
         "address": "iGwEZUvfA",
-        "modelName": "Resistor"
+        "modelName": "Resistor",
+        "isCheckedOutTo": null
     }
 }
 ```
@@ -57,7 +62,8 @@ Retrieve an item.
         "item": {
             "address": "iGwEZUvfA",
             "modelAddress": "m8y7nEtAe",
-            "status": "AVAILABLE"
+            "status": "AVAILABLE",
+            "isCheckedOutTo": 123456
         }
     }
 }
@@ -118,8 +124,7 @@ Create a model.
 * `manufacturer`: The manufacturer of the model
 * `vendor`: The vendor who sold the model
 * `location`: Location where the model is stored
-* `isFaulty`: Whether the model is faulty of not
-* `faultDescription`: Description of the fault
+* `allowCheckout`: If true, the model itself can be checked out
 * `price`: Price of one model
 * `count`: Amount of this model in stock
 
@@ -135,8 +140,7 @@ Create a model.
         "manufacturer": "Live",
         "vendor": "Mouzer",
         "location": "Shelf 14",
-        "isFaulty": false,
-        "faultDescription": "",
+        "allowCheckout": false,
         "price": 10.50,
         "count": 20
     }
@@ -158,9 +162,12 @@ Body:
 * `manufacturer`: The new manufacturer of the model
 * `vendor`: The bew vendor who sold the model
 * `location`: New location where the model is stored
-* `isFaulty`: Whether the model is faulty of not
-* `faultDescription`: New description of the fault
+* `allowCheckout`: If true, the model can be checked out as if it were an item
 * `price`: New price of one model
+* `count`: The total amount of the model
+* `changeStock`: If true, the number of models in stock is manually changed
+* `inStock`: The number of models in stock
+* `photo`: The model's picture encoded as base64
 
 ### Sample Request
 
@@ -187,10 +194,11 @@ Content-Type: application/json
         "manufacturer": "Live",
         "vendor": "Mouser",
         "location": "Shelf 14",
-        "isFaulty": false,
-        "faultDescription": "",
+        "allowCheckout": true,
         "price": 10.50,
-        "count": 20
+        "count": 20,
+        "inStock": 20
+        "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg="
     }
 }
 ```
@@ -250,6 +258,41 @@ An array containing each model and its data.
 }
 ```
 
+## GET `/api/model/children`
+
+Retrieve a model and all items belonging to it.
+
+### Parameters
+
+* `modelAddress`: Address of the model to retrieve
+
+### Sample Response
+The model and an array of its items
+```json
+{
+    "status": "success",
+    "data": {
+        "model": {
+            "address": "m8y7nEtAe",
+            "name": "Resistor",
+            "description": "V = IR",
+            "manufacturer": "Pancakes R Us",
+            "vendor": "Mouzer",
+            "location": "Shelf 14",
+            "isFaulty": false,
+            "faultDescription": "",
+            "price": 10.50,
+            "count": 20
+        },
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "status": "CHECKED_OUT"
+        }]
+    }
+}
+```
+
 ## DELETE `/api/model`
 
 Delete a model
@@ -279,7 +322,6 @@ Delete a model
     }
 }
 ```
-
 ## GET `/api/student`
 
 Retrieve a student.
@@ -295,7 +337,7 @@ Retrieve a student.
     "status": "success",
     "data": {
         "student": {
-            "id": "123456",
+            "id": 123456,
             "name": "John von Neumann",
             "items": [
                 {
@@ -314,6 +356,43 @@ Retrieve a student.
     }
 }
 ```
+## GET `/api/student/all`
+
+Retrieve a list of all students.
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 123456,
+            "name": "John von Neumann",
+            "items": [],
+            "email": "vonneumann@msoe.edu",
+            "major": "Chemical Engineering & Mathematics"
+        },
+        {
+            "id":111111,
+            "name":"Boaty McBoatface",
+            "status":"C - Current",
+            "email":"mcboatfaceb@msoe.edu",
+            "major":"Hyperdimensional Nautical Machines Engineering",
+            "items":[
+                {
+                    "address":"iGwEZVeaT",
+                    "modelAddress":"m8y7nFLsT",
+                    "status":"CHECKED_OUT",
+                    "isFaulty":false,
+                    "faultDescription":"",
+                    "timestamp":0
+                }
+            ]
+        }
+    ]
+}
+```
 ## POST `/api/student`
 
 Upload new student information based on an excel binary string.
@@ -330,6 +409,30 @@ Upload new student information based on an excel binary string.
 }
 ```
 
+## PATCH `/api/student`
+
+Update a student's information via a JSON object.
+Note that fields that don't exist in the updated student will be maintained.
+
+### Parameters
+
+* `student`: A JSON object containing the ID of the student and the fields to update.
+
+### Sample Response
+
+```json
+{
+    "status":"success",
+    "data":{
+        "id":111111,
+        "name":"string",
+        "status":"C - Current",
+        "email":"email",
+        "major":"string",
+        "items":[]
+    }
+}
+
 ## POST `/api/checkout`
 
 Submit a checkout request.
@@ -337,7 +440,7 @@ Submit a checkout request.
 ### Parameters
 
 * `studentId`: The student's identifier
-* `items`: An array of item identifiers
+* `equipmentAddresses`: An array of item and model identifiers
 * `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 
 ### Sample Response
@@ -364,7 +467,30 @@ Submit a check-in request.
     "status": "success",
     "data": {
         "itemAddress": "iGwEZUvfA",
-        "modelName": "Resistor"
+        "modelName": "Resistor",
+        "isCheckedOutTo": 123456
     }
 }
 ```
+
+## POST `/api/checkin/model`
+
+Submit a check-in request for one or more models.
+
+### Parameters
+
+* `studentId`: The student's identifier
+* `modelAddress`: The address of the model being checked in
+* `quantity`: The amount of the particular model being checked in
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": {
+        "modelAddress": "m8y7nEtAe",
+        "modelName": "Transistor",
+        "quantity": 5
+    }
+}
