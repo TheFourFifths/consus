@@ -1,3 +1,4 @@
+import config from 'config';
 import { Store } from 'consus-core/flux';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
@@ -78,15 +79,17 @@ store.registerHandler('NEW_CHECKOUT', data => {
         if(result.type == 'item'){
             store.getItemByAddress(address).status = 'CHECKED_OUT';
             store.getItemByAddress(address).isCheckedOutTo = data.studentId;
-            let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
+            let timestamp = moment.tz(data.timestamp * 1000, config.get('timezone'));
             let hour = parseInt(timestamp.format('H'));
             let minute = parseInt(timestamp.format('m'));
-            // check for times past 4:50pm
-            if (hour > 16 || (hour === 16 && minute >= 50)) {
+            // check for times past configured notification time
+            let dueHour = parseInt(config.get('checkin.due_hour')),
+                dueMin  = parseInt(config.get('checkin.due_minute'));
+            if (hour > dueHour - 1 || (hour === dueHour - 1 && minute >= dueMin - 10)) {
                 // increment to the next day
                 timestamp = timestamp.add(1, 'd');
             }
-            timestamp.hour(17).minute(0).second(0);
+            timestamp.hour(dueHour).minute(dueMin).second(0);
             let dueTime = parseInt(timestamp.format('X'));
             store.getItemByAddress(address).timestamp = dueTime;
         }

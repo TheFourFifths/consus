@@ -7,4 +7,5 @@ coverage*
 .nyc_output
 .idea/
 *.iml
+config/local*
 assets/img/m8y*

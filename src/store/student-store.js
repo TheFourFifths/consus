@@ -1,3 +1,4 @@
+import config from 'config';
 import { Store } from 'consus-core/flux';
 import { readAddress } from 'consus-core/identifiers';
 import ItemStore from './item-store';
@@ -6,7 +7,7 @@ import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { isBeforeNow } from '../lib/clock';
 
-const ACTIVE_STATUS = 'C - Current';
+const ACTIVE_STATUS = config.get('student.active_status');
 
 let students = Object.create(null);
 let studentsByActionId = Object.create(null);
@@ -45,7 +46,6 @@ class StudentStore extends Store {
     }
 
     isNewStudent(student) {
-
         return this.getStudentById(student.id) === undefined;
     }
 
