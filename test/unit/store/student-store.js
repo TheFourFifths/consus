@@ -3,6 +3,8 @@ import ItemStore from '../../../.dist/store/item-store';
 import ModelStore from '../../../.dist/store/model-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
+import sinon from 'sinon';
+import * as clock from '../../../.dist/lib/clock';
 
 describe('StudentStore', () => {
 
@@ -211,6 +213,18 @@ describe('StudentStore', () => {
             });
         }).then(() => {
             assert.lengthOf(student.items, 0);
+        });
+    });
+
+    it('should get students with overdue items', () => {
+        let stub = sinon.stub(clock, 'isBeforeNow');
+        stub.returns(true);
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            equipmentAddresses: [items[0].address]
+        }).then(() => {
+            let students = StudentStore.getStudentsWithOverdueItems();
+            assert.lengthOf(students, 1);
         });
     });
 
