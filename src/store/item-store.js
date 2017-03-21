@@ -85,7 +85,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
             // check for times past configured notification time
             let dueHour = parseInt(config.get('checkin.due_hour')),
                 dueMin  = parseInt(config.get('checkin.due_minute'));
-            if (hour > dueHour - 1 || (hour === dueHour - 1 && minute >= dueMin - 10)) {
+            if (hour >= dueHour || (hour === dueHour - 1 && minute >= dueMin - 10)) {
                 // increment to the next day
                 timestamp = timestamp.add(1, 'd');
             }
