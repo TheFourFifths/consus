@@ -1,9 +1,10 @@
 import { Store } from 'consus-core/flux';
+import { readAddress } from 'consus-core/identifiers';
 import ItemStore from './item-store';
 import ModelStore from './model-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
-import { readAddress } from 'consus-core/identifiers';
+import { isBeforeNow } from '../lib/clock';
 
 const ACTIVE_STATUS = 'C - Current';
 
@@ -22,6 +23,14 @@ class StudentStore extends Store {
 
     getStudentByActionId(actionId) {
         return studentsByActionId[actionId];
+    }
+
+    getStudentsWithOverdueItems() {
+        return Object.keys(students).map(id => students[id]).filter(student => {
+            return student.items.some(item => {
+                return isBeforeNow(item.timestamp);
+            });
+        });
     }
 
     hasOverdueItem(id){
