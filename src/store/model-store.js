@@ -70,6 +70,7 @@ function deleteModelByAddress(address) {
     delete models[result.index];
 }
 
+
 function updateModel(address, name, description, manufacturer, vendor, location, allowCheckout, price, count, changeStock, inStock, b64PhotoStr){
     let modelToUpdate = store.getModelByAddress(address);
     let originalStock = modelToUpdate.inStock;
