@@ -51,6 +51,36 @@ class ItemStore extends Store {
     }
 
 }
+
+function checkoutEquipment(equipmentAddrs, studentId, dueDateTime) {  // eslint-disable-line no-unused-vars
+    let timezone = 'America/Chicago';
+    equipmentAddrs.forEach(address => {
+        let result = readAddress(address);
+        if (result.type == 'item') {
+            store.getItemByAddress(address).status = 'CHECKED_OUT';
+            store.getItemByAddress(address).isCheckedOutTo = studentId;
+            let timestamp;
+            if (typeof dueDateTime === 'string') {
+                // this means longterm checkout
+                timestamp = moment.tz(dueDateTime, timezone);
+            } else {
+                // this means the equipment is due today, i.e. not longterm
+                timestamp = moment.tz(dueDateTime * 1000, timezone);
+            }
+            let hour = parseInt(timestamp.format('H'));
+            let minute = parseInt(timestamp.format('m'));
+            // check for times past 4:50pm
+            if (hour > 16 || (hour === 16 && minute >= 50)) {
+                // increment to the next day
+                timestamp = timestamp.add(1, 'd');
+            }
+            timestamp.hour(17).minute(0).second(0);
+            let dueTime = parseInt(timestamp.format('X'));
+            store.getItemByAddress(address).timestamp = dueTime;
+        }
+    });
+}
+
 const store = new ItemStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
@@ -73,24 +103,12 @@ store.registerHandler('NEW_ITEM', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'item'){
-            store.getItemByAddress(address).status = 'CHECKED_OUT';
-            store.getItemByAddress(address).isCheckedOutTo = data.studentId;
-            let timestamp = moment.tz(data.timestamp * 1000, 'America/Chicago');
-            let hour = parseInt(timestamp.format('H'));
-            let minute = parseInt(timestamp.format('m'));
-            // check for times past 4:50pm
-            if (hour > 16 || (hour === 16 && minute >= 50)) {
-                // increment to the next day
-                timestamp = timestamp.add(1, 'd');
-            }
-            timestamp.hour(17).minute(0).second(0);
-            let dueTime = parseInt(timestamp.format('X'));
-            store.getItemByAddress(address).timestamp = dueTime;
-        }
-    });
+    checkoutEquipment(data.equipmentAddresses, data.studentId, data.timestamp);
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    checkoutEquipment(data.equipmentAddresses, data.studentId, data.dueDate);
 });
 
 store.registerHandler('CHECKIN', data => {

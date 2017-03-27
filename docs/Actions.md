@@ -14,6 +14,7 @@ This document describes the Flux actions used in the Consus client.
     - [EDIT_MODEL](#edit_model)
     - [NEW_CHECKOUT](#new_checkout)
     - [NEW_ITEM](#new_item)
+    - [NEW_LONGTERM_CHECKOUT](#new_longterm_checkout)
     - [NEW_MODEL](#new_model)
     - [NEW_STUDENT](#new_student)
     - [UPDATE_STUDENT](#update_student)
@@ -66,7 +67,7 @@ Deletes an item from the system.
 
 Updates a model to have new attributes.
 
-### Date
+### Data
 
 - `address`: The edited model's address
 - `name`: Name of the model
@@ -122,6 +123,27 @@ Creates a new item.
 ```json
 {
     "modelAddress": "m8y7nEtAe"
+}
+```
+
+
+## NEW_LONGTERM_CHECKOUT
+
+Checks out equipment and sets the equipments due date to the one provided.
+
+### Data
+
+- `studentId`: 123456
+- `equipmentAddresses`: The equipment addresses to checkout
+- `dueDate`: The date and time the equipment is due back
+- `professor`: The name of the professor for this longterm checkout
+
+```json
+{
+    "studentId": 123456,
+    "equipmentAddresses": ["myxEb109"],
+    "dueDate": "2000-10-10T17:00",
+    "professor": "Dr. Monkey"
 }
 ```
 

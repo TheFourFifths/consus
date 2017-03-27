@@ -7,4 +7,5 @@ coverage*
 .nyc_output
 .idea/
 *.iml
-assets/img/m8y*
+assets/img/*
+!assets/img/placeholder.jpeg
