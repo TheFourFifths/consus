@@ -81,7 +81,18 @@ function removeItemFromAllStudents(itemAddress) {
         }
     }
 }
-
+function addItemsToStudent(studentId, equipmentAddresses){
+    let student = store.getStudentById(studentId);
+    equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'item'){
+            student.items.push(ItemStore.getItemByAddress(address));
+        }
+        else if (result.type == 'model') {
+            student.models.push(ModelStore.getModelByAddress(address));
+        }
+    });
+}
 store.registerHandler('CLEAR_ALL_DATA', () => {
     students = Object.create(null);
     studentsByActionId = Object.create(null);
@@ -104,18 +115,12 @@ store.registerHandler('NEW_STUDENT', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
+    addItemsToStudent(data.studentId, data.equipmentAddresses);
+});
 
-    let student = store.getStudentById(data.studentId);
-
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'item'){
-            student.items.push(ItemStore.getItemByAddress(address));
-        }
-        else if (result.type == 'model') {
-            student.models.push(ModelStore.getModelByAddress(address));
-        }
-    });
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    addItemsToStudent(data.studentId, data.equipmentAddresses);
 });
 
 store.registerHandler('CHECKIN', data => {

@@ -99,7 +99,14 @@ function savePhoto(b64Str, address) {
     fs.writeFileSync(photoPath, bitmap);
     return photoPath;
 }
-
+function checkoutModels(equipmentAddresses){
+    equipmentAddresses.forEach(address => {
+        let result = readAddress(address);
+        if(result.type == 'model'){
+            store.getModelByAddress(address).inStock--;
+        }
+    });
+}
 store.registerHandler('CLEAR_ALL_DATA', () => {
     models = [];
     modelsByActionId = Object.create(null);
@@ -142,12 +149,12 @@ store.registerHandler('NEW_MODEL', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'model'){
-            store.getModelByAddress(address).inStock--;
-        }
-    });
+    checkoutModels(data.equipmentAddresses);
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    checkoutModels(data.equipmentAddresses);
 });
 
 store.registerHandler('CHECKIN_MODELS', data => {

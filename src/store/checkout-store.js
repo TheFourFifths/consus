@@ -7,7 +7,7 @@ import { readAddress } from 'consus-core/identifiers';
 
 let checkouts = Object.create(null);
 let checkoutErrors = Object.create(null);
-
+let longtermCheckouts = Object.create(null);
 class CheckoutStore extends Store {
 
     getCheckouts() {
@@ -17,7 +17,9 @@ class CheckoutStore extends Store {
     getCheckoutErrors() {
         return Object.keys(checkoutErrors).map(key => checkoutErrors[key]);
     }
-
+    getLongtermCheckouts(){
+        return Object.keys(longtermCheckouts).map(key => longtermCheckouts[key]);
+    }
     getCheckoutByActionId(actionId) {
         return checkouts[actionId];
     }
@@ -30,18 +32,8 @@ class CheckoutStore extends Store {
 
 const store = new CheckoutStore();
 
-store.registerHandler('CLEAR_ALL_DATA', () => {
-    checkouts = Object.create(null);
-    checkoutErrors = Object.create(null);
-});
-
-store.registerHandler('NEW_CHECKOUT', data => {
-    let checkout = {
-        studentId: data.studentId,
-        equipmentAddresses: data.equipmentAddresses
-    };
-
-    data.equipmentAddresses.forEach(address => {
+function verifyEquipmentAvailability(equipmentAddresses){
+    equipmentAddresses.forEach(address => {
         let result = readAddress(address);
         if(result.type == 'item'){
             if (ItemStore.getItemByAddress(address).status !== 'AVAILABLE') {
@@ -55,6 +47,20 @@ store.registerHandler('NEW_CHECKOUT', data => {
             }
         }
     });
+}
+
+store.registerHandler('CLEAR_ALL_DATA', () => {
+    checkouts = Object.create(null);
+    checkoutErrors = Object.create(null);
+});
+
+store.registerHandler('NEW_CHECKOUT', data => {
+    let checkout = {
+        studentId: data.studentId,
+        equipmentAddresses: data.equipmentAddresses
+    };
+
+    verifyEquipmentAvailability(data.equipmentAddresses);
 
     if (data.adminCode){
         if(AuthStore.verifyAdmin(data.adminCode)) {
@@ -66,6 +72,29 @@ store.registerHandler('NEW_CHECKOUT', data => {
         throw new Error('Student has overdue item');
     } else {
         checkouts[data.actionId] = checkout;
+    }
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    let longtermCheckout = {
+        studentId: data.studentId,
+        equipmentAddresses: data.equipmentAddresses,
+        dueDate: data.dueDate,
+        professor: data.professor
+    };
+
+    verifyEquipmentAvailability(data.equipmentAddresses);
+
+    if (data.adminCode){
+        if(AuthStore.verifyAdmin(data.adminCode)) {
+            longtermCheckouts[data.actionId] = longtermCheckout;
+        } else {
+            throw new Error('Invalid Admin');
+        }
+    } else if (StudentStore.hasOverdueItem(data.studentId)) {
+        throw new Error('Student has overdue item');
+    } else {
+        longtermCheckouts[data.actionId] = longtermCheckout;
     }
 });
 
