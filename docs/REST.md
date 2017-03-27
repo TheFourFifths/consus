@@ -432,6 +432,7 @@ Note that fields that don't exist in the updated student will be maintained.
         "items":[]
     }
 }
+```
 
 ## POST `/api/checkout`
 
