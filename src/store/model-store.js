@@ -83,12 +83,14 @@ function updateModel(address, name, description, manufacturer, vendor, location,
     modelToUpdate.vendor = vendor;
     modelToUpdate.location = location;
     modelToUpdate.price = price;
-    if(allowCheckout)
+    if (allowCheckout){
         modelToUpdate.count = count;
-    if(allowCheckout && changeStock)
+    }
+    if (allowCheckout && changeStock) {
         modelToUpdate.inStock = inStock;
-    else
+    } else {
         modelToUpdate.inStock = originalStock + changeInCount;
+    }
     savePhoto(b64PhotoStr, address);
     recentlyUpdatedModel = modelToUpdate;
     return modelToUpdate;
@@ -99,6 +101,16 @@ function savePhoto(b64Str, address) {
     let photoPath = store.getPhotoPath(address, true);
     fs.writeFileSync(photoPath, bitmap);
     return photoPath;
+}
+
+function checkoutModels(equipment){
+    equipment.forEach(equip => {
+        let address = equip.address;
+        let result = readAddress(address);
+        if(result.type == 'model'){
+            store.getModelByAddress(address).inStock -= equip.quantity;
+        }
+    });
 }
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
@@ -143,12 +155,12 @@ store.registerHandler('NEW_MODEL', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'model'){
-            store.getModelByAddress(address).inStock--;
-        }
-    });
+    checkoutModels(data.equipment);
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    checkoutModels(data.equipment);
 });
 
 store.registerHandler('CHECKIN_MODELS', data => {

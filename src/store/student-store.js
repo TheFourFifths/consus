@@ -2,10 +2,10 @@ import config from 'config';
 import { Store } from 'consus-core/flux';
 import { readAddress } from 'consus-core/identifiers';
 import ItemStore from './item-store';
-import ModelStore from './model-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
-import { isBeforeNow } from '../lib/clock';
+import ModelStore from './model-store';
+import { isBeforeNow, dueDateToTimestamp } from '../lib/clock';
 
 const ACTIVE_STATUS = config.get('student.active_status');
 
@@ -82,6 +82,29 @@ function removeItemFromAllStudents(itemAddress) {
     }
 }
 
+function addItemsToStudent(studentId, equipment, dueDateTime){
+    let student = students[studentId];
+    equipment.forEach(equip => {
+        let address = equip.address;
+        let type = readAddress(address).type;
+        if (type === 'item') {
+            student.items.push(ItemStore.getItemByAddress(address));
+        } else if (type === 'model') {
+            let model = student.models.find(model => model.address === address);
+            if (model === undefined) {
+                model = {
+                    address,
+                    name: ModelStore.getModelByAddress(address).name,
+                    quantity: 0
+                };
+                student.models.push(model);
+            }
+            model.quantity += equip.quantity;
+            model.dueDate = dueDateToTimestamp(dueDateTime);
+        }
+    });
+}
+
 store.registerHandler('CLEAR_ALL_DATA', () => {
     students = Object.create(null);
     studentsByActionId = Object.create(null);
@@ -104,18 +127,12 @@ store.registerHandler('NEW_STUDENT', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
+    addItemsToStudent(data.studentId, data.equipment, data.timestamp);
+});
 
-    let student = store.getStudentById(data.studentId);
-
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'item'){
-            student.items.push(ItemStore.getItemByAddress(address));
-        }
-        else if (result.type == 'model') {
-            student.models.push(ModelStore.getModelByAddress(address));
-        }
-    });
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    addItemsToStudent(data.studentId, data.equipment, data.dueDate);
 });
 
 store.registerHandler('CHECKIN', data => {
@@ -133,16 +150,12 @@ store.registerHandler('CHECKIN_MODELS', data => {
     if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
         return;
     }
-    let student = store.getStudentById(data.studentId);
-    let model = ModelStore.getModelByAddress(data.modelAddress);
-
-    let modelsRemoved = 0;
-    for(let i = 0; i < student.models.length && modelsRemoved < data.quantity; i++){
-        if(student.models[i].address === model.address){
-            student.models.splice(i, 1);
-            i--;
-            modelsRemoved++;
-        }
+    let student = students[data.studentId];
+    let index = student.models.findIndex(m => m.address === data.modelAddress);
+    let model = student.models[index];
+    model.quantity -= data.quantity;
+    if (model.quantity === 0) {
+        student.models.splice(index, 1);
     }
 });
 

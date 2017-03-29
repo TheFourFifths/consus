@@ -8,4 +8,5 @@ coverage*
 .idea/
 *.iml
 config/local*
-assets/img/m8y*
+assets/img/*
+!assets/img/placeholder.jpeg

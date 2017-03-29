@@ -1,10 +1,9 @@
-import config from 'config';
 import { Store } from 'consus-core/flux';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import StudentStore from './student-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
-import moment from 'moment-timezone';
+import { dueDateToTimestamp } from '../lib/clock';
 
 let items = [];
 let itemsByActionId = Object.create(null);
@@ -41,17 +40,31 @@ class ItemStore extends Store {
 
     deleteItemByAddress(address){
         let result = readAddress(address);
-        if(result.type !== 'item' ){
+        if (result.type !== 'item') {
             throw new Error('Address is not an item.');
         }
         delete items[result.index];
     }
 
-    getChildrenOfModel(modelAddress){
+    getChildrenOfModel(modelAddress) {
         return items.filter(item => item.modelAddress === modelAddress);
     }
 
 }
+
+function checkoutEquipment(equipment, studentId, dueDateTime) {
+    equipment.forEach(equip => {
+        let address = equip.address;
+        let result = readAddress(address);
+        if (result.type == 'item') {
+            store.getItemByAddress(address).status = 'CHECKED_OUT';
+            store.getItemByAddress(address).isCheckedOutTo = studentId;
+            let dueTime = dueDateToTimestamp(dueDateTime);
+            store.getItemByAddress(address).timestamp = dueTime;
+        }
+    });
+}
+
 const store = new ItemStore();
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
@@ -74,26 +87,12 @@ store.registerHandler('NEW_ITEM', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'item'){
-            store.getItemByAddress(address).status = 'CHECKED_OUT';
-            store.getItemByAddress(address).isCheckedOutTo = data.studentId;
-            let timestamp = moment.tz(data.timestamp * 1000, config.get('timezone'));
-            let hour = parseInt(timestamp.format('H'));
-            let minute = parseInt(timestamp.format('m'));
-            // check for times past configured notification time
-            let dueHour = parseInt(config.get('checkin.due_hour')),
-                dueMin  = parseInt(config.get('checkin.due_minute'));
-            if (hour >= dueHour || (hour === dueHour - 1 && minute >= dueMin - 10)) {
-                // increment to the next day
-                timestamp = timestamp.add(1, 'd');
-            }
-            timestamp.hour(dueHour).minute(dueMin).second(0);
-            let dueTime = parseInt(timestamp.format('X'));
-            store.getItemByAddress(address).timestamp = dueTime;
-        }
-    });
+    checkoutEquipment(data.equipment, data.studentId, data.timestamp);
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    checkoutEquipment(data.equipment, data.studentId, data.dueDate);
 });
 
 store.registerHandler('CHECKIN', data => {
