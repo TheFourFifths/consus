@@ -441,7 +441,27 @@ Submit a checkout request.
 ### Parameters
 
 * `studentId`: The student's identifier
-* `equipmentAddresses`: An array of item and model identifiers
+* `equipment`: An array of equipment
+* `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
+
+### Sample Response
+
+```json
+{
+    "status": "success"
+}
+```
+
+## POST `/api/checkout/longterm`
+
+Submit a longterm checkout request.
+
+### Parameters
+
+* `studentId`: The student's identifier
+* `equipment`: An array of equipment
+* `professor`: The professor
+* `dueDate`: The date that the equipment is due
 * `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 
 ### Sample Response

@@ -138,10 +138,15 @@ describe('ModelStore', () => {
         });
     });
 
-    it('should check out modelsand change the amount in stock', () => {
+    it('should check out models and change the amount in stock', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [unserializedModel.address]
+            equipment: [
+                {
+                    address: unserializedModel.address,
+                    quantity: 1
+                }
+            ]
         }).then(() => {
             assert.strictEqual(unserializedModel.inStock, 19);
         });
@@ -150,7 +155,12 @@ describe('ModelStore', () => {
     it('should check in models and change the amount in stock', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [unserializedModel.address]
+            equipment: [
+                {
+                    address: unserializedModel.address,
+                    quantity: 1
+                }
+            ]
         }).then(() => {
             assert.strictEqual(unserializedModel.inStock, 19);
             return addAction('CHECKIN_MODELS', {

@@ -70,12 +70,15 @@ store.registerHandler('CHECKIN_MODELS', data => {
         checkinErrors[data.actionId] = msg;
         throw new Error(msg);
     }
-    if (!student.models.includes(model)) {
+    let equip = student.models.find(m => m.address === data.modelAddress);
+    if (!equip) {
         let msg = 'This model is not checked out by that student.';
         checkinErrors[data.actionId] = msg;
         throw new Error(msg);
     }
-
+    if (equip.quantity < data.quantity) {
+        throw new Error('Student does not have this many models checked out.');
+    }
     checkins[data.actionId] = {
         student: student,
         model: model,

@@ -74,7 +74,14 @@ describe('ItemStore', () => {
     it('should check out multiple items', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address, items[1].address]
+            equipment: [
+                {
+                    address: items[0].address
+                },
+                {
+                    address: items[1].address
+                }
+            ]
         }).then(() => {
             assert.strictEqual(items[0].status, 'CHECKED_OUT');
             assert.strictEqual(items[1].status, 'CHECKED_OUT');
@@ -84,7 +91,11 @@ describe('ItemStore', () => {
     it('should check out a single item', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             assert.strictEqual(items[0].status, 'CHECKED_OUT');
             assert.strictEqual(items[1].status, 'AVAILABLE');
@@ -94,7 +105,11 @@ describe('ItemStore', () => {
     it('should check an item in', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             return addAction('CHECKIN', {
                 studentId: student.id,
@@ -136,7 +151,11 @@ describe('ItemStore', () => {
     it('should get 0 overdue items when no items are overdue', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: 123456,
-            equipmentAddresses: [ItemStore.getItems()[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             assert.lengthOf(ItemStore.getOverdueItems(), 0);
         });
