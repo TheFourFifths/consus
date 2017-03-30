@@ -5,6 +5,7 @@ import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import ModelStore from './model-store';
 import { isBeforeNow, dueDateToTimestamp } from '../lib/clock';
+import config from 'config';
 
 const ACTIVE_STATUS = config.get('student.active_status');
 
