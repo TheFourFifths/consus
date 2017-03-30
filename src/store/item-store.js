@@ -78,7 +78,7 @@ store.registerHandler('NEW_ITEM', data => {
         modelAddress: data.modelAddress,
         status: 'AVAILABLE',
         isFaulty: false,
-        faultDescription: '',
+        faultHistory: [],
         isCheckedOutTo: null
     };
     itemsByActionId[data.actionId] = item;
@@ -112,4 +112,17 @@ store.registerHandler('DELETE_MODEL', data => {
     let itemsOfModel = store.getItems().filter(item => item.modelAddress === data.modelAddress);
     itemsOfModel.forEach(item => store.deleteItemByAddress(item.address));
 });
+
+store.registerHandler('ADD_ITEM_FAULT', data => {
+    store.getItemByAddress(data.itemAddress).isFaulty = true;
+    store.getItemByAddress(data.itemAddress).faultHistory.unshift({
+        description: data.description,
+        timestamp: data.timestamp
+    });
+});
+
+store.registerHandler('REMOVE_FAULT', data => {
+    store.getItemByAddress(data.itemAddress).isFaulty = false;
+});
+
 export default store;

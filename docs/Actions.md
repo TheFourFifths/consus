@@ -8,6 +8,7 @@ This document describes the Flux actions used in the Consus client.
 
 - [Actions](#actions)
     - [Table of contents](#table-of-contents)
+    - [ADD_ITEM_FAULT](#add_item_fault)
     - [CHECKIN](#checkin)
     - [CHECKIN_MODELS](#checkin_models)
     - [CLEAR_ALL_DATA](#clear_all_data)
@@ -19,8 +20,24 @@ This document describes the Flux actions used in the Consus client.
     - [NEW_LONGTERM_CHECKOUT](#new_longterm_checkout)
     - [NEW_MODEL](#new_model)
     - [NEW_STUDENT](#new_student)
+    - [REMOVE_FAULT](#remove_fault)
     - [UPDATE_STUDENT](#update_student)
 
+## ADD_ITEM_FAULT
+
+Adds a fault to a specified item.
+
+### Data
+
+- `itemAddress`: The address of the item to check-in.
+- `fault`: A JSON object containing the fault to add to the item.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA",
+    "description": "description"
+}
+```
 
 ## CHECKIN
 
@@ -256,6 +273,20 @@ Create a new student.
     "email": "nuemann@msoe.edu",
     "major": "Aircrafts underwater Engineer",
     "status": "Inactive"
+}
+```
+
+## REMOVE_FAULT
+
+Sets the item's fault state to false.
+
+### Data
+
+- `itemAddress`: The address of the item to update.
+
+```json
+{
+    "itemAddress": "iskdjfjjD"
 }
 ```
 

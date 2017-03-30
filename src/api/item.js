@@ -19,15 +19,13 @@ app.post('/', (req, res) => {
 
     addAction('NEW_ITEM', {
         modelAddress: req.body.modelAddress
-    })
-    .then(actionId => {
+    }).then(actionId => {
         let item = ItemStore.getItemByActionId(actionId);
         res.successJson({
             address: item.address,
             modelName: ModelStore.getModelByAddress(item.modelAddress).name
         });
-    })
-    .catch(e => {
+    }).catch(e => {
         res.failureJson(e.message);
     });
 });
@@ -35,6 +33,34 @@ app.post('/', (req, res) => {
 app.get('/all', (req, res) => {
     res.successJson({
         items: ItemStore.getItems()
+    });
+});
+
+app.delete('/fault', (req, res) => {
+    if(!req.query.itemAddress) return res.failureJson("Item address required to remove fault");
+    addAction("REMOVE_FAULT", {
+        itemAddress: req.query.itemAddress
+    }).then(() => {
+        res.successJson({
+            item: ItemStore.getItemByAddress(req.query.itemAddress)
+        });
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
+app.post('/fault', (req, res) => {
+    if(!req.body.itemAddress) return res.failureJson("Item address required to log fault.");
+    if(!req.body.faultDescription) return res.failureJson("Missing fault to log to item.");
+    addAction("ADD_ITEM_FAULT", {
+        itemAddress: req.body.itemAddress,
+        description: req.body.faultDescription
+    }).then(() => {
+        res.successJson({
+            item: ItemStore.getItemByAddress(req.body.itemAddress)
+        });
+    }).catch(e => {
+        res.failureJson(e.message);
     });
 });
 

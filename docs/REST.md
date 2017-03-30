@@ -9,6 +9,8 @@ This document describes the API endpoints of the Consus server.
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
+    * [DELETE `api/item/fault`](#delete-apiitemfault)
+    * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
     * [POST `/api/model`](#post-apimodel)
     * [PATCH `/api/model`](#patch-apimodel)
@@ -89,6 +91,39 @@ The entire list of items the server contains
             "status": "AVAILABLE"
         }],
         "modelName": "<NAME OF MODEL THE ITEM BELONGS TO>"
+    }
+}
+```
+
+## DELETE `/api/item/fault`
+
+Sets the "isFaulty" field of a specified item to false
+
+### Data
+
+- `itemAddress`: The item to updateStudent
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## POST `/api/item/fault`
+
+Adds a fault to a specified item.
+
+### Data
+
+- `itemAddress`: The address of the item to check-in.
+- `fault`: A JSON object containing the fault to add to the item.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA",
+    "fault": {
+        "timestamp": 1231289,
+        "description": "description"
     }
 }
 ```
