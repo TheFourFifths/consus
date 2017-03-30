@@ -12,6 +12,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
     * [POST `/api/model`](#post-apimodel)
     * [PATCH `/api/model`](#patch-apimodel)
+    * [PATCH `/api/model/instock`](#patch-apimodelinstock)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
     * [GET `/api/model/children`](#get-apimodelchildren)
@@ -202,6 +203,35 @@ Content-Type: application/json
     }
 }
 ```
+
+## PATCH `/api/model/instock`
+
+Updates an unserialized model's total and instock values after adding a new one
+
+### Parameters
+
+* `modelAddress`: Address of the model to increment
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": {
+        "address": "m8y7nEtAe",
+        "name": "Resistor",
+        "description": "V = IR",
+        "manufacturer": "Pancakes R Us",
+        "vendor": "Mouzer",
+        "location": "Shelf 14",
+        "allowCheckout": "true",
+        "price": 10.50,
+        "count": 21,
+        "inStock:": 21
+    }
+}
+```
+
 ## GET `/api/model`
 
 Retrieve a model.

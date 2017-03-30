@@ -77,7 +77,19 @@ app.patch('/', (req, res) => {
     }).catch(e => {
         res.failureJson(e.message);
     });
+});
 
+app.patch('/instock', (req, res) => {
+    if (typeof req.query.modelAddress !== 'string') {
+        return res.failureJson('A model address is required.');
+    }
+    addAction('INCREMENT_STOCK', {
+        modelAddress: req.query.modelAddress
+    }).then(() => {
+        res.successJson(ModelStore.getRecentlyUpdatedModel());
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
 });
 
 app.delete('/', (req, res) => {

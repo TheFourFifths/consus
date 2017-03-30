@@ -153,6 +153,17 @@ store.registerHandler('NEW_MODEL', data => {
     models.push(model);
 });
 
+store.registerHandler("INCREMENT_STOCK", data => {
+    let modelToInc = store.getModelByAddress(data.modelAddress);
+    if (!modelToInc.allowCheckout) {
+        throw new Error('Address cannot be a serialized model.');
+    }
+    modelToInc.count++;
+    modelToInc.inStock++;
+    recentlyUpdatedModel = modelToInc;
+    return modelToInc;
+});
+
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
     checkoutModels(data.equipment);

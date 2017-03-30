@@ -13,6 +13,7 @@ This document describes the Flux actions used in the Consus client.
     - [CLEAR_ALL_DATA](#clear_all_data)
     - [DELETE_ITEM](#delete_item)
     - [EDIT_MODEL](#edit_model)
+    - [INCREMENT_STOCK](#increment_stock)
     - [NEW_CHECKOUT](#new_checkout)
     - [NEW_ITEM](#new_item)
     - [NEW_LONGTERM_CHECKOUT](#new_longterm_checkout)
@@ -110,6 +111,29 @@ Updates a model to have new attributes.
 }
 ```
 
+## INCREMENT_STOCK
+
+Increment the inStock and total of the provided item
+
+### Data
+
+- `modelAddress`: The edited model's address
+
+```json
+{
+    "address": "m8y7nEtAe",
+    "name": "Resistor",
+    "description": "V = IR",
+    "manufacturer": "Pancakes R Us",
+    "vendor": "Mouser",
+    "location": "Shelf 14",
+    "price": 10.50,
+    "allowCheckout": "true",
+    "count": 21,
+    "inStock": 21,
+    "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+}
+```
 
 ## NEW_CHECKOUT
 

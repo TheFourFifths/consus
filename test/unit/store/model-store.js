@@ -261,4 +261,22 @@ describe('ModelStore', () => {
             assert.strictEqual(25, modifiedModel.inStock);
         });
     });
+
+    it('should increment an unserialized models in stock amount', () => {
+        return addAction('INCREMENT_STOCK', {
+            modelAddress: unserializedModel.address
+        }).then(() => {
+            let modifiedModel = ModelStore.getRecentlyUpdatedModel();
+            assert.strictEqual(modifiedModel.count, 21);
+            assert.strictEqual(modifiedModel.inStock, 21);
+        });
+    });
+
+    it('should not increment serialized models', () => {
+        return addAction('INCREMENT_STOCK', {
+            modelAddress: model.address
+        }).then(assert.fail).catch(e => {
+            assert.strictEqual(e.message, `Address cannot be a serialized model.`);
+        });
+    });
 });
