@@ -6,7 +6,7 @@ import CheckinStore from './checkin-store';
 import ModelStore from './model-store';
 import { isBeforeNow, dueDateToTimestamp } from '../lib/clock';
 
-const ACTIVE_STATUS = 'C - Current';
+const ACTIVE_STATUS = config.get('student.active_status');
 
 let students = Object.create(null);
 let studentsByActionId = Object.create(null);
