@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import config from 'config';
 import { Store } from 'consus-core/flux';
 import { assert } from 'chai';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
-const MODEL_PHOTO_DIR = 'assets/img';
+const MODEL_PHOTO_DIR = config.get('assets.model_photo_directory');
 
 let models = [];
 let modelsByActionId = Object.create(null);
@@ -82,12 +83,14 @@ function updateModel(address, name, description, manufacturer, vendor, location,
     modelToUpdate.vendor = vendor;
     modelToUpdate.location = location;
     modelToUpdate.price = price;
-    if(allowCheckout)
+    if (allowCheckout){
         modelToUpdate.count = count;
-    if(allowCheckout && changeStock)
+    }
+    if (allowCheckout && changeStock) {
         modelToUpdate.inStock = inStock;
-    else
+    } else {
         modelToUpdate.inStock = originalStock + changeInCount;
+    }
     savePhoto(b64PhotoStr, address);
     recentlyUpdatedModel = modelToUpdate;
     return modelToUpdate;
@@ -99,14 +102,17 @@ function savePhoto(b64Str, address) {
     fs.writeFileSync(photoPath, bitmap);
     return photoPath;
 }
-function checkoutModels(equipmentAddresses){
-    equipmentAddresses.forEach(address => {
+
+function checkoutModels(equipment){
+    equipment.forEach(equip => {
+        let address = equip.address;
         let result = readAddress(address);
         if(result.type == 'model'){
-            store.getModelByAddress(address).inStock--;
+            store.getModelByAddress(address).inStock -= equip.quantity;
         }
     });
 }
+
 store.registerHandler('CLEAR_ALL_DATA', () => {
     models = [];
     modelsByActionId = Object.create(null);
@@ -147,14 +153,25 @@ store.registerHandler('NEW_MODEL', data => {
     models.push(model);
 });
 
+store.registerHandler("INCREMENT_STOCK", data => {
+    let modelToInc = store.getModelByAddress(data.modelAddress);
+    if (!modelToInc.allowCheckout) {
+        throw new Error('Address cannot be a serialized model.');
+    }
+    modelToInc.count++;
+    modelToInc.inStock++;
+    recentlyUpdatedModel = modelToInc;
+    return modelToInc;
+});
+
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
-    checkoutModels(data.equipmentAddresses);
+    checkoutModels(data.equipment);
 });
 
 store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
-    checkoutModels(data.equipmentAddresses);
+    checkoutModels(data.equipment);
 });
 
 store.registerHandler('CHECKIN_MODELS', data => {

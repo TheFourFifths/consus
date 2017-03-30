@@ -24,3 +24,24 @@ setTimeout(() => {
 export function isBeforeNow(timestamp){
     return timestamp < Date.now() / 1000;
 }
+
+export function dueDateToTimestamp(dueDate) {
+    let timestamp;
+    let timezone = 'America/Chicago';
+    if (typeof dueDate === 'string') {
+        // this means longterm checkout
+        timestamp = moment.tz(dueDate, timezone);
+    } else {
+        // this means the equipment is due today, i.e. not longterm
+        timestamp = moment.tz(dueDate * 1000, timezone);
+    }
+    let hour = parseInt(timestamp.format('H'));
+    let minute = parseInt(timestamp.format('m'));
+    // check for times past 4:50pm
+    if (hour > 16 || (hour === 16 && minute >= 50)) {
+        // increment to the next day
+        timestamp = timestamp.add(1, 'd');
+    }
+    timestamp.hour(17).minute(0).second(0);
+    return parseInt(timestamp.format('X'));
+}

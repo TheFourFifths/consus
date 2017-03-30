@@ -7,7 +7,7 @@ import ItemStore from '../../.dist/store/item-store';
 import StudentStore from '../../.dist/store/student-store';
 import moment from 'moment-timezone';
 
-describe('Check out items and models', () => {
+describe('Check out longterm', () => {
     let items = [];
     before(() => {
         return server.start(8080);
@@ -89,8 +89,10 @@ describe('Check out items and models', () => {
         let timestamp = moment();
         return post('checkout/longterm', {
             studentId: 123456,
-            equipmentAddresses: [
-                'iGwEZUvfA'
+            equipment: [
+                {
+                    address: 'iGwEZUvfA'
+                }
             ],
             dueDate: timestamp,
             professor: 'Professor'
@@ -108,7 +110,11 @@ describe('Check out items and models', () => {
         let timestamp = moment();
         return addAction('NEW_LONGTERM_CHECKOUT', {
             studentId: 123456,
-            equipmentAddresses: [items[0].address],
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ],
             dueDate: timestamp,
             professor: 'test'
         }).then(() => {
@@ -116,7 +122,11 @@ describe('Check out items and models', () => {
             assert.isTrue(StudentStore.hasOverdueItem(student.id));
             addAction('NEW_LONGTERM_CHECKOUT', {
                 studentId: student.id,
-                equipmentAddresses: [items[1].address],
+                equipment: [
+                    {
+                        address: items[1].address
+                    }
+                ],
                 adminCode: '112994',
                 dueDate: timestamp,
                 professor: 'test'
@@ -132,8 +142,10 @@ describe('Check out items and models', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 2);
         let timestamp = moment();
         return post('checkout/longterm', {
-            equipmentAddresses: [
-                'iGwEZUvfA'
+            equipment: [
+                {
+                    address: 'iGwEZUvfA'
+                }
             ],
             dueDate: timestamp,
             professor: 'Professor'
@@ -156,7 +168,7 @@ describe('Check out items and models', () => {
         }).then(() => {
             assert.fail();
         }).catch(e => {
-            assert.strictEqual(e.message, 'An array of item addresses is required.');
+            assert.strictEqual(e.message, 'An array of equipment is required.');
         });
     });
 
@@ -167,8 +179,10 @@ describe('Check out items and models', () => {
         let timestamp = moment();
         return post('checkout/longterm', {
             studentId: 123456,
-            equipmentAddresses: [
-                'iGwEZUvfA'
+            equipment: [
+                {
+                    address: 'iGwEZUvfA'
+                }
             ],
             dueDate: timestamp,
         }).then(() => {

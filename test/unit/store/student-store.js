@@ -102,7 +102,18 @@ describe('StudentStore', () => {
     it('should add items and models upon checkout', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address, items[2].address, models[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                },
+                {
+                    address: items[2].address
+                },
+                {
+                    address: models[0].address,
+                    quantity: 1
+                }
+            ]
         }).then(() => {
             assert.strictEqual(student.items[0].address, items[0].address);
             assert.notInclude(student.items, items[1]);
@@ -114,7 +125,14 @@ describe('StudentStore', () => {
     it('should remove an item upon checkin', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address, items[2].address]
+            equipment: [
+                {
+                    address: items[0].address
+                },
+                {
+                    address: items[2].address
+                }
+            ]
         }).then(() => {
             return addAction('CHECKIN', {
                 studentId: student.id,
@@ -130,16 +148,21 @@ describe('StudentStore', () => {
     it('should remove a model upon checkin', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [models[1].address, models[1].address]
+            equipment: [
+                {
+                    address: models[1].address,
+                    quantity: 2
+                }
+            ]
         }).then(() => {
-            assert.strictEqual(student.models.length, 2);
+            assert.strictEqual(student.models.find(m => m.address === models[1].address).quantity, 2);
             return addAction('CHECKIN_MODELS', {
                 studentId: student.id,
                 modelAddress: models[1].address,
                 quantity: 1
             });
         }).then (() => {
-            assert.strictEqual(student.models.length, 1);
+            assert.strictEqual(student.models.find(m => m.address === models[1].address).quantity, 1);
         });
     });
 
@@ -188,7 +211,11 @@ describe('StudentStore', () => {
         };
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             assert.strictEqual(student.items[0].address, items[0].address);
             return addAction('UPDATE_STUDENT', updatedStudentInfo);
@@ -205,7 +232,14 @@ describe('StudentStore', () => {
     it('should remove items from students items list when model is deleted', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address, items[2].address]
+            equipment: [
+                {
+                    address: items[0].address
+                },
+                {
+                    address: items[2].address
+                }
+            ]
         }).then(() => {
             assert.lengthOf(student.items, 2);
             return addAction('DELETE_MODEL', {
@@ -221,7 +255,11 @@ describe('StudentStore', () => {
         stub.returns(true);
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             let students = StudentStore.getStudentsWithOverdueItems();
             assert.lengthOf(students, 1);
@@ -231,7 +269,14 @@ describe('StudentStore', () => {
     it('should remove item from students items list when item is deleted', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address, items[2].address]
+            equipment: [
+                {
+                    address: items[0].address
+                },
+                {
+                    address: items[2].address
+                }
+            ]
         }).then(() => {
             assert.lengthOf(student.items, 2);
             return addAction('DELETE_ITEM', {

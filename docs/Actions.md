@@ -8,17 +8,36 @@ This document describes the Flux actions used in the Consus client.
 
 - [Actions](#actions)
     - [Table of contents](#table-of-contents)
+    - [ADD_ITEM_FAULT](#add_item_fault)
     - [CHECKIN](#checkin)
+    - [CHECKIN_MODELS](#checkin_models)
     - [CLEAR_ALL_DATA](#clear_all_data)
     - [DELETE_ITEM](#delete_item)
     - [EDIT_MODEL](#edit_model)
+    - [INCREMENT_STOCK](#increment_stock)
     - [NEW_CHECKOUT](#new_checkout)
     - [NEW_ITEM](#new_item)
     - [NEW_LONGTERM_CHECKOUT](#new_longterm_checkout)
     - [NEW_MODEL](#new_model)
     - [NEW_STUDENT](#new_student)
+    - [REMOVE_FAULT](#remove_fault)
     - [UPDATE_STUDENT](#update_student)
 
+## ADD_ITEM_FAULT
+
+Adds a fault to a specified item.
+
+### Data
+
+- `itemAddress`: The address of the item to check-in.
+- `fault`: A JSON object containing the fault to add to the item.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA",
+    "description": "description"
+}
+```
 
 ## CHECKIN
 
@@ -27,7 +46,7 @@ Checks in an item for a student.
 ### Data
 
 - `itemAddress`: The address of the item to check-in
-- `studentId`: The ID of the student checking out the item
+- `studentId`: The ID of the student checking in the item
 
 ```json
 {
@@ -36,6 +55,23 @@ Checks in an item for a student.
 }
 ```
 
+## CHECKIN_MODELS
+
+Checks in models for a student.
+
+### Data
+
+- `modelAddress`: The address of the model to check in
+- `studentId`: The ID of the student checking in the model
+- `quantity`: The quantity of the model to check in
+
+```json
+{
+    "modelAddress": "myxEb109",
+    "studentId": "123456",
+    "quantity": 5
+}
+```
 
 ## CLEAR_ALL_DATA
 
@@ -92,6 +128,29 @@ Updates a model to have new attributes.
 }
 ```
 
+## INCREMENT_STOCK
+
+Increment the inStock and total of the provided item
+
+### Data
+
+- `modelAddress`: The edited model's address
+
+```json
+{
+    "address": "m8y7nEtAe",
+    "name": "Resistor",
+    "description": "V = IR",
+    "manufacturer": "Pancakes R Us",
+    "vendor": "Mouser",
+    "location": "Shelf 14",
+    "price": 10.50,
+    "allowCheckout": "true",
+    "count": 21,
+    "inStock": 21,
+    "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+}
+```
 
 ## NEW_CHECKOUT
 
@@ -100,13 +159,21 @@ Checkouts items to a student.
 ### Data
 
 - `adminCode`: (_Optional_) Admin override code
-- `itemAddresses`: Address of the item ...
+- `equipment`: Array of the equipment to check out
 - `studentId`: The student's ID who is checking out
 
 ```json
 {
     "adminCode": "1123581321",
-    "itemAddresses": [ "iGwEZUvfA", "iGwEVVHHE", "iGwEZeaT" ],
+    "equipment": [
+        {
+            "address": "iGwEZUvfA"
+        },
+        {
+            "address": "myxEb109",
+            "quantity": 5
+        }
+    ],
     "studentId": "123456"
 }
 ```
@@ -134,14 +201,22 @@ Checks out equipment and sets the equipments due date to the one provided.
 ### Data
 
 - `studentId`: 123456
-- `equipmentAddresses`: The equipment addresses to checkout
+- `equipment`: The equipment to check out
 - `dueDate`: The date and time the equipment is due back
 - `professor`: The name of the professor for this longterm checkout
 
 ```json
 {
     "studentId": 123456,
-    "equipmentAddresses": ["myxEb109"],
+    "equipment": [
+        {
+            "address": "iGwEZUvfA"
+        },
+        {
+            "address": "myxEb109",
+            "quantity": 5
+        }
+    ],
     "dueDate": "2000-10-10T17:00",
     "professor": "Dr. Monkey"
 }
@@ -198,6 +273,20 @@ Create a new student.
     "email": "nuemann@msoe.edu",
     "major": "Aircrafts underwater Engineer",
     "status": "Inactive"
+}
+```
+
+## REMOVE_FAULT
+
+Sets the item's fault state to false.
+
+### Data
+
+- `itemAddress`: The address of the item to update.
+
+```json
+{
+    "itemAddress": "iskdjfjjD"
 }
 ```
 

@@ -9,9 +9,12 @@ This document describes the API endpoints of the Consus server.
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
+    * [DELETE `api/item/fault`](#delete-apiitemfault)
+    * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
     * [POST `/api/model`](#post-apimodel)
     * [PATCH `/api/model`](#patch-apimodel)
+    * [PATCH `/api/model/instock`](#patch-apimodelinstock)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
     * [GET `/api/model/children`](#get-apimodelchildren)
@@ -88,6 +91,39 @@ The entire list of items the server contains
             "status": "AVAILABLE"
         }],
         "modelName": "<NAME OF MODEL THE ITEM BELONGS TO>"
+    }
+}
+```
+
+## DELETE `/api/item/fault`
+
+Sets the "isFaulty" field of a specified item to false
+
+### Data
+
+- `itemAddress`: The item to updateStudent
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## POST `/api/item/fault`
+
+Adds a fault to a specified item.
+
+### Data
+
+- `itemAddress`: The address of the item to check-in.
+- `fault`: A JSON object containing the fault to add to the item.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA",
+    "fault": {
+        "timestamp": 1231289,
+        "description": "description"
     }
 }
 ```
@@ -202,6 +238,35 @@ Content-Type: application/json
     }
 }
 ```
+
+## PATCH `/api/model/instock`
+
+Updates an unserialized model's total and instock values after adding a new one
+
+### Parameters
+
+* `modelAddress`: Address of the model to increment
+
+### Sample Response
+
+```json
+{
+    "status": "success",
+    "data": {
+        "address": "m8y7nEtAe",
+        "name": "Resistor",
+        "description": "V = IR",
+        "manufacturer": "Pancakes R Us",
+        "vendor": "Mouzer",
+        "location": "Shelf 14",
+        "allowCheckout": "true",
+        "price": 10.50,
+        "count": 21,
+        "inStock:": 21
+    }
+}
+```
+
 ## GET `/api/model`
 
 Retrieve a model.
@@ -432,6 +497,7 @@ Note that fields that don't exist in the updated student will be maintained.
         "items":[]
     }
 }
+```
 
 ## POST `/api/checkout`
 
@@ -440,7 +506,27 @@ Submit a checkout request.
 ### Parameters
 
 * `studentId`: The student's identifier
-* `equipmentAddresses`: An array of item and model identifiers
+* `equipment`: An array of equipment
+* `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
+
+### Sample Response
+
+```json
+{
+    "status": "success"
+}
+```
+
+## POST `/api/checkout/longterm`
+
+Submit a longterm checkout request.
+
+### Parameters
+
+* `studentId`: The student's identifier
+* `equipment`: An array of equipment
+* `professor`: The professor
+* `dueDate`: The date that the equipment is due
 * `adminCode`: (_Optional_) An admin code to force the action; may return failure if admin code is not valid
 
 ### Sample Response
