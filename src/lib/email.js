@@ -1,11 +1,12 @@
+import config from 'config';
 import nodemailer from 'nodemailer';
 import StudentStore from '../store/student-store';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASSWORD
+        user: config.get('notifications.gmail.user'),
+        pass: config.get('notifications.gmail.password')
     }
 });
 
@@ -15,8 +16,8 @@ export function sendMail(emails) {
     let body = 'Hello,%0A%0AOur records indicate that you have overdue equipment that was checked out from Tech Support. Please visit us soon to return the equipment.%0A%0AThank you!';
     return new Promise((resolve, reject) => {
         transporter.sendMail({
-            from: process.env.GMAIL_USER,
-            to: process.env.EMAIL_RECIPIENT,
+            from: config.get('notifications.gmail.user'),
+            to: config.get('notifications.gmail.recipient'),
             subject: 'Tech Support Notification',
             html: `
                 <h1>Tech Support Notification</h1>

@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import config from 'config';
 import { Store } from 'consus-core/flux';
 import { assert } from 'chai';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
-const MODEL_PHOTO_DIR = 'assets/img';
+const MODEL_PHOTO_DIR = config.get('assets.model_photo_directory');
 
 let models = [];
 let modelsByActionId = Object.create(null);
