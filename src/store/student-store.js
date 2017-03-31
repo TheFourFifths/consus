@@ -1,4 +1,3 @@
-import config from 'config';
 import { Store } from 'consus-core/flux';
 import { readAddress } from 'consus-core/identifiers';
 import ItemStore from './item-store';
@@ -6,6 +5,7 @@ import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import ModelStore from './model-store';
 import { isBeforeNow, dueDateToTimestamp } from '../lib/clock';
+import config from 'config';
 
 const ACTIVE_STATUS = config.get('student.active_status');
 
@@ -20,6 +20,10 @@ class StudentStore extends Store {
 
     getStudentById(id) {
         return students[id];
+    }
+
+    getStudentByRFID(rfid){
+        return students[Object.keys(students).find(id => students[id].rfid == rfid)];
     }
 
     getStudentByActionId(actionId) {
@@ -119,7 +123,8 @@ store.registerHandler('NEW_STUDENT', data => {
         email: data.email,
         major: data.major,
         items: [],
-        models: []
+        models: [],
+        rfid: null
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;

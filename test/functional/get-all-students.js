@@ -47,7 +47,8 @@ describe('Get all students', () => {
                     email: "",
                     major: "",
                     items: [],
-                    models: []
+                    models: [],
+                    rfid: null
                 },
                 {
                     name: "That Guy",
@@ -56,7 +57,8 @@ describe('Get all students', () => {
                     email: "",
                     major: "",
                     items: [],
-                    models: []
+                    models: [],
+                    rfid: null
                 }
             ]);
         });

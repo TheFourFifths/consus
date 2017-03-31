@@ -33,7 +33,8 @@ describe('Update Student', () => {
             id: 111123,
             status: "C - Current",
             email: "xx@xy.com",
-            major: ''
+            major: '',
+            rfid: null
         };
         return patch('student', {id: newStudent.id}, newStudent).then(response => {
             newStudent.models = [];

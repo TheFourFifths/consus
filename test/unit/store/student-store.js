@@ -84,6 +84,16 @@ describe('StudentStore', () => {
         assert.strictEqual(StudentStore.getStudentById(student.id), student);
     });
 
+    it('should add an rfid association', () => {
+        return addAction('UPDATE_STUDENT', {
+            id: '123456',
+            rfid: '12345'
+        }).then(() => {
+            assert.strictEqual(StudentStore.getStudentById('123456').rfid, '12345');
+            assert.strictEqual(StudentStore.getStudentByRFID('12345').id, '123456');
+        });
+    });
+
     it('should add more students', () => {
         return addAction('NEW_STUDENT', {
             id: '111111',
