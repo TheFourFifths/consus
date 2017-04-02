@@ -23,6 +23,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/student/all`](#get-apistudentall)
     * [POST `/api/student`](#post-apistudent)
     * [PATCH `/api/student`](#patch-apistudent)
+    * [PATCH `/api/student/rfid`](#patch-apistudentrfid)
     * [POST `/api/checkout`](#post-apicheckout)
     * [POST `api/checkin`](#post-apicheckin)
     * [POST `api/checkin/model`](#post-apicheckinmodel)
@@ -387,6 +388,7 @@ Delete a model
     }
 }
 ```
+
 ## GET `/api/student`
 
 Retrieve a student.
@@ -421,6 +423,25 @@ Retrieve a student.
     }
 }
 ```
+## PATCH `/api/student/rfid`
+
+Associate a student with an rfid
+
+### Parameters
+
+* `studentId`: The student's Id number
+
+### Body
+
+* `rfid`: The rfid number to associate with the student
+### Sample Response
+
+```json
+{
+    "status": "success"
+}
+```
+
 ## GET `/api/student/all`
 
 Retrieve a list of all students.
