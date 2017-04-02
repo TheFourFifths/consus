@@ -9,6 +9,7 @@ This document describes the Flux actions used in the Consus client.
 - [Actions](#actions)
     - [Table of contents](#table-of-contents)
     - [ADD_ITEM_FAULT](#add_item_fault)
+    - [CHANGE_ITEM_DUEDATE](#change_item_duedate)
     - [CHECKIN](#checkin)
     - [CHECKIN_MODELS](#checkin_models)
     - [CLEAR_ALL_DATA](#clear_all_data)
@@ -36,6 +37,22 @@ Adds a fault to a specified item.
 {
     "itemAddress": "iGwEZUvfA",
     "description": "description"
+}
+```
+
+## CHANGE_ITEM_DUEDATE
+
+Changes the due date of an item
+
+- `itemAddress`: The address of the item to change due date for.
+- `dueDate`: An ISO 8601 formatted date string.
+- `studentId`: The studentId number who has the item checked out.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA",
+    "dueDate": "1995-12-25",
+    "studentId": 123456
 }
 ```
 
