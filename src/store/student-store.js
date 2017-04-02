@@ -22,7 +22,7 @@ class StudentStore extends Store {
         return students[id];
     }
 
-    getStudentByRFID(rfid){
+    getStudentByRfid(rfid) {
         return students[Object.keys(students).find(id => students[id].rfid === rfid)];
     }
 
@@ -38,14 +38,14 @@ class StudentStore extends Store {
         });
     }
 
-    hasOverdueItem(id){
+    hasOverdueItem(id) {
         return students[id].items.some(item => {
             let now = Math.floor(Date.now() / 1000);
             return item.timestamp < now;
         });
     }
 
-    isCurrentStudent(student){
+    isCurrentStudent(student) {
         return student.status === ACTIVE_STATUS;
     }
 
@@ -53,13 +53,8 @@ class StudentStore extends Store {
         return this.getStudentById(student.id) === undefined;
     }
 
-    isUniqueRfid(rfid){
-        let returnVal = true;
-        this.getStudents().forEach(student => {
-            if(student.rfid === rfid)
-                returnVal = false;
-        });
-        return returnVal;
+    isUniqueRfid(rfid) {
+        return !this.getStudents().some(student => student.rfid === rfid);
     }
 
 }

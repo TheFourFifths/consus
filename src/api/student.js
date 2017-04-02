@@ -5,7 +5,7 @@ import xlsx from 'xlsx';
 let app = express();
 
 app.get('/', (req, res) => {
-    let student = StudentStore.getStudentByRFID(parseInt(req.query.rfid));
+    let student = StudentStore.getStudentByRfid(parseInt(req.query.rfid));
     let regex = new RegExp("^[a-zA-Z0-9]+$");
 
     if(!regex.test(req.query.rfid)){

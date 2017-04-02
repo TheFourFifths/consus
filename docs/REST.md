@@ -395,7 +395,7 @@ Retrieve a student.
 
 ### Parameters
 
-* `id`: The student's identifier
+* `rfid`: The student's RFID identifier
 
 ### Sample Response
 

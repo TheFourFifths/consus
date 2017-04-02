@@ -45,7 +45,7 @@ describe('Add rfid to student', () => {
 
     it('should add rfid to a student', () => {
         let rfid = 159753;
-        assert.isUndefined(StudentStore.getStudentByRFID(rfid));
+        assert.isUndefined(StudentStore.getStudentByRfid(rfid));
         let studentToEdit = StudentStore.getStudentById(111111);
         let qs = {
             studentId: studentToEdit.id
@@ -54,7 +54,7 @@ describe('Add rfid to student', () => {
             rfid
         };
         return patch('student/rfid', qs, body).then(() => {
-            let postStudent = StudentStore.getStudentByRFID(rfid);
+            let postStudent = StudentStore.getStudentByRfid(rfid);
             assert.strictEqual(postStudent.rfid, rfid);
         });
     });
@@ -74,7 +74,7 @@ describe('Add rfid to student', () => {
 
     it('should warn of missing rfid', () => {
         let rfid = 159753;
-        assert.isUndefined(StudentStore.getStudentByRFID(rfid));
+        assert.isUndefined(StudentStore.getStudentByRfid(rfid));
         let studentToEdit = StudentStore.getStudentById(111111);
         let qs = {
             studentId: studentToEdit.id
@@ -89,7 +89,7 @@ describe('Add rfid to student', () => {
 
     it('should warn that student does not exist', () => {
         let rfid = 159753;
-        assert.isUndefined(StudentStore.getStudentByRFID(rfid));
+        assert.isUndefined(StudentStore.getStudentByRfid(rfid));
         let qs = {
             studentId: -1
         };

@@ -95,7 +95,7 @@ describe('StudentStore', () => {
             rfid: '12345'
         }).then(() => {
             assert.strictEqual(StudentStore.getStudentById('123456').rfid, '12345');
-            assert.strictEqual(StudentStore.getStudentByRFID('12345').id, '123456');
+            assert.strictEqual(StudentStore.getStudentByRfid('12345').id, '123456');
         });
     });
 
