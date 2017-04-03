@@ -7,7 +7,7 @@ import ItemStore from '../../.dist/store/item-store';
 import ModelStore from '../../.dist/store/model-store';
 import moment from 'moment-timezone';
 import config from 'config';
-
+import { dueDateToTimestamp } from '../../.dist/lib/clock';
 describe('Edit item duedate', () => {
     let student;
     let item;
@@ -102,8 +102,8 @@ describe('Edit item duedate', () => {
             studentId: student.id
         };
         return patch('item/duedate', qs, body).then(() => {
-            today.hour(config.get('checkin.due_hour')).minute(config.get('checkin.due_minute')).second(0);
-            assert.strictEqual(item.timestamp, parseInt(today.format('X')));
+            let t = dueDateToTimestamp(today.format('YYYY-MM-DD'));
+            assert.strictEqual(item.timestamp, t);
         });
     });
 });
