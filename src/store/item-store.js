@@ -56,13 +56,17 @@ function checkoutEquipment(equipment, studentId, dueDateTime) {
     equipment.forEach(equip => {
         let address = equip.address;
         let result = readAddress(address);
-        if (result.type == 'item') {
+        if (result.type === 'item') {
             store.getItemByAddress(address).status = 'CHECKED_OUT';
             store.getItemByAddress(address).isCheckedOutTo = studentId;
             let dueTime = dueDateToTimestamp(dueDateTime);
             store.getItemByAddress(address).timestamp = dueTime;
         }
     });
+}
+
+function changeItemDueDate(dueDate, itemAddress){
+    store.getItemByAddress(itemAddress).timestamp = dueDateToTimestamp(dueDate);
 }
 
 const store = new ItemStore();
@@ -125,4 +129,7 @@ store.registerHandler('REMOVE_FAULT', data => {
     store.getItemByAddress(data.itemAddress).isFaulty = false;
 });
 
+store.registerHandler('CHANGE_ITEM_DUEDATE', data => {
+    changeItemDueDate(data.dueDate, data.itemAddress);
+});
 export default store;
