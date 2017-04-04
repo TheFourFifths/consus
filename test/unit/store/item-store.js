@@ -192,4 +192,22 @@ describe('ItemStore', () => {
             assert.strictEqual(item.faultHistory[0].description, "Is Brokeded");
         });
     });
+
+    it('should get all faulty items', ()=> {
+        let itemAddress = ItemStore.getItems()[0].address;
+        return addAction("ADD_ITEM_FAULT", {
+            itemAddress,
+            description: "Is Brokeded"
+        }).then(() => {
+            let itemAddress2 = ItemStore.getItems()[1].address;
+            return addAction("ADD_ITEM_FAULT", {
+                itemAddress: itemAddress2,
+                description: "Is MORE Brokeded"
+            });
+        }).then(() => {
+            let faultyItems = ItemStore.getFaultyItems();
+            assert.lengthOf(faultyItems, 2);
+            assert.strictEqual(faultyItems[0].faultHistory[0].description, "Is Brokeded");
+        });
+    });
 });

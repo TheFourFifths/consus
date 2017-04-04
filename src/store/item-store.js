@@ -10,6 +10,10 @@ let itemsByActionId = Object.create(null);
 
 class ItemStore extends Store {
 
+    getFaultyItems() {
+        return items.filter(item => item.isFaulty);
+    }
+
     getItems() {
         return items.filter(item => item !== undefined);
     }
