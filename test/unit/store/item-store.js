@@ -3,6 +3,8 @@ import ModelStore from '../../../.dist/store/model-store';
 import StudentStore from '../../../.dist/store/student-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
+import moment from 'moment-timezone';
+import config from 'config';
 
 describe('ItemStore', () => {
 
@@ -120,20 +122,20 @@ describe('ItemStore', () => {
         });
     });
 
-    it('should fail to delete an item', () =>{
+    it('should fail to delete an item', () => {
         assert.strictEqual(items.length, 2);
         let modelAddress = items[0].modelAddress;
         return addAction('DELETE_ITEM', {
             itemAddress: 'This is not an address',
             modelAddress: modelAddress
         }).then(assert.fail)
-          .catch(e => {
-              assert.strictEqual(e.message, 'Unknown type.');
-              assert.strictEqual(items.length, 2);
-          });
+            .catch(e => {
+                assert.strictEqual(e.message, 'Unknown type.');
+                assert.strictEqual(items.length, 2);
+            });
     });
 
-    it('should delete an item', () =>{
+    it('should delete an item', () => {
         assert.strictEqual(items.length, 2);
         let deletedItemAddress = items[0].address;
         let modelAddress = items[0].modelAddress;
@@ -208,6 +210,25 @@ describe('ItemStore', () => {
             let faultyItems = ItemStore.getFaultyItems();
             assert.lengthOf(faultyItems, 2);
             assert.strictEqual(faultyItems[0].faultHistory[0].description, "Is Brokeded");
+        });
+    });
+  
+    it('should change an items duedate', () => {
+        let tomorrow = moment().tz(config.get('timezone'));
+        let item;
+        tomorrow.add(1, 'd');
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(actionId => {
+            item = ItemStore.getItemByActionId(actionId);
+            return addAction('CHANGE_ITEM_DUEDATE', {
+                itemAddress: item.address,
+                dueDate: tomorrow.format('YYYY-MM-DD'),
+                studentId: student.id
+            });
+        }).then(() => {
+            tomorrow.hour(17).minute(0).second(0);
+            assert.strictEqual(item.timestamp, parseInt(tomorrow.format('X')));
         });
     });
 });
