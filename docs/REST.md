@@ -9,11 +9,8 @@ This document describes the API endpoints of the Consus server.
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
-<<<<<<< HEAD
-    * [GET `api/item/fault/all`](#get-apiitemfaultall)
-=======
     * [PATCH `/api/item/duedate`](#patch-apiitemduedate)
->>>>>>> 8ef9a2451d04d16e41930cdc7215f587e7fa98ea
+    * [GET `api/item/fault/all`](#get-apiitemfaultall)
     * [DELETE `api/item/fault`](#delete-apiitemfault)
     * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
@@ -148,12 +145,6 @@ The edited item
     }
 }
 ```
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 8ef9a2451d04d16e41930cdc7215f587e7fa98ea
-
 
 ## GET `/api/item/fault/all`
 
