@@ -87,4 +87,18 @@ app.delete('/', (req, res) => {
     });
 });
 
+app.patch('/duedate', (req, res) => {
+    if(!req.query.itemAddress) return res.failureJson("Item address required to update item's dueDate.");
+    if(!req.body.dueDate) return res.failureJson("A due date is required to update item's dueDate.");
+    if(!req.body.studentId) return res.failureJson("A studentId required to update item's dueDate.");
+    addAction('CHANGE_ITEM_DUEDATE', {
+        itemAddress: req.query.itemAddress,
+        dueDate: req.body.dueDate,
+        studentId: req.body.studentId
+    }).then(() => {
+        let item = ItemStore.getItemByAddress(req.query.itemAddress);
+        res.successJson(item);
+    });
+});
+
 export default app;

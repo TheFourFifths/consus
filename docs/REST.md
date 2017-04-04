@@ -9,6 +9,7 @@ This document describes the API endpoints of the Consus server.
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
+    * [PATCH `/api/item/duedate`](#patch-apiitemduedate)
     * [DELETE `api/item/fault`](#delete-apiitemfault)
     * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
@@ -72,7 +73,9 @@ Retrieve an item.
 }
 ```
 
+
 ## DELETE `/api/item`
+
 Delete an item
 
 ### Parameters
@@ -80,7 +83,9 @@ Delete an item
 * `itemAddress`: Address of the item to delete
 
 ### Sample Response
+
 The entire list of items the server contains
+
 ```json
 {
     "status": "success",
@@ -94,6 +99,52 @@ The entire list of items the server contains
     }
 }
 ```
+
+
+## PATCH `/api/item/duedate`
+
+Changes an item's due date.
+
+### Parameters
+
+Query String:
+* `itemAddress`: Address of the item whose due date to change
+
+Body:
+* `studentId`: Student ID who has the item checked out
+* `dueDate`: New due date for the item
+
+### Sample Request
+
+```http
+PATCH /api/item/duedate?itemAddress=iGwEZUvfA HTTP/1.1
+Content-Type: application/json
+
+{
+    "studentId": 123456,
+    "dueDate": "2017-04-30"
+}
+```
+
+### Sample Response
+
+The edited item
+
+```json
+{
+    "status": "success",
+    "data": {
+        "address": "iGwEZUvfA",
+        "faultHistory": [],
+        "isCheckedOutTo": 123456,
+        "isFaulty": false,
+        "modelAddress": "m8y7nEtAe",
+        "status": "CHECKED_OUT",
+        "timestamp": 1491170400
+    }
+}
+```
+
 
 ## DELETE `/api/item/fault`
 
