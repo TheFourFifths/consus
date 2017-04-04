@@ -9,6 +9,7 @@ This document describes the API endpoints of the Consus server.
     * [POST `/api/item`](#post-apiitem)
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
+    * [GET `api/item/fault/all`](#get-apiitemfaultall)
     * [DELETE `api/item/fault`](#delete-apiitemfault)
     * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
@@ -91,6 +92,28 @@ The entire list of items the server contains
             "status": "AVAILABLE"
         }],
         "modelName": "<NAME OF MODEL THE ITEM BELONGS TO>"
+    }
+}
+```
+
+## GET `/api/item/fault/all`
+
+Gets all items with "isFaulty" currently true.
+
+```json
+{
+    "status": "success",
+    "data": {
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "timestamp": 123,
+            "isFaulty": true,
+            "student": {
+                "name": "<Student Name>",
+                "id": "<StudentID>"
+            }
+        }]
     }
 }
 ```
