@@ -5,6 +5,8 @@ import { assert } from 'chai';
 import { addAction } from '../../util/database';
 import sinon from 'sinon';
 import * as clock from '../../../.dist/lib/clock';
+import moment from 'moment-timezone';
+import config from 'config';
 
 describe('StudentStore', () => {
 
@@ -69,6 +71,35 @@ describe('StudentStore', () => {
             });
         }).then(actionId => {
             student = StudentStore.getStudentByActionId(actionId);
+        });
+    });
+
+    it('should update student items on edit item date', () => {
+        let tomorrow = moment().tz(config.get('timezone'));
+        return addAction('NEW_CHECKOUT', {
+            studentId: student.id,
+            equipment: [
+                {
+                    address: items[0].address
+                },
+                {
+                    address: items[2].address
+                }
+            ]
+        }).then(() => {
+            assert.lengthOf(student.items, 2);
+            tomorrow.add(2, 'd');
+            return addAction('CHANGE_ITEM_DUEDATE', {
+                dueDate: tomorrow.format('YYYY-MM-DD'),
+                studentId: student.id,
+                itemAddress: items[0].address
+            });
+        }).then(() => {
+            tomorrow.hour(config.get('checkin.due_hour')).minute(config.get('checkin.due_minute')).second(0);
+            assert.lengthOf(student.items, 2);
+            assert.strictEqual(items[0].timestamp, parseInt(tomorrow.format('X')));
+            tomorrow.add(-2, 'd');
+            assert.strictEqual(items[2].timestamp, parseInt(tomorrow.format('X')));
         });
     });
 
@@ -302,4 +333,5 @@ describe('StudentStore', () => {
             assert.lengthOf(student.items, 1);
         });
     });
+
 });

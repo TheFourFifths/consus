@@ -61,9 +61,9 @@ class StudentStore extends Store {
 
 const store = new StudentStore();
 
-function updateStudent(student){
+function updateStudent(student) {
     let studentToUpdate = students[student.id];
-    for (let key in student){
+    for (let key in student) {
         studentToUpdate[key] = student[key];
     }
     delete studentToUpdate.actionId;
@@ -90,7 +90,7 @@ function removeItemFromAllStudents(itemAddress) {
     }
 }
 
-function addItemsToStudent(studentId, equipment, dueDateTime){
+function addItemsToStudent(studentId, equipment, dueDateTime) {
     let student = students[studentId];
     equipment.forEach(equip => {
         let address = equip.address;
@@ -178,5 +178,16 @@ store.registerHandler('DELETE_ITEM', data => {
 
 store.registerHandler('DELETE_MODEL', data => {
     removeModelFromAllStudents(data.modelAddress);
+});
+
+store.registerHandler('CHANGE_ITEM_DUEDATE', data => {
+    store.waitFor(ItemStore);
+    let updatedItem = ItemStore.getItemByAddress(data.itemAddress);
+    let student = students[data.studentId];
+    for (let i = 0; i < student.items.length; i++) {
+        if (student.items[i].address === updatedItem.address) {
+            student.items[i] = updatedItem;
+        }
+    }
 });
 export default store;
