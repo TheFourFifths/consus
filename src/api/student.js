@@ -116,7 +116,7 @@ app.post('/', (req, res) => {
         rfid: parseInt(req.body.rfid),
         status: config.get('student.active_status')
     };
-    console.log(student);
+
     if(StudentStore.isNewStudent(student)){
         addAction('NEW_STUDENT', student);
         return res.successJson();
