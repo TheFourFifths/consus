@@ -108,6 +108,9 @@ app.post('/', (req, res) => {
     if(!req.body.name){
         return res.failureJson('A name is required to make a new Student');
     }
+    if(!req.body.rfid){
+        return res.failureJson('A rfid is required to make a new Student');
+    }
     let student = {
         id: parseInt(req.body.studentId),
         name: req.body.name,
