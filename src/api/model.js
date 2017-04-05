@@ -92,6 +92,23 @@ app.patch('/instock', (req, res) => {
     });
 });
 
+app.post('/save', (req, res) => {
+    if (!req.body.modelAddress) {
+        return res.failureJson('Model address required to save');
+    }
+    if (!req.body.studentId) {
+        return res.failureJson('Student ID required to save');
+    }
+    addAction('SAVE_MODEL', {
+        studentId: req.body.studentId,
+        modelAddress: req.body.modelAddress
+    }).then(() => {
+        res.successJson();
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
 app.delete('/', (req, res) => {
     if (typeof req.query.modelAddress !== 'string') {
         return res.failureJson('A model address is required.');

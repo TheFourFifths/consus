@@ -13,20 +13,22 @@ This document describes the API endpoints of the Consus server.
     * [DELETE `api/item/fault`](#delete-apiitemfault)
     * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
+    * [POST `/api/item/save`](#post-apiitemsave)
     * [POST `/api/model`](#post-apimodel)
     * [PATCH `/api/model`](#patch-apimodel)
     * [PATCH `/api/model/instock`](#patch-apimodelinstock)
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
     * [GET `/api/model/children`](#get-apimodelchildren)
-    * [DELETE `api/model`](#delete-apimodel)
+    * [POST `/api/model/save`](#post-apimodelsave)
+    * [DELETE `/api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
     * [GET `/api/student/all`](#get-apistudentall)
     * [POST `/api/student`](#post-apistudent)
     * [PATCH `/api/student`](#patch-apistudent)
     * [POST `/api/checkout`](#post-apicheckout)
-    * [POST `api/checkin`](#post-apicheckin)
-    * [POST `api/checkin/model`](#post-apicheckinmodel)
+    * [POST `/api/checkin`](#post-apicheckin)
+    * [POST `/api/checkin/model`](#post-apicheckinmodel)
 
 ## POST `/api/item`
 
@@ -183,6 +185,8 @@ Adds a fault to a specified item.
 
 Get a list of all currently overdue items.
 
+### Sample Response
+
 ```json
 {
     "status": "success",
@@ -197,6 +201,22 @@ Get a list of all currently overdue items.
             }
         }]
     }
+}
+```
+
+## POST `/api/item/save`
+
+Save an item to be retrieved later.
+
+### Parameters
+
+* `itemAddress`: Address of the item to save
+
+### Sample Response
+
+```json
+{
+    "status": "success"
 }
 ```
 
@@ -406,6 +426,23 @@ The model and an array of its items
             "status": "CHECKED_OUT"
         }]
     }
+}
+```
+
+## POST `/api/model/save`
+
+Save models to be retrieved later.
+
+### Parameters
+
+* `studentID`: ID of the student saving models
+* `itemAddress`: Address of the model to save
+
+### Sample Response
+
+```json
+{
+    "status": "success"
 }
 ```
 

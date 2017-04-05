@@ -70,6 +70,19 @@ app.get('/overdue', (req, res) => {
     });
 });
 
+app.post('/save', (req, res) => {
+    if (!req.body.itemAddress) {
+        return res.failureJson('Item address required to save');
+    }
+    addAction('SAVE_ITEM', {
+        itemAddress: req.body.itemAddress
+    }).then(() => {
+        res.successJson();
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
 app.delete('/', (req, res) => {
     if(!req.query.itemAddress) return res.failureJson("Item address required to delete");
     if(!req.query.modelAddress) return res.failureJson("Model address required to delete");

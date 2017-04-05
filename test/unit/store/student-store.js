@@ -117,7 +117,7 @@ describe('StudentStore', () => {
 
     it('should add more students', () => {
         return addAction('NEW_STUDENT', {
-            id: '111111',
+            id: 111111,
             name: 'Alice'
         }).then(() => {
             assert.lengthOf(StudentStore.getStudents(), 2);
@@ -316,6 +316,89 @@ describe('StudentStore', () => {
             });
         }).then(() => {
             assert.lengthOf(student.items, 1);
+        });
+    });
+
+    it('should save a model', () => {
+        return addAction('NEW_CHECKOUT', {
+            equipment: [
+                {
+                    address: ModelStore.getModels()[1].address,
+                    quantity: 1
+                }
+            ],
+            studentId: student.id
+        }).then(() => {
+            return addAction('SAVE_MODEL', {
+                modelAddress: ModelStore.getModels()[1].address,
+                studentId: 123456
+            });
+        }).then(() => {
+            assert.strictEqual(StudentStore.getStudentById(123456).models[0].status, 'SAVED');
+        });
+    });
+
+    it('should require a model address', () => {
+        return addAction('SAVE_MODEL', {
+            modelAddress: ItemStore.getItems()[0].address,
+            studentId: 123456
+        }).then(() => {
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Address is not a model.');
+        });
+    });
+
+    it('should require a valid student', () => {
+        return addAction('SAVE_MODEL', {
+            modelAddress: ModelStore.getModels()[1].address,
+            studentId: 314159
+        }).then(() => {
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Student could not be found.');
+        });
+    });
+
+    it('should require the student to have the model checked out', () => {
+        return addAction('NEW_STUDENT', {
+            id: '786459',
+            name: 'Loopy doo'
+        }).then(() => {
+            return addAction('SAVE_MODEL', {
+                modelAddress: ModelStore.getModels()[1].address,
+                studentId: 786459
+            });
+        }).then(() => {
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Student does not have this model checked out.');
+        });
+    });
+
+    it('should not save a saved model', () => {
+        return addAction('NEW_CHECKOUT', {
+            equipment: [
+                {
+                    address: ModelStore.getModels()[1].address,
+                    quantity: 1
+                }
+            ],
+            studentId: student.id
+        }).then(() => {
+            return addAction('SAVE_MODEL', {
+                modelAddress: ModelStore.getModels()[1].address,
+                studentId: 123456
+            });
+        }).then(() => {
+            return addAction('SAVE_MODEL', {
+                modelAddress: ModelStore.getModels()[1].address,
+                studentId: 123456
+            });
+        }).then(() => {
+            throw new Error('Unexpected success');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Student already saved this model.');
         });
     });
 

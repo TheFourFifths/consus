@@ -112,6 +112,21 @@ store.registerHandler('DELETE_ITEM', data => {
     store.deleteItemByAddress(data.itemAddress);
 });
 
+store.registerHandler('SAVE_ITEM', data => {
+    let result = readAddress(data.itemAddress);
+    if (result.type !== 'item' ) {
+        throw new Error('Address is not an item.');
+    }
+    let item = items[result.index];
+    if (item.status === 'AVAILABLE') {
+        throw new Error('Item is not checked out.');
+    }
+    if (item.status === 'SAVED') {
+        throw new Error('Item is already saved.');
+    }
+    item.status = 'SAVED';
+});
+
 store.registerHandler('DELETE_MODEL', data => {
     let itemsOfModel = store.getItems().filter(item => item.modelAddress === data.modelAddress);
     itemsOfModel.forEach(item => store.deleteItemByAddress(item.address));
