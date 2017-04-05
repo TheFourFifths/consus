@@ -28,7 +28,7 @@ app.patch('/', (req, res) => {
         status: req.body.status,
         email: req.body.email,
         major: req.body.major,
-        rfid: req.body.rfid
+        rfid: parseInt(req.body.rfid)
     }).then(() => {
         res.successJson(StudentStore.getStudentById(req.query.id));
     });
@@ -109,17 +109,16 @@ app.post('/', (req, res) => {
         return res.failureJson('A name is required to make a new Student');
     }
     let student = {
-        id: req.body.studentId,
+        id: parseInt(req.body.studentId),
         name: req.body.name,
         email: req.body.email,
         major: req.body.major,
-        rfid: req.body.rfid,
+        rfid: parseInt(req.body.rfid),
         status: config.get('student.active_status')
     };
     console.log(student);
     if(StudentStore.isNewStudent(student)){
         addAction('NEW_STUDENT', student);
-        console.log('student made...');
         return res.successJson();
     }else{
         return res.failureJson('The studentId(' + student.id + ') passed in is already in use!');
