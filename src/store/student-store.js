@@ -22,8 +22,8 @@ class StudentStore extends Store {
         return students[id];
     }
 
-    getStudentByRFID(rfid){
-        return students[Object.keys(students).find(id => students[id].rfid == rfid)];
+    getStudentByRfid(rfid) {
+        return students[Object.keys(students).find(id => students[id].rfid === rfid)];
     }
 
     getStudentByActionId(actionId) {
@@ -51,6 +51,10 @@ class StudentStore extends Store {
 
     isNewStudent(student) {
         return this.getStudentById(student.id) === undefined;
+    }
+
+    isUniqueRfid(rfid) {
+        return !this.getStudents().some(student => student.rfid === rfid);
     }
 
 }
@@ -124,7 +128,7 @@ store.registerHandler('NEW_STUDENT', data => {
         major: data.major,
         items: [],
         models: [],
-        rfid: null
+        rfid: data.rfid
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;

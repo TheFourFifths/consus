@@ -282,6 +282,7 @@ Create a new student.
 - `email`: The student's new email
 - `major`: The student's new major
 - `status`: Whether the student is currently attending or not
+- `rfid`: (_Optional_)The rfid number of the student's ID card.
 
 ```json
 {
@@ -289,7 +290,8 @@ Create a new student.
     "name": "John von Neumann",
     "email": "nuemann@msoe.edu",
     "major": "Aircrafts underwater Engineer",
-    "status": "Inactive"
+    "status": "Inactive",
+    "rfid": 159753
 }
 ```
 
@@ -319,12 +321,14 @@ A student object
 - `name`: The student's new name
 - `email`: The student's new email
 - `major`: The student's new major
+- `rfid`: (_Optional_)The student's RFID number on their MSOE ID card
 
 ```json
 {
     "id": "123456",
     "name": "John von Neumann",
     "email": "nuemann@msoe.edu",
-    "major": "Aircrafts underwater Engineer"
+    "major": "Aircrafts underwater Engineer",
+    "rfid": 123456
 }
 ```

@@ -21,7 +21,8 @@ describe('Update Student', () => {
                 id: "111123",
                 status: "C - Current",
                 email: "",
-                major: ""
+                major: "",
+                rfid: 123456
             });
         });
     });
@@ -34,7 +35,7 @@ describe('Update Student', () => {
             status: "C - Current",
             email: "xx@xy.com",
             major: '',
-            rfid: null
+            rfid: 123456
         };
         return patch('student', {id: newStudent.id}, newStudent).then(response => {
             newStudent.models = [];

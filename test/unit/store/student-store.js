@@ -62,6 +62,7 @@ describe('StudentStore', () => {
         }).then(actionId => {
             models.push(ModelStore.getModelByActionId(actionId));
             return addAction('NEW_STUDENT', {
+                rfid: 123456,
                 id: '123456',
                 name: 'John von Neumann',
                 email: 'neumannj@msoe.edu',
@@ -115,13 +116,17 @@ describe('StudentStore', () => {
         assert.strictEqual(StudentStore.getStudentById(student.id), student);
     });
 
+    it('should recognize an rfid is already in use', () => {
+        assert.isFalse(StudentStore.isUniqueRfid(student.rfid));
+    });
+
     it('should add an rfid association', () => {
         return addAction('UPDATE_STUDENT', {
             id: '123456',
             rfid: '12345'
         }).then(() => {
             assert.strictEqual(StudentStore.getStudentById('123456').rfid, '12345');
-            assert.strictEqual(StudentStore.getStudentByRFID('12345').id, '123456');
+            assert.strictEqual(StudentStore.getStudentByRfid('12345').id, '123456');
         });
     });
 

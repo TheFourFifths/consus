@@ -5,10 +5,10 @@ import xlsx from 'xlsx';
 let app = express();
 
 app.get('/', (req, res) => {
-    let student = StudentStore.getStudentById(req.query.id);
+    let student = StudentStore.getStudentByRfid(parseInt(req.query.rfid));
     let regex = new RegExp("^[a-zA-Z0-9]+$");
 
-    if(!regex.test(req.query.id)){
+    if(!regex.test(req.query.rfid)){
         return res.failureJson('Invalid Characters in Student ID');
     }else if (typeof student === 'undefined') {
         return res.failureJson('The student could not be found.');
@@ -26,7 +26,8 @@ app.patch('/', (req, res) => {
         name: req.body.name,
         status: req.body.status,
         email: req.body.email,
-        major: req.body.major
+        major: req.body.major,
+        rfid: req.body.rfid
     }).then(() => {
         res.successJson(StudentStore.getStudentById(req.query.id));
     });
@@ -62,5 +63,34 @@ app.post('/', (req, res) => {
         }
     }
     res.successJson();
+});
+
+app.patch('/rfid', (req, res) => {
+    if (!req.query.studentId) {
+        return res.failureJson('Numeric student ID required when associating a studentId and RFID');
+    }
+    if (!req.body.rfid) {
+        return res.failureJson('Rfid number required when associating a studentId and RFID');
+    }
+    let student = StudentStore.getStudentById(parseInt(req.query.studentId));
+    if(student === undefined || student === null){
+        return res.failureJson('The student ID does not exist.');
+    }
+    if(!StudentStore.isUniqueRfid(req.body.rfid)){
+        return res.failureJson('The rfid is already associated with a student.');
+    }
+    if(student){
+        let s = {
+            id: student.id,
+            name: student.name,
+            status: student.status,
+            email: student.email,
+            major: student.major,
+            rfid: parseInt(req.body.rfid)
+        };
+        addAction('UPDATE_STUDENT', s);
+
+    }
+    res.successJson(StudentStore.getStudentById(parseInt(req.query.studentId)));
 });
 export default app;
