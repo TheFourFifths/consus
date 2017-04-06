@@ -250,6 +250,84 @@ describe('ItemStore', () => {
         });
     });
 
+    it('should retrieve an item', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('NEW_CHECKOUT', {
+                equipment: [
+                    {
+                        address: ItemStore.getItems()[2].address
+                    }
+                ],
+                studentId: 123456
+            });
+        }).then(() => {
+            return addAction('SAVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            assert.strictEqual(ItemStore.getItems()[2].status, 'SAVED');
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            assert.strictEqual(ItemStore.getItems()[2].status, 'CHECKED_OUT');
+        });
+    });
+
+    it('should not be able to retrieve an item with a model address', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: model.address
+            });
+        }).then(() => {
+            throw new Error('Should not have retrieved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Address is not an item.');
+        });
+    });
+
+    it('should not be able to retrieve an item which is not checked out', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            throw new Error('Should not have retrieved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Item is not saved.');
+        });
+    });
+
+    it('should not be able to retrieve an item which is not saved', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('NEW_CHECKOUT', {
+                equipment: [
+                    {
+                        address: ItemStore.getItems()[2].address
+                    }
+                ],
+                studentId: 123456
+            });
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            throw new Error('Should not have retrieved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Item is not saved.');
+        });
+    });
+
     it('should add and remove a fault to an item', () => {
         let itemAddress = ItemStore.getItems()[0].address;
         let timestamp = Math.floor(Date.now() / 1000);

@@ -13,6 +13,7 @@ This document describes the API endpoints of the Consus server.
     * [DELETE `api/item/fault`](#delete-apiitemfault)
     * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
+    * [POST `/api/item/retrieve`](#post-apiitemretrieve)
     * [POST `/api/item/save`](#post-apiitemsave)
     * [POST `/api/model`](#post-apimodel)
     * [PATCH `/api/model`](#patch-apimodel)
@@ -20,6 +21,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/model`](#get-apimodel)
     * [GET `/api/model/all`](#get-apimodelall)
     * [GET `/api/model/children`](#get-apimodelchildren)
+    * [POST `/api/model/retrieve`](#post-apimodelretrieve)
     * [POST `/api/model/save`](#post-apimodelsave)
     * [DELETE `/api/model`](#delete-apimodel)
     * [GET `/api/student`](#get-apistudent)
@@ -201,6 +203,22 @@ Get a list of all currently overdue items.
             }
         }]
     }
+}
+```
+
+## POST `/api/item/retrieve`
+
+Retrieve a saved item.
+
+### Parameters
+
+* `itemAddress`: Address of the item to retrieve
+
+### Sample Response
+
+```json
+{
+    "status": "success"
 }
 ```
 
@@ -426,6 +444,23 @@ The model and an array of its items
             "status": "CHECKED_OUT"
         }]
     }
+}
+```
+
+## POST `/api/model/retrieve`
+
+Retrieve saved models.
+
+### Parameters
+
+* `studentID`: ID of the student retrieving models
+* `itemAddress`: Address of the model to retrieve
+
+### Sample Response
+
+```json
+{
+    "status": "success"
 }
 ```
 

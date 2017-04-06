@@ -309,6 +309,36 @@ Sets the item's fault state to false.
 }
 ```
 
+## RETRIEVE_ITEM
+
+Retrieve a saved item.
+
+### Data
+
+- `itemAddress`: The address of the item to retrieve
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## RETRIEVE_MODEL
+
+Retrieve saved models.
+
+### Data
+
+- `studentId`: The student retrieving the model
+- `modelAddress`: The address of the model to retrieve
+
+```json
+{
+    "studentId": 123456,
+    "itemAddress": "myxEb109"
+}
+```
+
 ## SAVE_ITEM
 
 Save an item.

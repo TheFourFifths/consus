@@ -70,6 +70,19 @@ app.get('/overdue', (req, res) => {
     });
 });
 
+app.post('/retrieve', (req, res) => {
+    if (!req.body.itemAddress) {
+        return res.failureJson('Item address required to retrieve');
+    }
+    addAction('RETRIEVE_ITEM', {
+        itemAddress: req.body.itemAddress
+    }).then(() => {
+        res.successJson();
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
 app.post('/save', (req, res) => {
     if (!req.body.itemAddress) {
         return res.failureJson('Item address required to save');
