@@ -62,6 +62,7 @@ describe('StudentStore', () => {
         }).then(actionId => {
             models.push(ModelStore.getModelByActionId(actionId));
             return addAction('NEW_STUDENT', {
+                rfid: 123456,
                 id: '123456',
                 name: 'John von Neumann',
                 email: 'neumannj@msoe.edu',
@@ -97,8 +98,6 @@ describe('StudentStore', () => {
             tomorrow.hour(config.get('checkin.due_hour')).minute(config.get('checkin.due_minute')).second(0);
             assert.lengthOf(student.items, 2);
             assert.strictEqual(items[0].timestamp, parseInt(tomorrow.format('X')));
-            tomorrow.add(-2, 'd');
-            assert.strictEqual(items[2].timestamp, parseInt(tomorrow.format('X')));
         });
     });
 
@@ -113,6 +112,20 @@ describe('StudentStore', () => {
 
     it('should retrieve a student by id', () => {
         assert.strictEqual(StudentStore.getStudentById(student.id), student);
+    });
+
+    it('should recognize an rfid is already in use', () => {
+        assert.isFalse(StudentStore.isUniqueRfid(student.rfid));
+    });
+
+    it('should add an rfid association', () => {
+        return addAction('UPDATE_STUDENT', {
+            id: '123456',
+            rfid: '12345'
+        }).then(() => {
+            assert.strictEqual(StudentStore.getStudentById('123456').rfid, '12345');
+            assert.strictEqual(StudentStore.getStudentByRfid('12345').id, '123456');
+        });
     });
 
     it('should add more students', () => {
