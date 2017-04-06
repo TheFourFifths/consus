@@ -2,6 +2,7 @@ import express from 'express';
 import StudentStore from '../store/student-store';
 import { addAction } from '../lib/database';
 import xlsx from 'xlsx';
+import config from 'config';
 let app = express();
 
 app.get('/', (req, res) => {
@@ -27,13 +28,13 @@ app.patch('/', (req, res) => {
         status: req.body.status,
         email: req.body.email,
         major: req.body.major,
-        rfid: req.body.rfid
+        rfid: parseInt(req.body.rfid)
     }).then(() => {
         res.successJson(StudentStore.getStudentById(req.query.id));
     });
 });
 
-app.post('/', (req, res) => {
+app.post('/excel', (req, res) => {
     let workbook = xlsx.read(req.body.data, {type: 'binary'});
     let studentJSON;
     try{
@@ -92,5 +93,39 @@ app.patch('/rfid', (req, res) => {
 
     }
     res.successJson(StudentStore.getStudentById(parseInt(req.query.studentId)));
+});
+
+app.post('/', (req, res) => {
+    if(!req.body.studentId){
+        return res.failureJson('A studentId is required to make a new Student');
+    }
+    if(!req.body.major){
+        return res.failureJson('A major is required to make a new Student');
+    }
+    if(!req.body.email){
+        return res.failureJson('An email is required to make a new Student');
+    }
+    if(!req.body.name){
+        return res.failureJson('A name is required to make a new Student');
+    }
+    if(!req.body.rfid){
+        return res.failureJson('A rfid is required to make a new Student');
+    }
+    let student = {
+        id: parseInt(req.body.studentId),
+        name: req.body.name,
+        email: req.body.email,
+        major: req.body.major,
+        rfid: parseInt(req.body.rfid),
+        status: config.get('student.active_status')
+    };
+
+    if(StudentStore.isNewStudent(student)){
+        addAction('NEW_STUDENT', student);
+        return res.successJson();
+    }else{
+        return res.failureJson('The studentId(' + student.id + ') passed in is already in use!');
+    }
+
 });
 export default app;

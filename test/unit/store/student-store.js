@@ -98,8 +98,6 @@ describe('StudentStore', () => {
             tomorrow.hour(config.get('checkin.due_hour')).minute(config.get('checkin.due_minute')).second(0);
             assert.lengthOf(student.items, 2);
             assert.strictEqual(items[0].timestamp, parseInt(tomorrow.format('X')));
-            tomorrow.add(-2, 'd');
-            assert.strictEqual(items[2].timestamp, parseInt(tomorrow.format('X')));
         });
     });
 
