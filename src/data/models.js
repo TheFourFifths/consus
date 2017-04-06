@@ -1,7 +1,7 @@
 export default [
     {
-        name: 'Resistor',
-        description: 'V = IR',
+        name: 'Breadboard',
+        description: 'A breadboard for making circuits.',
         manufacturer: 'Pancakes R\' Us',
         vendor: 'Mouzer',
         location: 'Shelf 14',

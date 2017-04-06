@@ -91,11 +91,14 @@ function addItemsToStudent(studentId, equipment, dueDateTime) {
             student.items.push(ItemStore.getItemByAddress(address));
         } else if (type === 'model') {
             let model = student.models.find(model => model.address === address);
+            let m = ModelStore.getModelByAddress(address);
             if (model === undefined) {
                 model = {
                     address,
-                    name: ModelStore.getModelByAddress(address).name,
-                    quantity: 0
+                    name: m.name,
+                    quantity: 0,
+                    timestamp: m.timestamp,
+                    status: 'CHECKED_OUT'
                 };
                 student.models.push(model);
             }
@@ -171,6 +174,44 @@ store.registerHandler('DELETE_MODEL', data => {
     removeModelFromAllStudents(data.modelAddress);
 });
 
+store.registerHandler('SAVE_MODEL', data => {
+    let result = readAddress(data.modelAddress);
+    if (result.type !== 'model' ) {
+        throw new Error('Address is not a model.');
+    }
+    let student = students[data.studentId];
+    if (!student) {
+        throw new Error('Student could not be found.');
+    }
+    let model = student.models.find(m => m.address === data.modelAddress);
+    if (!model) {
+        throw new Error('Student does not have this model checked out.');
+    }
+    if (model.status === 'SAVED') {
+        throw new Error('Student already saved this model.');
+    }
+    model.status = 'SAVED';
+});
+
+store.registerHandler('RETRIEVE_MODEL', data => {
+    let result = readAddress(data.modelAddress);
+    if (result.type !== 'model' ) {
+        throw new Error('Address is not a model.');
+    }
+    let student = students[data.studentId];
+    if (!student) {
+        throw new Error('Student could not be found.');
+    }
+    let model = student.models.find(m => m.address === data.modelAddress);
+    if (!model) {
+        throw new Error('Student does not have this model saved or checked out.');
+    }
+    if (model.status !== 'SAVED') {
+        throw new Error('Student does not have this model saved.');
+    }
+    model.status = 'CHECKED_OUT';
+});
+
 store.registerHandler('CHANGE_ITEM_DUEDATE', data => {
     store.waitFor(ItemStore);
     let updatedItem = ItemStore.getItemByAddress(data.itemAddress);
@@ -181,4 +222,5 @@ store.registerHandler('CHANGE_ITEM_DUEDATE', data => {
         }
     }
 });
+
 export default store;

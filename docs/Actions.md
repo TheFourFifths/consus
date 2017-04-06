@@ -22,6 +22,8 @@ This document describes the Flux actions used in the Consus client.
     - [NEW_MODEL](#new_model)
     - [NEW_STUDENT](#new_student)
     - [REMOVE_FAULT](#remove_fault)
+    - [SAVE_ITEM](#save_item)
+    - [SAVE_MODEL](#save_model)
     - [UPDATE_STUDENT](#update_student)
 
 ## ADD_ITEM_FAULT
@@ -217,7 +219,7 @@ Checks out equipment and sets the equipments due date to the one provided.
 
 ### Data
 
-- `studentId`: 123456
+- `studentId`: The student checking out
 - `equipment`: The equipment to check out
 - `dueDate`: The date and time the equipment is due back
 - `professor`: The name of the professor for this longterm checkout
@@ -303,7 +305,67 @@ Sets the item's fault state to false.
 
 ```json
 {
-    "itemAddress": "iskdjfjjD"
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## RETRIEVE_ITEM
+
+Retrieve a saved item.
+
+### Data
+
+- `itemAddress`: The address of the item to retrieve
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## RETRIEVE_MODEL
+
+Retrieve saved models.
+
+### Data
+
+- `studentId`: The student retrieving the model
+- `modelAddress`: The address of the model to retrieve
+
+```json
+{
+    "studentId": 123456,
+    "itemAddress": "myxEb109"
+}
+```
+
+## SAVE_ITEM
+
+Save an item.
+
+### Data
+
+- `itemAddress`: The address of the item to save
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## SAVE_MODEL
+
+Save models.
+
+### Data
+
+- `studentId`: The student saving the model
+- `modelAddress`: The address of the model to save
+
+```json
+{
+    "studentId": 123456,
+    "itemAddress": "myxEb109"
 }
 ```
 
