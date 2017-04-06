@@ -44,9 +44,11 @@ app.post('/', (req, res) => {
         location: req.body.location,
         allowCheckout: req.body.allowCheckout,
         price: req.body.price,
-        count: req.body.count
+        count: req.body.count,
+        photo: req.body.photo
     }).then(actionId => {
         let model = ModelStore.getModelByActionId(actionId);
+        model.photo = getModelPhoto(model.address);
         res.successJson(model);
     }).catch(e => {
         res.failureJson(e.message);

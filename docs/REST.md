@@ -253,6 +253,7 @@ Create a model.
 * `allowCheckout`: If true, the model itself can be checked out
 * `price`: Price of one model
 * `count`: Amount of this model in stock
+* `photo`: Photo to be associated with the model
 
 ### Sample Response
 
@@ -268,7 +269,8 @@ Create a model.
         "location": "Shelf 14",
         "allowCheckout": false,
         "price": 10.50,
-        "count": 20
+        "count": 20,
+        "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg="
     }
 }
 ```
@@ -323,7 +325,7 @@ Content-Type: application/json
         "allowCheckout": true,
         "price": 10.50,
         "count": 20,
-        "inStock": 20
+        "inStock": 20,
         "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg="
     }
 }
