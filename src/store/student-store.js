@@ -131,11 +131,8 @@ store.registerHandler('NEW_STUDENT', data => {
         major: data.major,
         items: [],
         models: [],
-<<<<<<< HEAD
-        overdueCheckins: []
-=======
+        overdueCheckins: [],
         rfid: data.rfid
->>>>>>> 31823d9e8a3a9252fe0089edc268b309134630ee
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;
