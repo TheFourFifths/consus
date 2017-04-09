@@ -142,6 +142,12 @@ store.registerHandler('CHECKIN', data => {
         return;
     }
     let student = store.getStudentById(data.studentId);
+    if(store.hasOverdueItem(data.studentId)){
+        student.overdueCheckins.push({
+            timestamp: data.timestamp,
+            item: data.itemAddress
+        });
+    }
     let item = ItemStore.getItemByAddress(data.itemAddress);
     student.items.splice(student.items.indexOf(item), 1);
 });
