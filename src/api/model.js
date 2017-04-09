@@ -44,9 +44,11 @@ app.post('/', (req, res) => {
         location: req.body.location,
         allowCheckout: req.body.allowCheckout,
         price: req.body.price,
-        count: req.body.count
+        count: req.body.count,
+        photo: req.body.photo
     }).then(actionId => {
         let model = ModelStore.getModelByActionId(actionId);
+        model.photo = getModelPhoto(model.address);
         res.successJson(model);
     }).catch(e => {
         res.failureJson(e.message);
@@ -87,6 +89,40 @@ app.patch('/instock', (req, res) => {
         modelAddress: req.query.modelAddress
     }).then(() => {
         res.successJson(ModelStore.getRecentlyUpdatedModel());
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
+app.post('/retrieve', (req, res) => {
+    if (!req.body.modelAddress) {
+        return res.failureJson('Model address required to retrieve');
+    }
+    if (!req.body.studentId) {
+        return res.failureJson('Student ID required to retrieve');
+    }
+    addAction('RETRIEVE_MODEL', {
+        studentId: req.body.studentId,
+        modelAddress: req.body.modelAddress
+    }).then(() => {
+        res.successJson();
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
+app.post('/save', (req, res) => {
+    if (!req.body.modelAddress) {
+        return res.failureJson('Model address required to save');
+    }
+    if (!req.body.studentId) {
+        return res.failureJson('Student ID required to save');
+    }
+    addAction('SAVE_MODEL', {
+        studentId: req.body.studentId,
+        modelAddress: req.body.modelAddress
+    }).then(() => {
+        res.successJson();
     }).catch(e => {
         res.failureJson(e.message);
     });

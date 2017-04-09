@@ -137,8 +137,9 @@ store.registerHandler('NEW_MODEL', data => {
     assert.isBoolean(data.allowCheckout, 'The model allowCheckout must be a boolean');
     assert.isNumber(data.price, 'The model price must be a number');
     assert.isNumber(data.count, 'The model count must be a number');
+    let address = createAddress(models.length, 'model');
     let model = {
-        address: createAddress(models.length, 'model'),
+        address: address,
         name: data.name,
         description: data.description,
         manufacturer: data.manufacturer,
@@ -149,6 +150,9 @@ store.registerHandler('NEW_MODEL', data => {
         count: data.count,
         inStock: data.count
     };
+    if(data.photo){
+        savePhoto(data.photo, address);
+    }
     modelsByActionId[data.actionId] = model;
     models.push(model);
 });

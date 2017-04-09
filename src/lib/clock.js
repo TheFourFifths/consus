@@ -1,11 +1,12 @@
 import moment from 'moment-timezone';
 import { sendOverdueItemNotifications } from './email.js';
+import config from 'config';
 
 const ONE_DAY = 1000*60*60*24;
 
 //initialization code
 function getInitialTimeoutTime(){
-    let timestamp = moment.tz(Date.now(), 'America/Chicago');
+    let timestamp = moment.tz(Date.now(), config.get('timezone'));
     let hour = parseInt(timestamp.format('H'));
     // check for times past 18:00 (6:00pm)
     if (hour >= 18) {
