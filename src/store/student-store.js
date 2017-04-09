@@ -119,7 +119,8 @@ store.registerHandler('NEW_STUDENT', data => {
         email: data.email,
         major: data.major,
         items: [],
-        models: []
+        models: [],
+        overdueCheckins: []
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;
