@@ -35,3 +35,9 @@ pid_file = "consus.pid"
 # The string that identifies a student as currently enrolled.
 # Consult the document used to import students.
 active_status = "C - Current"
+
+[database]
+# The location of the Oak-Lite database's data directory.
+# If the value is an empty string, the location of `consus` will be used.
+# Otherwise, the value must be the absolute path of an existing directory.
+data_directory = ""
