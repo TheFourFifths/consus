@@ -37,6 +37,7 @@ npm start
 ### Development Scripts
 
 * `npm test`: Run the test suite
+* `npm run data-setup`: Add sample data to the database
 * `npm run lint`: Run the linter
 * `npm run build`: Build the usable .dist directory
 * `npm run coverage`: Generate a code coverage report
