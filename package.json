@@ -13,6 +13,7 @@
   "license": "Unlicense",
   "scripts": {
     "start": "node index.js",
+    "data-setup": "node .dist/data-setup.js",
     "build": "grunt build",
     "coverage": "cross-env NODE_ENV=test BABEL_ENV=test nyc npm test && nyc report --reporter=text-lcov > coverage.lcov",
     "prepublish": "grunt prepublish",
