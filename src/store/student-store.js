@@ -154,13 +154,14 @@ store.registerHandler('CHECKIN', data => {
         return;
     }
     let student = store.getStudentById(data.studentId);
-    if(store.hasOverdueItem(data.studentId)){
+    let item = ItemStore.getItemByAddress(data.itemAddress);
+    console.log("Checked in item timestamp:",item.timestamp);
+    if(item.timestamp < Math.floor(Date.now() / 1000)){
         student.overdueCheckins.push({
             timestamp: data.timestamp,
             item: data.itemAddress
         });
     }
-    let item = ItemStore.getItemByAddress(data.itemAddress);
     student.items.splice(student.items.indexOf(item), 1);
 });
 
