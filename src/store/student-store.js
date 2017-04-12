@@ -155,7 +155,6 @@ store.registerHandler('CHECKIN', data => {
     }
     let student = store.getStudentById(data.studentId);
     let item = ItemStore.getItemByAddress(data.itemAddress);
-    console.log("Checked in item timestamp:",item.timestamp);
     if(item.timestamp < Math.floor(Date.now() / 1000)){
         student.overdueCheckins.push({
             timestamp: data.timestamp,
