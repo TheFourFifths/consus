@@ -4,8 +4,8 @@ var path = require('path');
 var config = require('config');
 
 let dataDirectory = config.get('database.data_directory');
-if (dataDirectory === '') {
-    dataDirectory = path.join(__dirname, './.oak');
+if (!path.isAbsolute(dataDirectory)) {
+    dataDirectory = path.join(__dirname, dataDirectory, './.oak');
 }
 
 module.exports = function(grunt) {

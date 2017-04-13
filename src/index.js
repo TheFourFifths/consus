@@ -9,8 +9,8 @@ const PORT = process.argv.reduce((port, arg) => {
 }, config.get('server.port'));
 
 let dataDirectory = config.get('database.data_directory');
-if (dataDirectory === '') {
-    dataDirectory = path.join(__dirname, '../');
+if (!path.isAbsolute(dataDirectory)) {
+    dataDirectory = path.join(__dirname, '../', dataDirectory);
 }
 
 setDataDirectory(dataDirectory);
