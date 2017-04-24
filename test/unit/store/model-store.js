@@ -279,4 +279,58 @@ describe('ModelStore', () => {
             assert.strictEqual(e.message, `Address cannot be a serialized model.`);
         });
     });
+
+    it('should require positive values for new model counts', () => {
+        return addAction('NEW_MODEL', {
+            name: 'Transistor',
+            description: 'desc',
+            manufacturer: 'man',
+            vendor: 'vend',
+            location: 'loc',
+            allowCheckout: true,
+            price: 1.00,
+            count: -20
+        }).then(assert.fail).catch(e => {
+            assert.include(e.message, 'The model count cannot be negative');
+        });
+    });
+
+    it('should require positive values for edited model counts', () => {
+        return addAction('EDIT_MODEL', {
+            address: unserializedModel.address,
+            name: 'computer',
+            description: 'WHAT A DESCRIPTION',
+            manufacturer: 'Change it up',
+            vendor: 'vendor',
+            location: 'Neptune',
+            allowCheckout: true,
+            price: 11.50,
+            count: -30,
+            changeStock: true,
+            inStock: 25,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+        }).then(assert.fail).catch(e => {
+            assert.include(e.message, 'The model count cannot be negative');
+        });
+    });
+
+    it('should require positive values for edited model in-stock quantities', () => {
+        return addAction('EDIT_MODEL', {
+            address: unserializedModel.address,
+            name: 'computer',
+            description: 'WHAT A DESCRIPTION',
+            manufacturer: 'Change it up',
+            vendor: 'vendor',
+            location: 'Neptune',
+            allowCheckout: true,
+            price: 11.50,
+            count: 30,
+            changeStock: true,
+            inStock: -25,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+        }).then(assert.fail).catch(e => {
+            assert.include(e.message, 'The model stock amount cannot be negative');
+        });
+    });
+
 });
