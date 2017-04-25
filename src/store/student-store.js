@@ -131,6 +131,7 @@ store.registerHandler('NEW_STUDENT', data => {
         major: data.major,
         items: [],
         models: [],
+        overdueCheckins: [],
         rfid: data.rfid
     };
     studentsByActionId[data.actionId] = student;
@@ -154,6 +155,12 @@ store.registerHandler('CHECKIN', data => {
     }
     let student = store.getStudentById(data.studentId);
     let item = ItemStore.getItemByAddress(data.itemAddress);
+    if(item.timestamp < Math.floor(Date.now() / 1000)){
+        student.overdueCheckins.push({
+            timestamp: data.timestamp,
+            item: data.itemAddress
+        });
+    }
     student.items.splice(student.items.indexOf(item), 1);
 });
 
