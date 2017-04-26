@@ -8,16 +8,55 @@ This document describes the Flux actions used in the Consus client.
 
 - [Actions](#actions)
     - [Table of contents](#table-of-contents)
+    - [ADD_ITEM_FAULT](#add_item_fault)
+    - [CHANGE_ITEM_DUEDATE](#change_item_duedate)
     - [CHECKIN](#checkin)
+    - [CHECKIN_MODELS](#checkin_models)
     - [CLEAR_ALL_DATA](#clear_all_data)
     - [DELETE_ITEM](#delete_item)
     - [EDIT_MODEL](#edit_model)
+    - [INCREMENT_STOCK](#increment_stock)
     - [NEW_CHECKOUT](#new_checkout)
     - [NEW_ITEM](#new_item)
+    - [NEW_LONGTERM_CHECKOUT](#new_longterm_checkout)
     - [NEW_MODEL](#new_model)
     - [NEW_STUDENT](#new_student)
+    - [REMOVE_FAULT](#remove_fault)
+    - [SAVE_ITEM](#save_item)
+    - [SAVE_MODEL](#save_model)
     - [UPDATE_STUDENT](#update_student)
 
+## ADD_ITEM_FAULT
+
+Adds a fault to a specified item.
+
+### Data
+
+- `itemAddress`: The address of the item to check-in.
+- `fault`: A JSON object containing the fault to add to the item.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA",
+    "description": "description"
+}
+```
+
+## CHANGE_ITEM_DUEDATE
+
+Changes the due date of an item
+
+- `itemAddress`: The address of the item to change due date for.
+- `dueDate`: An ISO 8601 formatted date string.
+- `studentId`: The studentId number who has the item checked out.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA",
+    "dueDate": "1995-12-25",
+    "studentId": 123456
+}
+```
 
 ## CHECKIN
 
@@ -26,7 +65,7 @@ Checks in an item for a student.
 ### Data
 
 - `itemAddress`: The address of the item to check-in
-- `studentId`: The ID of the student checking out the item
+- `studentId`: The ID of the student checking in the item
 
 ```json
 {
@@ -35,6 +74,23 @@ Checks in an item for a student.
 }
 ```
 
+## CHECKIN_MODELS
+
+Checks in models for a student.
+
+### Data
+
+- `modelAddress`: The address of the model to check in
+- `studentId`: The ID of the student checking in the model
+- `quantity`: The quantity of the model to check in
+
+```json
+{
+    "modelAddress": "myxEb109",
+    "studentId": "123456",
+    "quantity": 5
+}
+```
 
 ## CLEAR_ALL_DATA
 
@@ -66,7 +122,7 @@ Deletes an item from the system.
 
 Updates a model to have new attributes.
 
-### Date
+### Data
 
 - `address`: The edited model's address
 - `name`: Name of the model
@@ -91,6 +147,29 @@ Updates a model to have new attributes.
 }
 ```
 
+## INCREMENT_STOCK
+
+Increment the inStock and total of the provided item
+
+### Data
+
+- `modelAddress`: The edited model's address
+
+```json
+{
+    "address": "m8y7nEtAe",
+    "name": "Resistor",
+    "description": "V = IR",
+    "manufacturer": "Pancakes R Us",
+    "vendor": "Mouser",
+    "location": "Shelf 14",
+    "price": 10.50,
+    "allowCheckout": "true",
+    "count": 21,
+    "inStock": 21,
+    "photo": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+}
+```
 
 ## NEW_CHECKOUT
 
@@ -99,13 +178,21 @@ Checkouts items to a student.
 ### Data
 
 - `adminCode`: (_Optional_) Admin override code
-- `itemAddresses`: Address of the item ...
+- `equipment`: Array of the equipment to check out
 - `studentId`: The student's ID who is checking out
 
 ```json
 {
     "adminCode": "1123581321",
-    "itemAddresses": [ "iGwEZUvfA", "iGwEVVHHE", "iGwEZeaT" ],
+    "equipment": [
+        {
+            "address": "iGwEZUvfA"
+        },
+        {
+            "address": "myxEb109",
+            "quantity": 5
+        }
+    ],
     "studentId": "123456"
 }
 ```
@@ -122,6 +209,35 @@ Creates a new item.
 ```json
 {
     "modelAddress": "m8y7nEtAe"
+}
+```
+
+
+## NEW_LONGTERM_CHECKOUT
+
+Checks out equipment and sets the equipments due date to the one provided.
+
+### Data
+
+- `studentId`: The student checking out
+- `equipment`: The equipment to check out
+- `dueDate`: The date and time the equipment is due back
+- `professor`: The name of the professor for this longterm checkout
+
+```json
+{
+    "studentId": 123456,
+    "equipment": [
+        {
+            "address": "iGwEZUvfA"
+        },
+        {
+            "address": "myxEb109",
+            "quantity": 5
+        }
+    ],
+    "dueDate": "2000-10-10T17:00",
+    "professor": "Dr. Monkey"
 }
 ```
 
@@ -168,6 +284,7 @@ Create a new student.
 - `email`: The student's new email
 - `major`: The student's new major
 - `status`: Whether the student is currently attending or not
+- `rfid`: (_Optional_)The rfid number of the student's ID card.
 
 ```json
 {
@@ -175,7 +292,82 @@ Create a new student.
     "name": "John von Neumann",
     "email": "nuemann@msoe.edu",
     "major": "Aircrafts underwater Engineer",
-    "status": "Inactive"
+    "status": "Inactive",
+    "rfid": 159753
+}
+```
+
+## REMOVE_FAULT
+
+Sets the item's fault state to false.
+
+### Data
+
+- `itemAddress`: The address of the item to update.
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## RETRIEVE_ITEM
+
+Retrieve a saved item.
+
+### Data
+
+- `itemAddress`: The address of the item to retrieve
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## RETRIEVE_MODEL
+
+Retrieve saved models.
+
+### Data
+
+- `studentId`: The student retrieving the model
+- `modelAddress`: The address of the model to retrieve
+
+```json
+{
+    "studentId": 123456,
+    "itemAddress": "myxEb109"
+}
+```
+
+## SAVE_ITEM
+
+Save an item.
+
+### Data
+
+- `itemAddress`: The address of the item to save
+
+```json
+{
+    "itemAddress": "iGwEZUvfA"
+}
+```
+
+## SAVE_MODEL
+
+Save models.
+
+### Data
+
+- `studentId`: The student saving the model
+- `modelAddress`: The address of the model to save
+
+```json
+{
+    "studentId": 123456,
+    "itemAddress": "myxEb109"
 }
 ```
 
@@ -191,12 +383,14 @@ A student object
 - `name`: The student's new name
 - `email`: The student's new email
 - `major`: The student's new major
+- `rfid`: (_Optional_)The student's RFID number on their MSOE ID card
 
 ```json
 {
     "id": "123456",
     "name": "John von Neumann",
     "email": "nuemann@msoe.edu",
-    "major": "Aircrafts underwater Engineer"
+    "major": "Aircrafts underwater Engineer",
+    "rfid": 123456
 }
 ```

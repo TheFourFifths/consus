@@ -1,11 +1,13 @@
 import { Store } from 'consus-core/flux';
+import { readAddress } from 'consus-core/identifiers';
 import ItemStore from './item-store';
-import ModelStore from './model-store';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
-import { readAddress } from 'consus-core/identifiers';
+import ModelStore from './model-store';
+import { isBeforeNow, dueDateToTimestamp } from '../lib/clock';
+import config from 'config';
 
-const ACTIVE_STATUS = 'C - Current';
+const ACTIVE_STATUS = config.get('student.active_status');
 
 let students = Object.create(null);
 let studentsByActionId = Object.create(null);
@@ -20,33 +22,48 @@ class StudentStore extends Store {
         return students[id];
     }
 
+    getStudentByRfid(rfid) {
+        return students[Object.keys(students).find(id => students[id].rfid === rfid)];
+    }
+
     getStudentByActionId(actionId) {
         return studentsByActionId[actionId];
     }
 
-    hasOverdueItem(id){
+    getStudentsWithOverdueItems() {
+        return Object.keys(students).map(id => students[id]).filter(student => {
+            return student.items.some(item => {
+                return isBeforeNow(item.timestamp);
+            });
+        });
+    }
+
+    hasOverdueItem(id) {
         return students[id].items.some(item => {
             let now = Math.floor(Date.now() / 1000);
             return item.timestamp < now;
         });
     }
 
-    isCurrentStudent(student){
+    isCurrentStudent(student) {
         return student.status === ACTIVE_STATUS;
     }
 
     isNewStudent(student) {
-
         return this.getStudentById(student.id) === undefined;
+    }
+
+    isUniqueRfid(rfid) {
+        return !this.getStudents().some(student => student.rfid === rfid);
     }
 
 }
 
 const store = new StudentStore();
 
-function updateStudent(student){
+function updateStudent(student) {
     let studentToUpdate = students[student.id];
-    for (let key in student){
+    for (let key in student) {
         studentToUpdate[key] = student[key];
     }
     delete studentToUpdate.actionId;
@@ -73,6 +90,32 @@ function removeItemFromAllStudents(itemAddress) {
     }
 }
 
+function addItemsToStudent(studentId, equipment, dueDateTime) {
+    let student = students[studentId];
+    equipment.forEach(equip => {
+        let address = equip.address;
+        let type = readAddress(address).type;
+        if (type === 'item') {
+            student.items.push(ItemStore.getItemByAddress(address));
+        } else if (type === 'model') {
+            let model = student.models.find(model => model.address === address);
+            let m = ModelStore.getModelByAddress(address);
+            if (model === undefined) {
+                model = {
+                    address,
+                    name: m.name,
+                    quantity: 0,
+                    timestamp: m.timestamp,
+                    status: 'CHECKED_OUT'
+                };
+                student.models.push(model);
+            }
+            model.quantity += equip.quantity;
+            model.dueDate = dueDateToTimestamp(dueDateTime);
+        }
+    });
+}
+
 store.registerHandler('CLEAR_ALL_DATA', () => {
     students = Object.create(null);
     studentsByActionId = Object.create(null);
@@ -87,7 +130,8 @@ store.registerHandler('NEW_STUDENT', data => {
         email: data.email,
         major: data.major,
         items: [],
-        models: []
+        models: [],
+        rfid: data.rfid
     };
     studentsByActionId[data.actionId] = student;
     students[data.id] = student;
@@ -95,18 +139,12 @@ store.registerHandler('NEW_STUDENT', data => {
 
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
+    addItemsToStudent(data.studentId, data.equipment, data.timestamp);
+});
 
-    let student = store.getStudentById(data.studentId);
-
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'item'){
-            student.items.push(ItemStore.getItemByAddress(address));
-        }
-        else if (result.type == 'model') {
-            student.models.push(ModelStore.getModelByAddress(address));
-        }
-    });
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    addItemsToStudent(data.studentId, data.equipment, data.dueDate);
 });
 
 store.registerHandler('CHECKIN', data => {
@@ -124,16 +162,12 @@ store.registerHandler('CHECKIN_MODELS', data => {
     if (typeof CheckinStore.getCheckinByActionId(data.actionId) !== 'object') {
         return;
     }
-    let student = store.getStudentById(data.studentId);
-    let model = ModelStore.getModelByAddress(data.modelAddress);
-
-    let modelsRemoved = 0;
-    for(let i = 0; i < student.models.length && modelsRemoved < data.quantity; i++){
-        if(student.models[i].address === model.address){
-            student.models.splice(i, 1);
-            i--;
-            modelsRemoved++;
-        }
+    let student = students[data.studentId];
+    let index = student.models.findIndex(m => m.address === data.modelAddress);
+    let model = student.models[index];
+    model.quantity -= data.quantity;
+    if (model.quantity === 0) {
+        student.models.splice(index, 1);
     }
 });
 
@@ -148,4 +182,54 @@ store.registerHandler('DELETE_ITEM', data => {
 store.registerHandler('DELETE_MODEL', data => {
     removeModelFromAllStudents(data.modelAddress);
 });
+
+store.registerHandler('SAVE_MODEL', data => {
+    let result = readAddress(data.modelAddress);
+    if (result.type !== 'model' ) {
+        throw new Error('Address is not a model.');
+    }
+    let student = students[data.studentId];
+    if (!student) {
+        throw new Error('Student could not be found.');
+    }
+    let model = student.models.find(m => m.address === data.modelAddress);
+    if (!model) {
+        throw new Error('Student does not have this model checked out.');
+    }
+    if (model.status === 'SAVED') {
+        throw new Error('Student already saved this model.');
+    }
+    model.status = 'SAVED';
+});
+
+store.registerHandler('RETRIEVE_MODEL', data => {
+    let result = readAddress(data.modelAddress);
+    if (result.type !== 'model' ) {
+        throw new Error('Address is not a model.');
+    }
+    let student = students[data.studentId];
+    if (!student) {
+        throw new Error('Student could not be found.');
+    }
+    let model = student.models.find(m => m.address === data.modelAddress);
+    if (!model) {
+        throw new Error('Student does not have this model saved or checked out.');
+    }
+    if (model.status !== 'SAVED') {
+        throw new Error('Student does not have this model saved.');
+    }
+    model.status = 'CHECKED_OUT';
+});
+
+store.registerHandler('CHANGE_ITEM_DUEDATE', data => {
+    store.waitFor(ItemStore);
+    let updatedItem = ItemStore.getItemByAddress(data.itemAddress);
+    let student = students[data.studentId];
+    for (let i = 0; i < student.items.length; i++) {
+        if (student.items[i].address === updatedItem.address) {
+            student.items[i] = updatedItem;
+        }
+    }
+});
+
 export default store;

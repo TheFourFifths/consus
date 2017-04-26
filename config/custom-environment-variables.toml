@@ -1,0 +1,14 @@
+# All configurations set here override all other values set in this directory.
+# The value of the configuration key is the value of the environment variable
+# specified by that key. For example,
+#     timezone = "TZ"
+# with the environment variable TZ="America/Chicago", the `timezone` key will
+# be set to "America/Chicago".
+
+[notifications.gmail]
+# The Gmail account used for sending notification mail.
+user = "GMAIL_USER"
+# The password for the Gmail user account
+password = "GMAIL_PASSWORD"
+# The email address to receive and forward notifications.
+recipient = "EMAIL_RECIPIENT"

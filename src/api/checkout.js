@@ -7,20 +7,39 @@ app.post('/', (req, res) => {
     if (typeof req.body.studentId !== 'number') {
         return res.failureJson('A student id is required.');
     }
-    if (typeof req.body.equipmentAddresses !== 'object'
-        || typeof req.body.equipmentAddresses[0] !== 'string') {
-        return res.failureJson('An array of item addresses is required.');
-
+    if (typeof req.body.equipment !== 'object') {
+        return res.failureJson('An array of equipment is required.');
     }
     addAction('NEW_CHECKOUT', {
         studentId: req.body.studentId,
-        equipmentAddresses: req.body.equipmentAddresses,
+        equipment: req.body.equipment,
         adminCode: req.body.adminCode
-    })
-    .then(() => {
+    }).then(() => {
         res.successJson();
-    })
-    .catch(e => {
+    }).catch(e => {
+        res.failureJson(e.message);
+    });
+});
+
+app.post('/longterm', (req, res) => {
+    if (typeof req.body.studentId !== 'number') {
+        return res.failureJson('A student id is required.');
+    }
+    if (typeof req.body.equipment !== 'object') {
+        return res.failureJson('An array of equipment is required.');
+    }
+    if (typeof req.body.professor !== 'string') {
+        return res.failureJson('A professor is required.');
+    }
+    addAction('NEW_LONGTERM_CHECKOUT', {
+        studentId: req.body.studentId,
+        equipment: req.body.equipment,
+        dueDate: req.body.dueDate,
+        professor: req.body.professor,
+        adminCode: req.body.adminCode
+    }).then(() => {
+        res.successJson();
+    }).catch(e => {
         res.failureJson(e.message);
     });
 });

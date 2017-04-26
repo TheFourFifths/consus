@@ -4,7 +4,7 @@ import items from '../data/items';
 import models from '../data/models';
 import ItemStore from '../store/item-store';
 
-export function initData(){
+export function initData() {
     students.forEach(student => {
         addAction('NEW_STUDENT', student);
     });
@@ -19,7 +19,11 @@ export function initData(){
 
     addAction('NEW_CHECKOUT', {
         studentId: students[1].id,
-        equipmentAddresses: [ItemStore.getItems()[2].address]
+        equipment: [
+            {
+                address: ItemStore.getItems()[2].address
+            }
+        ]
     });
 
     ItemStore.getItems()[2].timestamp = 0;

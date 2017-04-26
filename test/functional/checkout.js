@@ -81,9 +81,11 @@ describe('Check out items and models', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 1);
         return post('checkout', {
             studentId: 123456,
-            equipmentAddresses: [
-                'iGwEZUvfA'
-            ]
+            equipment: [
+                {
+                    address: 'iGwEZUvfA'
+                }
+            ],
         }).then(data => {
             assert.isUndefined(data);
             assert.lengthOf(CheckoutStore.getCheckouts(), 1);
@@ -99,8 +101,10 @@ describe('Check out items and models', () => {
         assert.lengthOf(ItemStore.getItems().filter(item => item.status === 'AVAILABLE'), 0);
         return post('checkout', {
             studentId: 111111,
-            equipmentAddresses: [
-                'iGwEZUvfA'
+            equipment: [
+                {
+                    address: 'iGwEZUvfA'
+                }
             ]
         }).then(() => {
             throw new Error('Unexpected success');
@@ -111,8 +115,10 @@ describe('Check out items and models', () => {
 
     it('should require a student id', () => {
         return post('checkout', {
-            equipmentAddresses: [
-                'iGwEZUvfA'
+            equipment: [
+                {
+                    address: 'iGwEZUvfA'
+                }
             ]
         }).then(() => {
             throw new Error('Unexpected success');
@@ -127,7 +133,7 @@ describe('Check out items and models', () => {
         }).then(() => {
             throw new Error('Unexpected success');
         }).catch(e => {
-            assert.strictEqual(e.message, 'An array of item addresses is required.');
+            assert.strictEqual(e.message, 'An array of equipment is required.');
         });
     });
 
@@ -138,8 +144,11 @@ describe('Check out items and models', () => {
         assert.strictEqual(model.inStock, 100);
         return post('checkout', {
             studentId: 123456,
-            equipmentAddresses: [
-                'm8y7nFLsT'
+            equipment: [
+                {
+                    address: 'm8y7nFLsT',
+                    quantity: 1
+                }
             ]
         }).then(data => {
             assert.isUndefined(data);
@@ -155,8 +164,11 @@ describe('Check out items and models', () => {
         assert.strictEqual(ModelStore.getModelByAddress('m8y7nEtAe').allowCheckout, false);
         return post('checkout', {
             studentId: 123456,
-            equipmentAddresses: [
-                'm8y7nEtAe'
+            equipment: [
+                {
+                    address: 'm8y7nEtAe',
+                    quantity: 1
+                }
             ]
         }).then(() => {
             throw new Error('Unexpected success');
@@ -174,8 +186,11 @@ describe('Check out items and models', () => {
         assert.strictEqual(model.inStock, 0);
         return post('checkout', {
             studentId: 123456,
-            equipmentAddresses: [
-                'm8y7nFnMs'
+            equipment: [
+                {
+                    address: 'm8y7nFnMs',
+                    quantity: 1
+                }
             ]
         }).then(() => {
             throw new Error('Unexpected success');

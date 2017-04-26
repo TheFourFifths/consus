@@ -81,11 +81,23 @@ describe('Checkin items', () => {
             }).then(() => {
                 return Promise.all([
                     addAction('NEW_CHECKOUT', {
-                        equipmentAddresses: [ItemStore.getItems()[0].address],
+                        equipment: [
+                            {
+                                address: ItemStore.getItems()[0].address
+                            }
+                        ],
                         studentId: 111111
                     }),
                     addAction('NEW_CHECKOUT', {
-                        equipmentAddresses: [ItemStore.getItems()[1].address, ModelStore.getModels()[2].address],
+                        equipment: [
+                            {
+                                address: ItemStore.getItems()[1].address
+                            },
+                            {
+                                address: ModelStore.getModels()[2].address,
+                                quantity: 1
+                            }
+                        ],
                         studentId: 123456
                     })
                 ]);

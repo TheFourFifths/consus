@@ -3,6 +3,8 @@ import ModelStore from '../../../.dist/store/model-store';
 import StudentStore from '../../../.dist/store/student-store';
 import { assert } from 'chai';
 import { addAction } from '../../util/database';
+import moment from 'moment-timezone';
+import config from 'config';
 
 describe('ItemStore', () => {
 
@@ -74,7 +76,14 @@ describe('ItemStore', () => {
     it('should check out multiple items', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address, items[1].address]
+            equipment: [
+                {
+                    address: items[0].address
+                },
+                {
+                    address: items[1].address
+                }
+            ]
         }).then(() => {
             assert.strictEqual(items[0].status, 'CHECKED_OUT');
             assert.strictEqual(items[1].status, 'CHECKED_OUT');
@@ -84,7 +93,11 @@ describe('ItemStore', () => {
     it('should check out a single item', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             assert.strictEqual(items[0].status, 'CHECKED_OUT');
             assert.strictEqual(items[1].status, 'AVAILABLE');
@@ -94,7 +107,11 @@ describe('ItemStore', () => {
     it('should check an item in', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [items[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             return addAction('CHECKIN', {
                 studentId: student.id,
@@ -105,20 +122,20 @@ describe('ItemStore', () => {
         });
     });
 
-    it('should fail to delete an item', () =>{
+    it('should fail to delete an item', () => {
         assert.strictEqual(items.length, 2);
         let modelAddress = items[0].modelAddress;
         return addAction('DELETE_ITEM', {
             itemAddress: 'This is not an address',
             modelAddress: modelAddress
         }).then(assert.fail)
-          .catch(e => {
-              assert.strictEqual(e.message, 'Unknown type.');
-              assert.strictEqual(items.length, 2);
-          });
+            .catch(e => {
+                assert.strictEqual(e.message, 'Unknown type.');
+                assert.strictEqual(items.length, 2);
+            });
     });
 
-    it('should delete an item', () =>{
+    it('should delete an item', () => {
         assert.strictEqual(items.length, 2);
         let deletedItemAddress = items[0].address;
         let modelAddress = items[0].modelAddress;
@@ -136,7 +153,11 @@ describe('ItemStore', () => {
     it('should get 0 overdue items when no items are overdue', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: 123456,
-            equipmentAddresses: [ItemStore.getItems()[0].address]
+            equipment: [
+                {
+                    address: items[0].address
+                }
+            ]
         }).then(() => {
             assert.lengthOf(ItemStore.getOverdueItems(), 0);
         });
@@ -151,4 +172,201 @@ describe('ItemStore', () => {
             assert.strictEqual(item.modelAddress, model.address);
         });
     });
+
+    it('should save an item', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('NEW_CHECKOUT', {
+                equipment: [
+                    {
+                        address: ItemStore.getItems()[2].address
+                    }
+                ],
+                studentId: 123456
+            });
+        }).then(() => {
+            return addAction('SAVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            assert.strictEqual(ItemStore.getItems()[2].status, 'SAVED');
+        });
+    });
+
+    it('should not be able to save an item with a model address', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('SAVE_ITEM', {
+                itemAddress: ModelStore.getModels()[0].address
+            });
+        }).then(() => {
+            throw new Error('Should not have saved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Address is not an item.');
+        });
+    });
+
+    it('should not be able to save a saved item', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('NEW_CHECKOUT', {
+                equipment: [
+                    {
+                        address: ItemStore.getItems()[2].address
+                    }
+                ],
+                studentId: 123456
+            });
+        }).then(() => {
+            return addAction('SAVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            assert.strictEqual(ItemStore.getItems()[2].status, 'SAVED');
+            return addAction('SAVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            throw new Error('Should not have saved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Item is already saved.');
+        });
+    });
+
+    it('should not be able to save an available item', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('SAVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            throw new Error('Should not have saved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Item is not checked out.');
+        });
+    });
+
+    it('should retrieve an item', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('NEW_CHECKOUT', {
+                equipment: [
+                    {
+                        address: ItemStore.getItems()[2].address
+                    }
+                ],
+                studentId: 123456
+            });
+        }).then(() => {
+            return addAction('SAVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            assert.strictEqual(ItemStore.getItems()[2].status, 'SAVED');
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            assert.strictEqual(ItemStore.getItems()[2].status, 'CHECKED_OUT');
+        });
+    });
+
+    it('should not be able to retrieve an item with a model address', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: model.address
+            });
+        }).then(() => {
+            throw new Error('Should not have retrieved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Address is not an item.');
+        });
+    });
+
+    it('should not be able to retrieve an item which is not checked out', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            throw new Error('Should not have retrieved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Item is not saved.');
+        });
+    });
+
+    it('should not be able to retrieve an item which is not saved', () => {
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(() => {
+            return addAction('NEW_CHECKOUT', {
+                equipment: [
+                    {
+                        address: ItemStore.getItems()[2].address
+                    }
+                ],
+                studentId: 123456
+            });
+        }).then(() => {
+            return addAction('RETRIEVE_ITEM', {
+                itemAddress: ItemStore.getItems()[2].address
+            });
+        }).then(() => {
+            throw new Error('Should not have retrieved the item.');
+        }).catch(e => {
+            assert.strictEqual(e.message, 'Item is not saved.');
+        });
+    });
+
+    it('should add and remove a fault to an item', () => {
+        let itemAddress = ItemStore.getItems()[0].address;
+        let timestamp = Math.floor(Date.now() / 1000);
+        return addAction("ADD_ITEM_FAULT", {
+            itemAddress,
+            description: "Is Brokeded"
+        }).then(() => {
+            let item = ItemStore.getItemByAddress(itemAddress);
+            assert.lengthOf(item.faultHistory, 1);
+            assert.isTrue(item.isFaulty);
+            assert.strictEqual(item.faultHistory[0].timestamp, timestamp);
+            assert.strictEqual(item.faultHistory[0].description, "Is Brokeded");
+        }).then(() => {
+            return addAction("REMOVE_FAULT", {itemAddress});
+        }).then(() => {
+            let item = ItemStore.getItemByAddress(itemAddress);
+            assert.lengthOf(item.faultHistory, 1);
+            assert.isFalse(item.isFaulty);
+            assert.strictEqual(item.faultHistory[0].description, "Is Brokeded");
+        });
+    });
+
+    it('should change an items duedate', () => {
+        let tomorrow = moment().tz(config.get('timezone'));
+        let item;
+        tomorrow.add(1, 'd');
+        return addAction('NEW_ITEM', {
+            modelAddress: model.address
+        }).then(actionId => {
+            item = ItemStore.getItemByActionId(actionId);
+            return addAction('CHANGE_ITEM_DUEDATE', {
+                itemAddress: item.address,
+                dueDate: tomorrow.format('YYYY-MM-DD'),
+                studentId: student.id
+            });
+        }).then(() => {
+            tomorrow.hour(17).minute(0).second(0);
+            assert.strictEqual(item.timestamp, parseInt(tomorrow.format('X')));
+        });
+    });
+
 });

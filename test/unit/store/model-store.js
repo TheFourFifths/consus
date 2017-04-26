@@ -138,10 +138,15 @@ describe('ModelStore', () => {
         });
     });
 
-    it('should check out modelsand change the amount in stock', () => {
+    it('should check out models and change the amount in stock', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [unserializedModel.address]
+            equipment: [
+                {
+                    address: unserializedModel.address,
+                    quantity: 1
+                }
+            ]
         }).then(() => {
             assert.strictEqual(unserializedModel.inStock, 19);
         });
@@ -150,7 +155,12 @@ describe('ModelStore', () => {
     it('should check in models and change the amount in stock', () => {
         return addAction('NEW_CHECKOUT', {
             studentId: student.id,
-            equipmentAddresses: [unserializedModel.address]
+            equipment: [
+                {
+                    address: unserializedModel.address,
+                    quantity: 1
+                }
+            ]
         }).then(() => {
             assert.strictEqual(unserializedModel.inStock, 19);
             return addAction('CHECKIN_MODELS', {
@@ -251,4 +261,76 @@ describe('ModelStore', () => {
             assert.strictEqual(25, modifiedModel.inStock);
         });
     });
+
+    it('should increment an unserialized models in stock amount', () => {
+        return addAction('INCREMENT_STOCK', {
+            modelAddress: unserializedModel.address
+        }).then(() => {
+            let modifiedModel = ModelStore.getRecentlyUpdatedModel();
+            assert.strictEqual(modifiedModel.count, 21);
+            assert.strictEqual(modifiedModel.inStock, 21);
+        });
+    });
+
+    it('should not increment serialized models', () => {
+        return addAction('INCREMENT_STOCK', {
+            modelAddress: model.address
+        }).then(assert.fail).catch(e => {
+            assert.strictEqual(e.message, `Address cannot be a serialized model.`);
+        });
+    });
+
+    it('should require positive values for new model counts', () => {
+        return addAction('NEW_MODEL', {
+            name: 'Transistor',
+            description: 'desc',
+            manufacturer: 'man',
+            vendor: 'vend',
+            location: 'loc',
+            allowCheckout: true,
+            price: 1.00,
+            count: -20
+        }).then(assert.fail).catch(e => {
+            assert.include(e.message, 'The model count cannot be negative');
+        });
+    });
+
+    it('should require positive values for edited model counts', () => {
+        return addAction('EDIT_MODEL', {
+            address: unserializedModel.address,
+            name: 'computer',
+            description: 'WHAT A DESCRIPTION',
+            manufacturer: 'Change it up',
+            vendor: 'vendor',
+            location: 'Neptune',
+            allowCheckout: true,
+            price: 11.50,
+            count: -30,
+            changeStock: true,
+            inStock: 25,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+        }).then(assert.fail).catch(e => {
+            assert.include(e.message, 'The model count cannot be negative');
+        });
+    });
+
+    it('should require positive values for edited model in-stock quantities', () => {
+        return addAction('EDIT_MODEL', {
+            address: unserializedModel.address,
+            name: 'computer',
+            description: 'WHAT A DESCRIPTION',
+            manufacturer: 'Change it up',
+            vendor: 'vendor',
+            location: 'Neptune',
+            allowCheckout: true,
+            price: 11.50,
+            count: 30,
+            changeStock: true,
+            inStock: -25,
+            photo: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+        }).then(assert.fail).catch(e => {
+            assert.include(e.message, 'The model stock amount cannot be negative');
+        });
+    });
+
 });

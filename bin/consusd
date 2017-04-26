@@ -2,31 +2,32 @@
 
 'use strict';
 
-// Capture an optional port from the command line args
-const PORT = process.argv.reduce((port, arg) => {
-    return (arg.match(/^--port=(\d+)$/) || [0, port])[1];
-}, 80);
-
 var path = require('path');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
+var config = require('config');
+
+// Capture an optional port from the command line args
+const PORT = process.argv.reduce((port, arg) => {
+    return (arg.match(/^--port=(\d+)$/) || [0, port])[1];
+}, config.get('server.port'));
 
 function start() {
     console.log('Attempting to start the Consus server on port ' + PORT + '...');
     try {
-        fs.writeFileSync(path.join(__dirname, '/../.pid'), '', {
+        fs.writeFileSync(config.get('pid_file'), '', {
             flag: 'wx'
         });
     } catch (e) {
         console.log('Failed to start the Consus server!');
         console.log('The server is probably already running: the ".pid" file already exists.');
-        return;
+        process.exit(1);
     }
     var child = spawn('node', [path.join(__dirname, '../.dist/index'), '--port=' + PORT], {
         stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
         detached: true
     });
-    fs.writeFileSync(path.join(__dirname, '/../.pid'), child.pid.toString(), {
+    fs.writeFileSync(config.get('pid_file'), child.pid.toString(), {
         flag: 'w',
         encoding: 'ascii'
     });
@@ -38,22 +39,22 @@ function stop() {
     console.log('Attempting to stop the Consus server...');
     var pid;
     try {
-        pid = fs.readFileSync(path.join(__dirname, '/../.pid'), {
+        pid = fs.readFileSync(config.get('pid_file'), {
             flag: 'r',
             encoding: 'ascii'
         });
     } catch (e) {
         console.log('Failed to stop the Consus server!');
         console.log('The server is probably not running: the ".pid" file does not exist.');
-        return;
+        process.exit(2);
     }
-    fs.unlinkSync(path.join(__dirname, '/../.pid'));
+    fs.unlinkSync(config.get('pid_file'));
     try {
         process.kill(pid);
-    } catch(e) {
+    } catch (e) {
         console.log('Failed to stop the consus server!');
-        console.log('The server is probably not running: the process does not exist.');
-        return;
+        console.log('The server is probably not running, or you do not have permission to terminate it.');
+        process.exit(3);
     }
     console.log('Consus server stopped!');
 }

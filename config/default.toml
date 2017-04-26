@@ -1,0 +1,37 @@
+# Valid time zones are listed under the "TZ" column at
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone = "America/Chicago"
+
+[assets]
+# The location of where the model photos should be stored.
+model_photo_directory = "assets/img"
+
+[checkin]
+# The time equipment is due back.
+# NOTE: Specify as 24-hour (local) time.
+due_hour = 17
+due_minute = 0
+
+[notifications.gmail]
+# The Gmail account used for sending notification mail.
+user = "example@gmail.com"
+# The password for the Gmail user account
+password = "Pack my box with five dozen liquor jugs"
+# The email address to receive and forward notifications.
+recipient = "person@example.com"
+
+[server]
+# Which IP address and port should the server listen on.
+ip = "0.0.0.0"
+port = 8000
+# Maximum JSON payload size received from a client is allowed to be.
+# This may affect the processing of model photos when there is also a large
+# model description.
+max_payload_size = "1.5MB"
+# The location to save the PID file.
+pid_file = "consus.pid"
+
+[student]
+# The string that identifies a student as currently enrolled.
+# Consult the document used to import students.
+active_status = "C - Current"

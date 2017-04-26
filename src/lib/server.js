@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
+import config from 'config';
 import api from './api';
 
 let server = null;
@@ -12,9 +13,12 @@ function start(port) {
         }
         let app = express();
         app.use(express.static(path.join(__dirname, '../public')));
-        app.use(bodyParser.json({ limit: '1MB' }));
+        app.use(bodyParser.json({ limit: config.get('server.max_payload_size') }));
         app.use('/api', api);
-        server = app.listen(port, () => {
+        let host = config.get('server.ip');
+        server = app.listen(port, host, () => {
+            /* eslint-disable no-console */
+            console.log(`The consus server is now listening at ${host}:${port}.`);
             resolve();
         });
     });

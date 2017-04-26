@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import config from 'config';
 import { Store } from 'consus-core/flux';
 import { assert } from 'chai';
 import CheckoutStore from './checkout-store';
 import CheckinStore from './checkin-store';
 import { createAddress, readAddress } from 'consus-core/identifiers';
 
-const MODEL_PHOTO_DIR = 'assets/img';
+const MODEL_PHOTO_DIR = config.get('assets.model_photo_directory');
 
 let models = [];
 let modelsByActionId = Object.create(null);
@@ -70,6 +71,7 @@ function deleteModelByAddress(address) {
     delete models[result.index];
 }
 
+
 function updateModel(address, name, description, manufacturer, vendor, location, allowCheckout, price, count, changeStock, inStock, b64PhotoStr){
     let modelToUpdate = store.getModelByAddress(address);
     let originalStock = modelToUpdate.inStock;
@@ -81,12 +83,14 @@ function updateModel(address, name, description, manufacturer, vendor, location,
     modelToUpdate.vendor = vendor;
     modelToUpdate.location = location;
     modelToUpdate.price = price;
-    if(allowCheckout)
+    if (allowCheckout){
         modelToUpdate.count = count;
-    if(allowCheckout && changeStock)
+    }
+    if (allowCheckout && changeStock) {
         modelToUpdate.inStock = inStock;
-    else
+    } else {
         modelToUpdate.inStock = originalStock + changeInCount;
+    }
     savePhoto(b64PhotoStr, address);
     recentlyUpdatedModel = modelToUpdate;
     return modelToUpdate;
@@ -97,6 +101,16 @@ function savePhoto(b64Str, address) {
     let photoPath = store.getPhotoPath(address, true);
     fs.writeFileSync(photoPath, bitmap);
     return photoPath;
+}
+
+function checkoutModels(equipment){
+    equipment.forEach(equip => {
+        let address = equip.address;
+        let result = readAddress(address);
+        if(result.type == 'model'){
+            store.getModelByAddress(address).inStock -= equip.quantity;
+        }
+    });
 }
 
 store.registerHandler('CLEAR_ALL_DATA', () => {
@@ -123,8 +137,10 @@ store.registerHandler('NEW_MODEL', data => {
     assert.isBoolean(data.allowCheckout, 'The model allowCheckout must be a boolean');
     assert.isNumber(data.price, 'The model price must be a number');
     assert.isNumber(data.count, 'The model count must be a number');
+    assert.isAtLeast(data.count, 0, 'The model count cannot be negative');
+    let address = createAddress(models.length, 'model');
     let model = {
-        address: createAddress(models.length, 'model'),
+        address: address,
         name: data.name,
         description: data.description,
         manufacturer: data.manufacturer,
@@ -135,18 +151,32 @@ store.registerHandler('NEW_MODEL', data => {
         count: data.count,
         inStock: data.count
     };
+    if(data.photo){
+        savePhoto(data.photo, address);
+    }
     modelsByActionId[data.actionId] = model;
     models.push(model);
 });
 
+store.registerHandler("INCREMENT_STOCK", data => {
+    let modelToInc = store.getModelByAddress(data.modelAddress);
+    if (!modelToInc.allowCheckout) {
+        throw new Error('Address cannot be a serialized model.');
+    }
+    modelToInc.count++;
+    modelToInc.inStock++;
+    recentlyUpdatedModel = modelToInc;
+    return modelToInc;
+});
+
 store.registerHandler('NEW_CHECKOUT', data => {
     store.waitFor(CheckoutStore);
-    data.equipmentAddresses.forEach(address => {
-        let result = readAddress(address);
-        if(result.type == 'model'){
-            store.getModelByAddress(address).inStock--;
-        }
-    });
+    checkoutModels(data.equipment);
+});
+
+store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
+    store.waitFor(CheckoutStore);
+    checkoutModels(data.equipment);
 });
 
 store.registerHandler('CHECKIN_MODELS', data => {
@@ -171,7 +201,9 @@ store.registerHandler('EDIT_MODEL', data => {
     assert.isString(data.location, 'The model location must be a string');
     assert.isNumber(data.price, 'The model price must be a number');
     assert.isNumber(data.count, 'The model count must be a number');
+    assert.isAtLeast(data.count, 0, 'The model count cannot be negative');
     assert.isNumber(data.inStock, 'The model stock amount must be a number');
+    assert.isAtLeast(data.inStock, 0, 'The model stock amount cannot be negative');
     updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.allowCheckout, data.price, data.count, data.changeStock, data.inStock, data.photo);
 });
 
