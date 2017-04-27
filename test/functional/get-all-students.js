@@ -23,14 +23,16 @@ describe('Get all students', () => {
                     id: "111123",
                     status: "C - Current",
                     email: "",
-                    major: ""
+                    major: "",
+                    rfid: 123458
                 }),
                 addAction("NEW_STUDENT", {
                     name: "That Other Guy",
                     id: "111113",
                     status: "C - Current",
                     email: "",
-                    major: ""
+                    major: "",
+                    rfid: 123456
                 }),
             ]);
         });
@@ -47,7 +49,9 @@ describe('Get all students', () => {
                     email: "",
                     major: "",
                     items: [],
-                    models: []
+                    models: [],
+                    overdueCheckins: [],
+                    rfid: 123456
                 },
                 {
                     name: "That Guy",
@@ -56,7 +60,9 @@ describe('Get all students', () => {
                     email: "",
                     major: "",
                     items: [],
-                    models: []
+                    models: [],
+                    overdueCheckins: [],
+                    rfid: 123458
                 }
             ]);
         });

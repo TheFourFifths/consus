@@ -6,6 +6,9 @@ import ModelStore from '../../.dist/store/model-store';
 
 describe('New model', () => {
 
+    // base64 encoding of test/assets/img/photo.jpeg
+    let b64SamplePhoto = '/9j/4AAQSkZJRgABAQEASABIAAD//gATQ3JlYXRlZCB3aXRoIEdJTVD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wgARCAAPAA8DAREAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAUH/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB3gSPLJ//xAAZEAACAwEAAAAAAAAAAAAAAAADBQAEBhT/2gAIAQEAAQUC0zciivnWhG1Jiu7yT//EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQMBAT8BH//EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQIBAT8BH//EACQQAAIBAwIGAwAAAAAAAAAAAAECAwQREgATEBQiMTJRQmGh/9oACAEBAAY/AqRknpqYTVAiaaqF0QYsb+S+venlk22xlaNZYQQkoHyX61RNuYctOJ+18uki37w//8QAHRAAAQQCAwAAAAAAAAAAAAAAAQAhMUERURBhcf/aAAgBAQABPyEyZH5fIDYI9Jy05DmESXRJguVolSpbNfPXH//aAAwDAQACAAMAAAAQgE//xAAUEQEAAAAAAAAAAAAAAAAAAAAg/9oACAEDAQE/EB//xAAUEQEAAAAAAAAAAAAAAAAAAAAg/9oACAECAQE/EB//xAAbEAEBAQACAwAAAAAAAAAAAAABESEAMUFRsf/aAAgBAQABPxBdS10SDSFQa7zgbqThYUpR6dkEefckIrG/c8JtOf/Z';
+
     before(() => {
         return server.start(8080);
     });
@@ -28,7 +31,8 @@ describe('New model', () => {
             location: 'The shelf',
             allowCheckout: false,
             price: 3.50,
-            count: 10
+            count: 10,
+            photo: b64SamplePhoto
         }).then(response => {
             assert.lengthOf(ModelStore.getModels(), 1);
             let model = ModelStore.getModelByAddress(response.address);
@@ -43,7 +47,8 @@ describe('New model', () => {
                 allowCheckout: false,
                 price: 3.50,
                 count: 10,
-                inStock: 10
+                inStock: 10,
+                photo: b64SamplePhoto
             });
         });
     });

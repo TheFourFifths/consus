@@ -12,7 +12,7 @@ describe('Data Setup', () => {
         let models = ModelStore.getModels();
         let items = ItemStore.getItems();
 
-        assert.lengthOf(students, 2);
+        assert.lengthOf(students, 3);
         assert.lengthOf(models, 2);
         assert.lengthOf(items, 3);
 
