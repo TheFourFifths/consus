@@ -36,6 +36,10 @@ app.get('/all', (req, res) => {
     });
 });
 
+app.get('/fault/all', (req, res) => {
+    res.successJson({items:ItemStore.getFaultyItems()});
+});
+
 app.delete('/fault', (req, res) => {
     if(!req.query.itemAddress) return res.failureJson("Item address required to remove fault");
     addAction("REMOVE_FAULT", {
