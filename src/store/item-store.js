@@ -11,7 +11,7 @@ let itemsByActionId = Object.create(null);
 class ItemStore extends Store {
 
     getFaultyItems() {
-        return items.filter(item => item.isFaulty);
+        return items.filter(item => item.faultHistory.length > 0);
     }
 
     getItems() {
