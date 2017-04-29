@@ -83,7 +83,8 @@ store.registerHandler('NEW_ITEM', data => {
         status: 'AVAILABLE',
         isFaulty: false,
         faultHistory: [],
-        isCheckedOutTo: null
+        isCheckedOutTo: null,
+        frequency: 0
     };
     itemsByActionId[data.actionId] = item;
     items.push(item);

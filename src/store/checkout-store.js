@@ -32,6 +32,20 @@ class CheckoutStore extends Store {
 
 const store = new CheckoutStore();
 
+function updateCheckoutFrequency(equipment){
+    equipment.forEach(equip => {
+        let result = readAddress(equip.address);
+        let checkout = null;
+        if (result.type === 'item')
+            checkout = ItemStore.getItemByAddress(equip.address);
+        else checkout = ModelStore.getModelByAddress(equip.address);
+
+        if(!checkout.frequency){
+            checkout.frequency = 1;
+        } else checkout.frequency++;
+    });
+}
+
 function verifyEquipmentAvailability(equipment){
     equipment.forEach(equip => {
         let address = equip.address;
@@ -62,6 +76,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
     };
 
     verifyEquipmentAvailability(data.equipment);
+    updateCheckoutFrequency(data.equipment);
 
     if (data.adminCode){
         if(AuthStore.verifyAdmin(data.adminCode)) {
@@ -85,6 +100,7 @@ store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
     };
 
     verifyEquipmentAvailability(data.equipment);
+    updateCheckoutFrequency(data.equipment);
 
     if (data.adminCode){
         if(AuthStore.verifyAdmin(data.adminCode)) {
