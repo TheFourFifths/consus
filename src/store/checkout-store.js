@@ -3,6 +3,8 @@ import AuthStore from './auth-store';
 import ItemStore from './item-store';
 import ModelStore from './model-store';
 import StudentStore from './student-store';
+import moment from 'moment-timezone';
+import config from 'config';
 import { readAddress } from 'consus-core/identifiers';
 
 let checkouts = Object.create(null);
@@ -43,6 +45,9 @@ function updateCheckoutFrequency(equipment){
         if(!model.frequency){
             model.frequency = 1;
         } else model.frequency++;
+
+        let lastCheckoutTime = moment.tz(Date.now(), config.get('timezone'));
+        model.lastCheckedOut = parseInt(lastCheckoutTime.format('X'));
     });
 }
 
