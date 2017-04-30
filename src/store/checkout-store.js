@@ -35,14 +35,14 @@ const store = new CheckoutStore();
 function updateCheckoutFrequency(equipment){
     equipment.forEach(equip => {
         let result = readAddress(equip.address);
-        let checkout = null;
-        if (result.type === 'item')
-            checkout = ItemStore.getItemByAddress(equip.address);
-        else checkout = ModelStore.getModelByAddress(equip.address);
-
-        if(!checkout.frequency){
-            checkout.frequency = 1;
-        } else checkout.frequency++;
+        let model = null;
+        if (result.type === 'item'){
+            let item = ItemStore.getItemByAddress(equip.address);
+            model = ModelStore.getModelByAddress(item.modelAddress);
+        }else model = ModelStore.getModelByAddress(equip.address);
+        if(!model.frequency){
+            model.frequency = 1;
+        } else model.frequency++;
     });
 }
 
