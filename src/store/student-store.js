@@ -206,6 +206,8 @@ store.registerHandler('SAVE_MODEL', data => {
     if (model.status === 'SAVED') {
         throw new Error('Student already saved this model.');
     }
+    // Due 7 days from today
+    model.dueDate = dueDateToTimestamp(data.timestamp + (60 * 60 * 24 * 7));
     model.status = 'SAVED';
 });
 

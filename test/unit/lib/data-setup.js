@@ -15,8 +15,6 @@ describe('Data Setup', () => {
         assert.lengthOf(students, 3);
         assert.lengthOf(models, 2);
         assert.lengthOf(items, 3);
-
-        assert(StudentStore.hasOverdueItem(111111));
     });
 
 });
