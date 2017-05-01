@@ -42,9 +42,7 @@ function updateCheckoutFrequency(equipment){
             let item = ItemStore.getItemByAddress(equip.address);
             model = ModelStore.getModelByAddress(item.modelAddress);
         }else model = ModelStore.getModelByAddress(equip.address);
-        if(!model.frequency){
-            model.frequency = 1;
-        } else model.frequency++;
+        model.frequency++;
 
         let lastCheckoutTime = moment.tz(Date.now(), config.get('timezone'));
         model.lastCheckedOut = parseInt(lastCheckoutTime.format('X'));
