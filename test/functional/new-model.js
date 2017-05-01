@@ -41,6 +41,7 @@ describe('New model', () => {
             assert.deepEqual(response, {
                 name: 'Widget',
                 description: 'A widget',
+                frequency: 0,
                 manufacturer: 'The Factory',
                 vendor: 'The Store',
                 location: 'The shelf',

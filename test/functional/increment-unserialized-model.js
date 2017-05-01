@@ -4,7 +4,7 @@ import { patch } from '../util/mock-client';
 import server from '../../.dist/lib/server';
 import ModelStore from '../../.dist/store/model-store';
 
-describe('Edit model', () => {
+describe('Increment unserialized model', () => {
     let model;
 
     before(() => {
@@ -36,6 +36,7 @@ describe('Edit model', () => {
         let newModel = {
             name: 'Resistor',
             description: 'V = IR',
+            frequency: 0,
             manufacturer: 'Pancakes R\' Us',
             vendor: 'Mouzer',
             location: 'Shelf 14',

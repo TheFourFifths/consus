@@ -40,6 +40,7 @@ describe('Edit model', () => {
         let newModel = {
             name: 'New name',
             description: 'New description',
+            frequency: 0,
             manufacturer: 'New manufacturer',
             vendor: 'New vendor',
             location: 'New location',
