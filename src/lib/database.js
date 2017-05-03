@@ -13,17 +13,18 @@ export function setDataDirectory(dataDirectory) {
     rack = database.selectRack('actions');
     rack.subscribe(action => {
         let actionId = action.data.actionId;
-        Dispatcher.handleAction(action.type, action.data).then(() => {
+        try {
+            Dispatcher.handleAction(action.type, action.data);
             if (promises.has(actionId)) {
                 promises.get(actionId).resolve(actionId);
                 promises.delete(actionId);
             }
-        }).catch(e => {
+        } catch (e) {
             if (promises.has(actionId)) {
                 promises.get(actionId).reject(e);
                 promises.delete(actionId);
             }
-        });
+        }
     });
 }
 
