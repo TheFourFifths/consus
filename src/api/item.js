@@ -20,10 +20,9 @@ app.post('/', (req, res) => {
     addAction('NEW_ITEM', {
         modelAddress: req.body.modelAddress
     }).then(actionId => {
-        let item = ItemStore.getItemByActionId(actionId);
         res.successJson({
-            address: item.address,
-            modelName: ModelStore.getModelByAddress(item.modelAddress).name
+            item: ItemStore.getItemByActionId(actionId),
+            modelName: ModelStore.getModelByAddress(req.body.modelAddress).name
         });
     }).catch(e => {
         res.failureJson(e.message);

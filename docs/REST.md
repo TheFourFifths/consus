@@ -10,8 +10,8 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
     * [PATCH `/api/item/duedate`](#patch-apiitemduedate)
-    * [DELETE `api/item/fault`](#delete-apiitemfault)
-    * [POST `api/item/fault`](#post-apiitemfault)
+    * [DELETE `/api/item/fault`](#delete-apiitemfault)
+    * [POST `/api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
     * [POST `/api/item/retrieve`](#post-apiitemretrieve)
     * [POST `/api/item/save`](#post-apiitemsave)
@@ -47,7 +47,15 @@ Create an item.
 {
     "status": "success",
     "data": {
-        "address": "iGwEZUvfA",
+        "item": {
+            "address": "iGwEZUvfA",
+            "faultHistory": [],
+            "isCheckedOutTo": 123456,
+            "isFaulty": false,
+            "modelAddress": "m8y7nEtAe",
+            "status": "CHECKED_OUT",
+            "timestamp": 1491170400
+        },
         "modelName": "Resistor",
         "isCheckedOutTo": null
     }
