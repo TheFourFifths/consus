@@ -12,24 +12,33 @@ export function setDataDirectory(dataDirectory) {
     });
     rack = database.selectRack('actions');
     rack.subscribe(action => {
-        Dispatcher.handleAction(action.type, action.data);
         let actionId = action.data.actionId;
-        if (promises.has(actionId)) {
-            promises.get(actionId)(actionId);
-            promises.delete(actionId);
-        }
+        Dispatcher.handleAction(action.type, action.data).then(() => {
+            if (promises.has(actionId)) {
+                promises.get(actionId).resolve(actionId);
+                promises.delete(actionId);
+            }
+        }).catch(e => {
+            if (promises.has(actionId)) {
+                promises.get(actionId).reject(e);
+                promises.delete(actionId);
+            }
+        });
     });
 }
 
 export function addAction(type, data) {
     data.actionId = crypto.randomBytes(32).toString('hex');
     data.timestamp = Math.floor(Date.now() / 1000);
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         if (database === undefined) {
             Dispatcher.handleAction(type, data);
             resolve(data.actionId);
         } else {
-            promises.set(data.actionId, resolve);
+            promises.set(data.actionId, {
+                resolve,
+                reject
+            });
             rack.publish({
                 type,
                 data
