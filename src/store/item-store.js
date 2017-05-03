@@ -124,6 +124,8 @@ store.registerHandler('SAVE_ITEM', data => {
     if (item.status === 'SAVED') {
         throw new Error('Item is already saved.');
     }
+    // Due 7 days from today
+    item.timestamp = dueDateToTimestamp(data.timestamp + (60 * 60 * 24 * 7));
     item.status = 'SAVED';
 });
 

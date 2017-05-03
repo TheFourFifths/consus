@@ -1,5 +1,13 @@
 'use strict';
 
+var path = require('path');
+var config = require('config');
+
+let dataDirectory = config.get('database.data_directory');
+if (!path.isAbsolute(dataDirectory)) {
+    dataDirectory = path.join(__dirname, dataDirectory, './.oak');
+}
+
 module.exports = function(grunt) {
 
     grunt.initConfig({
@@ -76,7 +84,8 @@ module.exports = function(grunt) {
             coverage: ['coverage/', 'coverage.lcov', '.nyc_output'],
             dist: ['.dist/'],
             test: ['.test/'],
-            tools: ['.tools/']
+            tools: ['.tools/'],
+            database: [dataDirectory]
         }
     });
 
@@ -92,5 +101,6 @@ module.exports = function(grunt) {
     grunt.registerTask('lintless-test', ['build', 'clean:test', 'babel:test', 'mochacli']);
     grunt.registerTask('prepublish', ['test', 'clean:dist', 'babel:dist']);
     grunt.registerTask('tools', ['build', 'clean:tools', 'babel:tools']);
+    grunt.registerTask('delete-database', ['clean:database']);
 
 };

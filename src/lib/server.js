@@ -17,8 +17,6 @@ function start(port) {
         app.use('/api', api);
         let host = config.get('server.ip');
         server = app.listen(port, host, () => {
-            /* eslint-disable no-console */
-            console.log(`The consus server is now listening at ${host}:${port}.`);
             resolve();
         });
     });

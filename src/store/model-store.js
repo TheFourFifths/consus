@@ -137,6 +137,7 @@ store.registerHandler('NEW_MODEL', data => {
     assert.isBoolean(data.allowCheckout, 'The model allowCheckout must be a boolean');
     assert.isNumber(data.price, 'The model price must be a number');
     assert.isNumber(data.count, 'The model count must be a number');
+    assert.isAtLeast(data.count, 0, 'The model count cannot be negative');
     let address = createAddress(models.length, 'model');
     let model = {
         address: address,
@@ -200,7 +201,9 @@ store.registerHandler('EDIT_MODEL', data => {
     assert.isString(data.location, 'The model location must be a string');
     assert.isNumber(data.price, 'The model price must be a number');
     assert.isNumber(data.count, 'The model count must be a number');
+    assert.isAtLeast(data.count, 0, 'The model count cannot be negative');
     assert.isNumber(data.inStock, 'The model stock amount must be a number');
+    assert.isAtLeast(data.inStock, 0, 'The model stock amount cannot be negative');
     updateModel(data.address, data.name, data.description, data.manufacturer, data.vendor, data.location, data.allowCheckout, data.price, data.count, data.changeStock, data.inStock, data.photo);
 });
 
