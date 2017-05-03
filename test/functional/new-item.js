@@ -36,8 +36,8 @@ describe('New Item', () => {
             modelAddress: ModelStore.getModels()[0].address
         }).then(response => {
             assert.lengthOf(ItemStore.getItems(), 1);
-            let item = ItemStore.getItemByAddress(response.address);
-            delete response.address;
+            let item = response.item;
+            delete response.item;
             assert.deepEqual(response, {
                 modelName: "Resistor"
             });
