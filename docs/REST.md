@@ -10,6 +10,7 @@ This document describes the API endpoints of the Consus server.
     * [GET `/api/item`](#get-apiitem)
     * [DELETE `api/item`](#delete-apiitem)
     * [PATCH `/api/item/duedate`](#patch-apiitemduedate)
+    * [GET `api/item/fault/all`](#get-apiitemfaultall)
     * [DELETE `api/item/fault`](#delete-apiitemfault)
     * [POST `api/item/fault`](#post-apiitemfault)
     * [GET `/api/item/overdue`](#get-apiitemoverdue)
@@ -150,7 +151,27 @@ The edited item
 }
 ```
 
+## GET `/api/item/fault/all`
 
+Gets all items with "isFaulty" currently true.
+
+```json
+{
+    "status": "success",
+    "data": {
+        "items": [{
+            "address": "iGwEZUvfA",
+            "modelAddress": "m8y7nEtAe",
+            "timestamp": 123,
+            "isFaulty": true,
+            "student": {
+                "name": "<Student Name>",
+                "id": "<StudentID>"
+            }
+        }]
+    }
+}
+```
 ## DELETE `/api/item/fault`
 
 Sets the "isFaulty" field of a specified item to false

@@ -149,7 +149,8 @@ store.registerHandler('NEW_MODEL', data => {
         allowCheckout: data.allowCheckout,
         price: data.price,
         count: data.count,
-        inStock: data.count
+        inStock: data.count,
+        frequency: 0
     };
     if(data.photo){
         savePhoto(data.photo, address);
