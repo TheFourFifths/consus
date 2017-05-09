@@ -41,6 +41,7 @@ describe('Update Student', () => {
             newStudent.models = [];
             newStudent.items = [];
             newStudent.major = "";
+            newStudent.overdueCheckins = [];
             return assert.deepEqual(response, newStudent);
         }).then(() => {
             newStudent.name = "Joe Blow";

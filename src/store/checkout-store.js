@@ -3,6 +3,8 @@ import AuthStore from './auth-store';
 import ItemStore from './item-store';
 import ModelStore from './model-store';
 import StudentStore from './student-store';
+import moment from 'moment-timezone';
+import config from 'config';
 import { readAddress } from 'consus-core/identifiers';
 
 let checkouts = Object.create(null);
@@ -31,6 +33,21 @@ class CheckoutStore extends Store {
 }
 
 const store = new CheckoutStore();
+
+function updateCheckoutFrequency(equipment){
+    equipment.forEach(equip => {
+        let result = readAddress(equip.address);
+        let model = null;
+        if (result.type === 'item'){
+            let item = ItemStore.getItemByAddress(equip.address);
+            model = ModelStore.getModelByAddress(item.modelAddress);
+        }else model = ModelStore.getModelByAddress(equip.address);
+        model.frequency++;
+
+        let lastCheckoutTime = moment.tz(Date.now(), config.get('timezone'));
+        model.lastCheckedOut = parseInt(lastCheckoutTime.format('X'));
+    });
+}
 
 function verifyEquipmentAvailability(equipment){
     equipment.forEach(equip => {
@@ -62,6 +79,7 @@ store.registerHandler('NEW_CHECKOUT', data => {
     };
 
     verifyEquipmentAvailability(data.equipment);
+    updateCheckoutFrequency(data.equipment);
 
     if (data.adminCode){
         if(AuthStore.verifyAdmin(data.adminCode)) {
@@ -85,6 +103,7 @@ store.registerHandler('NEW_LONGTERM_CHECKOUT', data => {
     };
 
     verifyEquipmentAvailability(data.equipment);
+    updateCheckoutFrequency(data.equipment);
 
     if (data.adminCode){
         if(AuthStore.verifyAdmin(data.adminCode)) {

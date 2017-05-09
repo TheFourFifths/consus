@@ -50,6 +50,7 @@ describe('Get all students', () => {
                     major: "",
                     items: [],
                     models: [],
+                    overdueCheckins: [],
                     rfid: 123456
                 },
                 {
@@ -60,6 +61,7 @@ describe('Get all students', () => {
                     major: "",
                     items: [],
                     models: [],
+                    overdueCheckins: [],
                     rfid: 123458
                 }
             ]);

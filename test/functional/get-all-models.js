@@ -55,6 +55,7 @@ describe('Get all models', () => {
                 {
                     name: 'Widget',
                     description: 'A widget',
+                    frequency: 0,
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
@@ -66,6 +67,7 @@ describe('Get all models', () => {
                 {
                     name: 'OtherThing',
                     description: 'Not a widget',
+                    frequency: 0,
                     manufacturer: 'The Factory',
                     vendor: 'The Store',
                     location: 'The shelf',
