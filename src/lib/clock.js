@@ -10,7 +10,7 @@ function getInitialTimeoutTime(){
     let hour = parseInt(timestamp.format('H'));
     let minute = parseInt(timestamp.format('m'));
     // check for times past 23:55 (11:55pm)
-    if (hour > config.get('checkin.due_hour') || (hour === config.get('checkin.due_hour') && minute >= config.get('checkin.due_minute'))) {
+    if (hour > config.get('checkin.due_hour') || (hour === config.get('checkin.due_hour') - 1 && minute >= config.get('checkin.due_minute'))) {
         // increment to the next day
         timestamp = timestamp.add(1, 'd');
     }
@@ -40,7 +40,7 @@ export function dueDateToTimestamp(dueDate) {
     let hour = parseInt(timestamp.format('H'));
     let minute = parseInt(timestamp.format('m'));
     // check for times past 23:55 (11:55pm)
-    if (hour > config.get('checkin.due_hour') || (hour === config.get('checkin.due_hour') && minute >= config.get('checkin.due_minute'))) {
+    if (hour > config.get('checkin.due_hour') || (hour === config.get('checkin.due_hour') - 1 && minute >= config.get('checkin.due_minute'))) {
         // increment to the next day
         timestamp = timestamp.add(1, 'd');
     }
