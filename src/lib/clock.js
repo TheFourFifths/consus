@@ -8,12 +8,13 @@ const ONE_DAY = 1000*60*60*24;
 function getInitialTimeoutTime(){
     let timestamp = moment.tz(Date.now(), config.get('timezone'));
     let hour = parseInt(timestamp.format('H'));
-    // check for times past 18:00 (6:00pm)
-    if (hour >= 18) {
+    let minute = parseInt(timestamp.format('m'));
+    // check for times past 23:55 (11:55pm)
+    if (hour > config.get('checkin.due_hour') || (hour === config.get('checkin.due_hour') - 1 && minute >= config.get('checkin.due_minute'))) {
         // increment to the next day
         timestamp = timestamp.add(1, 'd');
     }
-    timestamp.hour(18).minute(0).second(0);
+    timestamp.hour(config.get('checkin.due_hour')).minute(config.get('checkin.due_minute')).second(0);
     return parseInt(timestamp.format('X')) - (Date.now()/1000);
 }
 
@@ -38,11 +39,11 @@ export function dueDateToTimestamp(dueDate) {
     }
     let hour = parseInt(timestamp.format('H'));
     let minute = parseInt(timestamp.format('m'));
-    // check for times past 4:50pm
-    if (hour > 16 || (hour === 16 && minute >= 50)) {
+    // check for times past 23:55 (11:55pm)
+    if (hour > config.get('checkin.due_hour') || (hour === config.get('checkin.due_hour') - 1 && minute >= config.get('checkin.due_minute'))) {
         // increment to the next day
         timestamp = timestamp.add(1, 'd');
     }
-    timestamp.hour(17).minute(0).second(0);
+    timestamp.hour(config.get('checkin.due_hour')).minute(config.get('checkin.due_minute')).second(0);
     return parseInt(timestamp.format('X'));
 }

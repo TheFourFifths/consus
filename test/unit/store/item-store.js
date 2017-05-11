@@ -367,7 +367,7 @@ describe('ItemStore', () => {
             assert.strictEqual(faultyItems[0].faultHistory[0].description, "Is Brokeded");
         });
     });
-  
+
     it('should change an items duedate', () => {
         let tomorrow = moment().tz(config.get('timezone'));
         let item;
@@ -382,7 +382,7 @@ describe('ItemStore', () => {
                 studentId: student.id
             });
         }).then(() => {
-            tomorrow.hour(17).minute(0).second(0);
+            tomorrow.hour(23).minute(55).second(0);
             assert.strictEqual(item.timestamp, parseInt(tomorrow.format('X')));
         });
     });
