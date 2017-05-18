@@ -350,6 +350,24 @@ describe('ItemStore', () => {
         });
     });
 
+    it('should get all faulty items', ()=> {
+        let itemAddress = ItemStore.getItems()[0].address;
+        return addAction("ADD_ITEM_FAULT", {
+            itemAddress,
+            description: "Is Brokeded"
+        }).then(() => {
+            let itemAddress2 = ItemStore.getItems()[1].address;
+            return addAction("ADD_ITEM_FAULT", {
+                itemAddress: itemAddress2,
+                description: "Is MORE Brokeded"
+            });
+        }).then(() => {
+            let faultyItems = ItemStore.getFaultyItems();
+            assert.lengthOf(faultyItems, 2);
+            assert.strictEqual(faultyItems[0].faultHistory[0].description, "Is Brokeded");
+        });
+    });
+
     it('should change an items duedate', () => {
         let tomorrow = moment().tz(config.get('timezone'));
         let item;
@@ -364,7 +382,7 @@ describe('ItemStore', () => {
                 studentId: student.id
             });
         }).then(() => {
-            tomorrow.hour(17).minute(0).second(0);
+            tomorrow.hour(23).minute(55).second(0);
             assert.strictEqual(item.timestamp, parseInt(tomorrow.format('X')));
         });
     });

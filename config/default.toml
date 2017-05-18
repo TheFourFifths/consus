@@ -9,8 +9,8 @@ model_photo_directory = "assets/img"
 [checkin]
 # The time equipment is due back.
 # NOTE: Specify as 24-hour (local) time.
-due_hour = 17
-due_minute = 0
+due_hour = 23
+due_minute = 55
 
 [notifications.gmail]
 # The Gmail account used for sending notification mail.
